@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Inside src/styles/globals.css or src/styles/globals.scss */
+
+.nc-SocialsShare {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.nc-SocialsShare a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6; /* Default background */
+  border-radius: 50%;
+  padding: 0.5rem;
+}
+
+.nc-SocialsShare a:hover {
+  background-color: #e5e7eb; /* Hover background */
+}
+

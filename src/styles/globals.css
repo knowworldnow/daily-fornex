@@ -11,13 +11,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
-  transition: background-color 0.3s ease;
+  background-color: #ffffff; /* Light background for better visibility */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  margin-right: 10px; /* Spacing between icons */
 }
 
 .nc-SocialsShare a:hover {
-  background-color: #e5e7eb;
+  background-color: #f1f1f1; /* Slight change on hover */
+  transform: scale(1.1); /* Slight zoom effect on hover */
 }
 
+.nc-SocialsShare img {
+  width: 24px; /* Adjust icon size */
+  height: 24px; /* Adjust icon size */
+  filter: none; /* Ensure the SVGs keep their original color */
+}

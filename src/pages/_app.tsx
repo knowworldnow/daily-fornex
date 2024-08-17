@@ -1,3 +1,4 @@
+import Head from "next/head";
 import "../../faust.config";
 import React from "react";
 import { useRouter } from "next/router";
@@ -25,6 +26,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Head>
+        <meta
+          name="google-site-verification"
+          content="PPWkOAbB6IW6iwjZqRrcjzpoAPf9QXZt2YwvpGmHmkA"
+        />
+      </Head>
       <GoogleAnalytics trackPageViews />
 
       <FaustProvider pageProps={pageProps}>

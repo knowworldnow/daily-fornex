@@ -14,14 +14,20 @@ import PageLayout from "@/container/PageLayout";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT } from "@/fragments/mutations";
+import { useMutation } from "@apollo/client";
+import { IS_DEV } from "@/contains/site-settings";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores/store";
+import useGetPostsNcmazMetaByIds from "@/hooks/useGetPostsNcmazMetaByIds";
 import { TPostCard } from "@/components/Card2/Card2";
+import { useRouter } from "next/router";
 import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
 import SingleTypeAudio from "@/container/singles/single-audio/single-audio";
 import SingleTypeVideo from "@/container/singles/single-video/single-video";
 import SingleTypeGallery from "@/container/singles/single-gallery/single-gallery";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
-import TableContent from "@/container/singles/TableContentAnchor"; // Added TOC component
+import TableContentAnchor from "@/container/singles/TableContentAnchor"; // Updated TOC component
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -182,7 +188,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
               <div className="container flex flex-col my-10 lg:flex-row ">
                 <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
                   {/* Render the Table of Contents */}
-                  <TableContent content={content || ""} className="mb-6" />
+                  <TableContentAnchor content={content || ""} className="mb-6" />
 
                   <SingleContent post={_post} />
                   <SocialsShare link={router.asPath} />
@@ -203,7 +209,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
             {renderHeaderType()}
 
             <div className="container mt-10">
-              <TableContent content={content || ""} className="mb-6" />
+              <TableContentAnchor content={content || ""} className="mb-6" />
 
               <SingleContent post={_post} />
               <SocialsShare link={router.asPath} />
@@ -239,7 +245,7 @@ Component.query = gql`
     $footerLocation: MenuLocationEnum!
   ) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-      ...NcmazFcPostFullFieldsFragment
+      ...NcmazFcPostFullFields
       content
     }
     posts(where: { isRelatedOfPostId: $post_databaseId }) {

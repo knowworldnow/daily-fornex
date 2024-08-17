@@ -4,6 +4,7 @@ import {
   NcgeneralSettingsFieldsFragmentFragment,
   NcmazFcUserReactionPostActionEnum,
   NcmazFcUserReactionPostNumberUpdateEnum,
+  NcmazFcPostFullFieldsFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -27,7 +28,7 @@ import SingleTypeAudio from "@/container/singles/single-audio/single-audio";
 import SingleTypeVideo from "@/container/singles/single-video/single-video";
 import SingleTypeGallery from "@/container/singles/single-gallery/single-gallery";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
-import TableContentAnchor from "@/container/singles/TableContentAnchor"; // Updated TOC component
+import TableContentAnchor from "@/container/singles/TableContentAnchor"; // Added TOC component
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -69,7 +70,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     };
   }, []);
 
-  const _post = props.data?.post || {};
+  const _post = props.data?.post as NcmazFcPostFullFieldsFragment;
   const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
   const _top10Categories =
     (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
@@ -84,7 +85,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     content, // Extracted content for TOC
   } = getPostDataFromPostFragment(_post);
 
-  const {} = useGetPostsNcmazMetaByIds({
+  useGetPostsNcmazMetaByIds({
     posts: IS_PREVIEW ? [] : [_post],
   });
 
@@ -245,8 +246,7 @@ Component.query = gql`
     $footerLocation: MenuLocationEnum!
   ) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-      ...NcmazFcPostFullFields
-      content
+      ...NcmazFcPostFullFieldsFragment
     }
     posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {

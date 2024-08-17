@@ -1,4 +1,4 @@
-import { gql } from "../__generated__";
+import { gql, DocumentNode } from "../__generated__";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
@@ -160,7 +160,7 @@ Component.variables = ({ databaseId }, ctx) => ({
   footerLocation: FOOTER_LOCATION,
 });
 
-Component.query = gql(`
+Component.query = gql<GetPostSiglePageQuery, {}>(`
   query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int, $asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
       ...NcmazFcPostFullFields

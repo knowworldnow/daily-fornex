@@ -5,20 +5,48 @@
 
 .nc-SocialsShare {
   display: flex;
-  gap: 0.75rem;
-  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  justify-content: flex-start;
+  margin-top: 1.5rem;
 }
 
 .nc-SocialsShare a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #f3f4f6; /* Default background */
   border-radius: 50%;
-  padding: 0.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.25rem;
+  color: white;
+  text-decoration: none;
 }
 
-.nc-SocialsShare a:hover {
-  background-color: #e5e7eb; /* Hover background */
+.nc-SocialsShare a.facebook {
+  background-color: #1877f2;
 }
+
+.nc-SocialsShare a.twitter {
+  background-color: #1da1f2;
+}
+
+.nc-SocialsShare a.linkedin {
+  background-color: #0077b5;
+}
+
+.nc-SocialsShare a.instagram {
+  background-color: #e4405f;
+}
+
+.nc-SocialsShare a.pinterest {
+  background-color: #bd081c;
+}
+
+.share-text {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-right: 1rem;
+}
+
 

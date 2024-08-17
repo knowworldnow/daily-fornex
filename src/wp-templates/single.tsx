@@ -14,14 +14,8 @@ import PageLayout from "@/container/PageLayout";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT } from "@/fragments/mutations";
-import { useMutation } from "@apollo/client";
-import { IS_DEV } from "@/contains/site-settings";
-import { useSelector } from "react-redux";
-import { RootState } from "@/stores/store";
-import useGetPostsNcmazMetaByIds from "@/hooks/useGetPostsNcmazMetaByIds";
-import { TPostCard } from "@/components/Card2/Card2";
 import { useRouter } from "next/router";
+import { TPostCard } from "@/components/Card2/Card2";
 import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
 import SingleTypeAudio from "@/container/singles/single-audio/single-audio";
 import SingleTypeVideo from "@/container/singles/single-video/single-video";
@@ -245,7 +239,8 @@ Component.query = gql`
     $footerLocation: MenuLocationEnum!
   ) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-      ...NcmazFcPostFullFields
+      ...NcmazFcPostFullFieldsFragment
+      content
     }
     posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {

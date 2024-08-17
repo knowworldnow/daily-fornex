@@ -14,7 +14,7 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background-color: #ffffff; /* Light background for better visibility */
+  background-color: #ffffff; /* Light background for light mode */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   transition: transform 0.3s ease, background-color 0.3s ease;
   margin-right: 10px; /* Spacing between icons */
@@ -28,5 +28,19 @@
 .nc-SocialsShare img {
   width: 24px; /* Adjust icon size */
   height: 24px; /* Adjust icon size */
-  filter: none; /* Ensure the SVGs keep their original color */
+  filter: invert(0); /* Default black in light mode */
+  transition: filter 0.3s ease; /* Smooth transition */
+}
+
+/* Make the icons white in dark mode */
+.dark .nc-SocialsShare img {
+  filter: invert(1);
+}
+
+.dark .nc-SocialsShare a {
+  background-color: #333333; /* Dark background for dark mode */
+}
+
+.dark .nc-SocialsShare a:hover {
+  background-color: #444444; /* Slight change on hover in dark mode */
 }

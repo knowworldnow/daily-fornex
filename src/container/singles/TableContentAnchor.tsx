@@ -1,195 +1,56 @@
-import { useEffect, useState } from 'react';
-import { flatListToHierarchical } from '@faustwp/core';
-import { Popover, Transition } from '@headlessui/react';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
-import { Fragment } from 'react';
+// src/components/TableOfContents.tsx
 
-type HeadingNode = {
-  tag: string;
+import React, { useEffect, useState } from 'react';
+
+interface Heading {
   id: string;
   text: string;
   level: number;
-  parentIndex: number;
-  parentId: string;
-  children?: HeadingNode[];
-};
-
-interface TableContentProps {
-  content: string;
-  className?: string;
-  btnClassName?: string;
 }
 
-const TableContent: React.FC<TableContentProps> = ({
-  content,
-  className = '',
-  btnClassName = 'relative rounded-full flex items-center justify-center h-9 w-9 bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-700',
-}) => {
-  const [headingsWrapList, setHeadingsWrapList] = useState<HeadingNode[]>([]);
+interface TableOfContentsProps {
+  content: string;
+}
+
+const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => {
+  const [headings, setHeadings] = useState<Heading[]>([]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // Run this code only on the client side
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(content, 'text/html');
-      const headingElements = Array.from(
-        doc.querySelectorAll('h1, h2, h3, h4, h5, h6')
-      );
+    // Parse the HTML content and extract headings
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    const headingElements = doc.querySelectorAll('h1, h2, h3');
 
-      let headingsWithId: HeadingNode[] = headingElements.map(
-        (element, index) => {
-          let id = element.getAttribute('id') || '';
-          return {
-            tag: element.tagName.toLowerCase(),
-            id,
-            level: parseInt(element.tagName.charAt(1)),
-            parentIndex: -1,
-            parentId: '',
-            text: element.textContent || '',
-          };
-        }
-      );
-      headingsWithId = headingsWithId.filter((item) => !!item.id);
-
-      // Map headings hierarchy
-      headingsWithId = headingsWithId.map((item, index) => {
-        let parentIndex = index - 1;
-        while (parentIndex >= 0) {
-          if (item.level > headingsWithId[parentIndex].level) {
-            item.parentIndex = parentIndex;
-            item.parentId = headingsWithId[parentIndex].id;
-            break;
-          }
-          parentIndex--;
-        }
-        return item;
+    const headingArray: Heading[] = [];
+    headingElements.forEach((heading) => {
+      headingArray.push({
+        id: heading.id,
+        text: heading.textContent || '',
+        level: parseInt(heading.tagName.charAt(1)),
       });
+    });
 
-      const hierarchicalHeadings = flatListToHierarchical(headingsWithId, {
-        idKey: 'id',
-        parentKey: 'parentId',
-      }) as HeadingNode[];
-
-      setHeadingsWrapList(hierarchicalHeadings);
-    }
+    setHeadings(headingArray);
   }, [content]);
 
-  const renderHeadings = (headings: HeadingNode[]) => {
-    return (
-      <>
-        {headings.map((heading) => (
-          <li key={heading.id}>
-            <a
-              className="inline-flex gap-2 hover:text-neutral-800 dark:hover:text-neutral-200"
-              href={`#${heading.id}`}
-            >
-              <ArrowRightIcon className="h-3 w-3 flex-shrink-0 self-center rtl:rotate-180" />
-              {heading.text}
-            </a>
-            {heading?.children?.length ? (
-              <ol className="mt-2 space-y-3 ps-4 text-neutral-500 dark:text-neutral-300">
-                {renderHeadings(heading.children)}
-              </ol>
-            ) : null}
-          </li>
-        ))}
-      </>
-    );
-  };
-
-  const renderContent = () => {
-    return (
-      <nav>
-        <h2
-          id="on-this-page-title"
-          className="font-display text-sm font-medium text-slate-900 dark:text-white"
-        >
-          On this page
-        </h2>
-        <div className="">
-          <ol className="mt-4 space-y-3 text-sm">{renderHeadings(headingsWrapList)}</ol>
-        </div>
-      </nav>
-    );
-  };
-
-  if (!headingsWrapList?.length) {
+  if (headings.length === 0) {
     return null;
   }
 
   return (
-    <div className={className}>
-      <Popover className="relative z-40">
-        {({ open }) => (
-          <>
-            <Popover.Button
-              className={`${
-                open ? '' : 'text-opacity-90'
-              } group ${btnClassName} focus:outline-none focus-visible:ring-0`}
-              title="Table of contents"
-            >
-              <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M8 2V5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeMiterlimit="10"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M16 2V5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeMiterlimit="10"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeMiterlimit="10"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M8 11H16"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeMiterlimit="10"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M8 16H12"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeMiterlimit="10"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Popover.Button>
-
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-200"
-              enterFrom="opacity-0 translate-y-1"
-              enterTo="opacity-100 translate-y-0"
-              leave="transition ease-in duration-150"
-              leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-1"
-            >
-              <Popover.Panel className="lg:s-0 hiddenScrollbar absolute -end-2.5 bottom-full z-40 mb-5 max-h-[min(70vh,600px)] w-screen max-w-[min(90vw,20rem)] overflow-y-auto rounded-xl bg-white shadow-xl ring-1 ring-black/5 lg:end-auto lg:max-w-md lg:-translate-x-1/2 rtl:lg:translate-x-1/2 dark:bg-neutral-800 dark:ring-neutral-600">
-                <div className="relative p-4 sm:p-7">{renderContent()}</div>
-              </Popover.Panel>
-            </Transition>
-          </>
-        )}
-      </Popover>
-    </div>
+    <nav className="mb-8 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <h2 className="font-bold text-lg mb-4">Table of Contents</h2>
+      <ul className="space-y-2">
+        {headings.map((heading) => (
+          <li key={heading.id} className={`ml-${(heading.level - 1) * 4}`}>
+            <a href={`#${heading.id}`} className="text-blue-600 dark:text-blue-400 hover:underline">
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 };
 
-export default TableContent;
+export default TableOfContents;

@@ -1,7 +1,7 @@
 import { gql } from "../__generated__";
 import {
   GetPostSiglePageQuery,
-  NcgeneralSettingsFieldsFragmentFragment,
+  NcgeneralSettingsFieldsFragmentFragment, 
   NcmazFcUserReactionPostActionEnum,
   NcmazFcUserReactionPostNumberUpdateEnum,
 } from "../__generated__/graphql";

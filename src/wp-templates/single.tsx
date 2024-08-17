@@ -88,6 +88,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     featuredImage,
     databaseId,
     excerpt,
+    content, // Extract content from the post object
   } = getPostDataFromPostFragment(_post);
 
   //
@@ -201,7 +202,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
               <div className="container flex flex-col my-10 lg:flex-row ">
                 <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
                   {/* Render the Table of Contents */}
-                  <TableContent content={_post?.content || ""} className="mb-6" />
+                  <TableContent content={content || ""} className="mb-6" />
                   
                   <SingleContent post={_post} />
                   <SocialsShare link={router.asPath} />
@@ -224,7 +225,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
 
             <div className="container mt-10">
               {/* Render the Table of Contents */}
-              <TableContent content={_post?.content || ""} className="mb-6" />
+              <TableContent content={content || ""} className="mb-6" />
               
               {/* SINGLE MAIN CONTENT */}
               <SingleContent post={_post} />
@@ -257,6 +258,7 @@ Component.query = gql(`
   query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int,$asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
     ...NcmazFcPostFullFields
+    content
     }
     posts(where: {isRelatedOfPostId:$post_databaseId}) {
       nodes {

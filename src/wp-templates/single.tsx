@@ -134,4 +134,141 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     isUpdateViewCount,
   ]);
 
-  const renderHeaderTy
+  const renderHeaderType = () => {
+    const pData = { ...(_post || {}) };
+
+    if (postFormats === "audio") {
+      return <SingleTypeAudio post={pData} />;
+    }
+    if (postFormats === "video") {
+      return <SingleTypeVideo post={pData} />;
+    }
+    if (postFormats === "gallery") {
+      return <SingleTypeGallery post={pData} />;
+    }
+
+    if (ncPostMetaData?.template?.[0] === "style2") {
+      return <DynamicSingleType2 post={pData} />;
+    }
+    if (ncPostMetaData?.template?.[0] === "style3") {
+      return <DynamicSingleType3 post={pData} />;
+    }
+    if (ncPostMetaData?.template?.[0] === "style4") {
+      return <DynamicSingleType4 post={pData} />;
+    }
+    if (ncPostMetaData?.template?.[0] === "style5") {
+      return <DynamicSingleType5 post={pData} />;
+    }
+    return (
+      <SingleType1
+        showRightSidebar={!!ncPostMetaData?.showRightSidebar}
+        post={pData}
+      />
+    );
+  };
+
+  return (
+    <>
+      <PageLayout
+        headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
+        footerMenuItems={props.data?.footerMenuItems?.nodes || []}
+        pageFeaturedImageUrl={featuredImage?.sourceUrl}
+        pageTitle={title}
+        pageDescription={excerpt || ""}
+        generalSettings={
+          props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
+        }
+      >
+        {ncPostMetaData?.showRightSidebar ? (
+          <div>
+            <div className={`relative`}>
+              {renderHeaderType()}
+
+              <div className="container flex flex-col my-10 lg:flex-row ">
+                <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
+                  <TableOfContents content={content || ""} />
+
+                  <SingleContent post={_post} />
+                  <SocialsShare link={router.asPath} />
+                </div>
+                <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
+                  <Sidebar categories={_top10Categories} />
+                </div>
+              </div>
+
+              <DynamicSingleRelatedPosts
+                posts={_relatedPosts}
+                postDatabaseId={databaseId}
+              />
+            </div>
+          </div>
+        ) : (
+          <div>
+            {renderHeaderType()}
+
+            <div className="container mt-10">
+              <TableOfContents content={content || ""} />
+
+              <SingleContent post={_post} />
+              <SocialsShare link={router.asPath} />
+            </div>
+
+            <DynamicSingleRelatedPosts
+              posts={_relatedPosts}
+              postDatabaseId={databaseId}
+            />
+          </div>
+        )}
+      </PageLayout>
+    </>
+  );
+};
+
+Component.variables = ({ databaseId }, ctx) => {
+  return {
+    databaseId,
+    post_databaseId: Number(databaseId || 0),
+    asPreview: ctx?.asPreview,
+    headerLocation: PRIMARY_LOCATION,
+    footerLocation: FOOTER_LOCATION,
+  };
+};
+
+Component.query = gql`
+  query GetPostSiglePage(
+    $databaseId: ID!
+    $post_databaseId: Int
+    $asPreview: Boolean = false
+    $headerLocation: MenuLocationEnum!
+    $footerLocation: MenuLocationEnum!
+  ) {
+    post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
+      ...NcmazFcPostFullFields
+    }
+    posts(where: { isRelatedOfPostId: $post_databaseId }) {
+      nodes {
+        ...PostCardFieldsNOTNcmazMEDIA
+      }
+    }
+    categories(first: 10, where: { orderby: COUNT, order: DESC }) {
+      nodes {
+        ...NcmazFcCategoryFullFieldsFragment
+      }
+    }
+    generalSettings {
+      ...NcmazFcGeneralSettingsFieldsFragment
+    }
+    primaryMenuItems: menuItems(where: { location: $headerLocation }, first: 80) {
+      nodes {
+        ...NcPrimaryMenuFieldsFragment
+      }
+    }
+    footerMenuItems: menuItems(where: { location: $footerLocation }, first: 40) {
+      nodes {
+        ...NcFooterMenuFieldsFragment
+      }
+    }
+  }
+`;
+
+export default Component;

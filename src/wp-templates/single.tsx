@@ -27,6 +27,7 @@ import SingleTypeAudio from "@/container/singles/single-audio/single-audio";
 import SingleTypeVideo from "@/container/singles/single-video/single-video";
 import SingleTypeGallery from "@/container/singles/single-gallery/single-gallery";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
+import TableOfContents from "@/components/TableOfContents"; // Import the TOC component
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -82,10 +83,11 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     featuredImage,
     databaseId,
     excerpt,
+    content, // Extracted content for TOC
   } = getPostDataFromPostFragment(_post);
 
   //
-  const {} = useGetPostsNcmazMetaByIds({
+  useGetPostsNcmazMetaByIds({
     posts: (IS_PREVIEW ? [] : [_post]) as TPostCard[],
   });
   //
@@ -194,6 +196,9 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
 
               <div className="container flex flex-col my-10 lg:flex-row ">
                 <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
+                  {/* Render the Table of Contents */}
+                  <TableOfContents content={content || ""} className="mb-6" />
+
                   <SingleContent post={_post} />
                   <SocialsShare link={router.asPath} />
                 </div>
@@ -202,7 +207,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
                 </div>
               </div>
 
-              {/* RELATED POSTS */}
               <DynamicSingleRelatedPosts
                 posts={_relatedPosts}
                 postDatabaseId={databaseId}
@@ -214,12 +218,12 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
             {renderHeaderType()}
 
             <div className="container mt-10">
-              {/* SINGLE MAIN CONTENT */}
+              <TableOfContents content={content || ""} className="mb-6" />
+
               <SingleContent post={_post} />
               <SocialsShare link={router.asPath} />
             </div>
 
-            {/* RELATED POSTS */}
             <DynamicSingleRelatedPosts
               posts={_relatedPosts}
               postDatabaseId={databaseId}
@@ -241,36 +245,42 @@ Component.variables = ({ databaseId }, ctx) => {
   };
 };
 
-Component.query = gql(`
-  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int,$asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
+Component.query = gql`
+  query GetPostSiglePage(
+    $databaseId: ID!
+    $post_databaseId: Int
+    $asPreview: Boolean = false
+    $headerLocation: MenuLocationEnum!
+    $footerLocation: MenuLocationEnum!
+  ) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-    ...NcmazFcPostFullFields
+      ...NcmazFcPostFullFields
+      content
     }
-    posts(where: {isRelatedOfPostId:$post_databaseId}) {
+    posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {
-      ...PostCardFieldsNOTNcmazMEDIA
+        ...PostCardFieldsNOTNcmazMEDIA
       }
     }
-    categories(first:10, where: { orderby: COUNT, order: DESC }) {
+    categories(first: 10, where: { orderby: COUNT, order: DESC }) {
       nodes {
         ...NcmazFcCategoryFullFieldsFragment
       }
     }
     generalSettings {
-      ...NcgeneralSettingsFieldsFragment
+      ...NcmazFcGeneralSettingsFieldsFragment
     }
-    primaryMenuItems: menuItems(where: {location:$headerLocation}, first: 80) {
+    primaryMenuItems: menuItems(where: { location: $headerLocation }, first: 80) {
       nodes {
         ...NcPrimaryMenuFieldsFragment
       }
     }
-    footerMenuItems: menuItems(where: {location:$footerLocation}, first: 40) {
+    footerMenuItems: menuItems(where: { location: $footerLocation }, first: 40) {
       nodes {
         ...NcFooterMenuFieldsFragment
       }
     }
   }
-`);
+`;
 
 export default Component;
-

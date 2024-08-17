@@ -4,6 +4,7 @@ import {
   NcgeneralSettingsFieldsFragmentFragment,
   NcmazFcUserReactionPostActionEnum,
   NcmazFcUserReactionPostNumberUpdateEnum,
+  NcmazFcPostFullFieldsFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -27,7 +28,7 @@ import SingleTypeAudio from "@/container/singles/single-audio/single-audio";
 import SingleTypeVideo from "@/container/singles/single-video/single-video";
 import SingleTypeGallery from "@/container/singles/single-gallery/single-gallery";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
-import TableOfContents from "@/components/TableOfContents"; // Import the TOC component
+import TableOfContents from "@/components/TableOfContents";
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -69,7 +70,8 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     };
   }, []);
 
-  const _post = props.data?.post || {};
+  // Type-casting `_post` as `NcmazFcPostFullFieldsFragment`
+  const _post = props.data?.post as NcmazFcPostFullFieldsFragment;
   const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
   const _top10Categories =
     (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
@@ -272,7 +274,10 @@ Component.query = gql`
       }
     }
   }
+  ${NcmazFcPostFullFieldsFragment}
+  ${PostCardFieldsNOTNcmazMEDIA}
+  ${NcmazFcCategoryFullFieldsFragment}
+  ${NcmazFcGeneralSettingsFieldsFragment}
 `;
 
 export default Component;
-

@@ -27,7 +27,12 @@ import SingleTypeAudio from "@/container/singles/single-audio/single-audio";
 import SingleTypeVideo from "@/container/singles/single-video/single-video";
 import SingleTypeGallery from "@/container/singles/single-gallery/single-gallery";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
-import TableContent from "@/container/singles/TableContentAnchor"; // Import the TOC component
+
+// Dynamically import TableContent component
+const TableContent = dynamic(
+  () => import("@/container/singles/TableContentAnchor"),
+  { ssr: false }
+);
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -83,7 +88,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     featuredImage,
     databaseId,
     excerpt,
-    content, // Ensure content is extracted here
   } = getPostDataFromPostFragment(_post);
 
   //
@@ -196,9 +200,9 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
 
               <div className="container flex flex-col my-10 lg:flex-row ">
                 <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
-                  {/* Render Table of Contents */}
-                  <TableContent content={content} className="mb-6" />
-
+                  {/* Render the Table of Contents */}
+                  <TableContent content={_post?.content || ""} className="mb-6" />
+                  
                   <SingleContent post={_post} />
                   <SocialsShare link={router.asPath} />
                 </div>
@@ -219,9 +223,9 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
             {renderHeaderType()}
 
             <div className="container mt-10">
-              {/* Render Table of Contents */}
-              <TableContent content={content} className="mb-6" />
-
+              {/* Render the Table of Contents */}
+              <TableContent content={_post?.content || ""} className="mb-6" />
+              
               {/* SINGLE MAIN CONTENT */}
               <SingleContent post={_post} />
               <SocialsShare link={router.asPath} />

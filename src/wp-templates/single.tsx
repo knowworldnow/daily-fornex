@@ -1,4 +1,4 @@
-import { gql } from "../__generated__";
+import { gql } from "@apollo/client";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
@@ -192,3 +192,4 @@ Component.query = gql`
 `;
 
 export default Component;
+

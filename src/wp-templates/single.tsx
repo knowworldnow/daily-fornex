@@ -80,7 +80,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     featuredImage,
     databaseId,
     excerpt,
-    content, // Extracted content for TOC
+    content,
   } = getPostDataFromPostFragment(_post);
 
   useGetPostsNcmazMetaByIds({

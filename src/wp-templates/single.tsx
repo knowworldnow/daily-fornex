@@ -70,7 +70,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     };
   }, []);
 
-  // Type-casting `_post` as `NcmazFcPostFullFieldsFragment`
   const _post = props.data?.post as NcmazFcPostFullFieldsFragment;
   const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
   const _top10Categories =
@@ -189,8 +188,8 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
 
               <div className="container flex flex-col my-10 lg:flex-row ">
                 <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
-                  {/* Render the Table of Contents */}
-                  <TableOfContents content={content || ""} />
+                  {/* Table of Contents */}
+                  <TableOfContents content={content || ""} className="mb-6" />
 
                   <SingleContent post={_post} />
                   <SocialsShare link={router.asPath} />
@@ -211,7 +210,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
             {renderHeaderType()}
 
             <div className="container mt-10">
-              <TableOfContents content={content || ""} />
+              <TableOfContents content={content || ""} className="mb-6" />
 
               <SingleContent post={_post} />
               <SocialsShare link={router.asPath} />
@@ -238,7 +237,7 @@ Component.variables = ({ databaseId }, ctx) => {
   };
 };
 
-Component.query = gql`
+Component.query = gql(`
   query GetPostSiglePage(
     $databaseId: ID!
     $post_databaseId: Int
@@ -248,7 +247,6 @@ Component.query = gql`
   ) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
       ...NcmazFcPostFullFields
-      content
     }
     posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {
@@ -278,6 +276,6 @@ Component.query = gql`
   ${PostCardFieldsNOTNcmazMEDIA}
   ${NcmazFcCategoryFullFieldsFragment}
   ${NcmazFcGeneralSettingsFieldsFragment}
-`;
+`);
 
 export default Component;

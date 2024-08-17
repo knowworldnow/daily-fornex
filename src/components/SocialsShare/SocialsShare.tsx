@@ -1,7 +1,7 @@
-import { FC } from 'react';
 import Image from 'next/image';
+import { FC } from 'react';
 
-export interface SocialsShareProps {
+interface SocialsShareProps {
   link: string;
 }
 
@@ -9,48 +9,39 @@ const SocialsShare: FC<SocialsShareProps> = ({ link }) => {
   const socials = [
     {
       name: 'Facebook',
-      href: `https://www.facebook.com/sharer/sharer.php?u=${link}`,
-      icon: '/images/socials/facebook.svg', // Corrected path for Facebook
+      url: `https://facebook.com/sharer/sharer.php?u=${link}`,
+      icon: '/images/socials/facebook.svg',
     },
     {
       name: 'Twitter',
-      href: `https://twitter.com/intent/tweet?url=${link}`,
-      icon: '/images/socials/x-twitter.svg', // Corrected path for Twitter
+      url: `https://twitter.com/intent/tweet?url=${link}`,
+      icon: '/images/socials/x-twitter.svg',
     },
     {
       name: 'Instagram',
-      href: `https://instagram.com/`, // Instagram doesn’t allow direct link sharing
-      icon: '/images/socials/instagram.svg', // Corrected path for Instagram
+      url: `https://instagram.com`,
+      icon: '/images/socials/instagram.svg',
     },
     {
       name: 'Pinterest',
-      href: `https://pinterest.com/pin/create/button/?url=${link}`,
-      icon: '/images/socials/pinterest.svg', // Corrected path for Pinterest
+      url: `https://pinterest.com/pin/create/button/?url=${link}`,
+      icon: '/images/socials/pinterest.svg',
     },
   ];
 
   return (
-    <div className="flex items-center space-x-3">
-      <span className="text-lg font-medium text-neutral-700 dark:text-neutral-300">
-        Feel free to share:
-      </span>
-      <div className="flex space-x-4">
-        {socials.map((item, index) => (
+    <div className="nc-SocialsShare flex items-center gap-4">
+      <span className="text-neutral-900 dark:text-neutral-100">Feel free to share:</span>
+      <div className="flex gap-3">
+        {socials.map((social, index) => (
           <a
             key={index}
-            href={item.href}
+            href={social.url}
             target="_blank"
             rel="noopener noreferrer"
-            title={item.name}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+            className="flex items-center justify-center h-12 w-12 rounded-full shadow-lg shadow-neutral-800/5 ring-1 ring-neutral-900/5 dark:border dark:border-neutral-700/50 dark:bg-neutral-400 dark:ring-0"
           >
-            <Image
-              src={item.icon}
-              alt={item.name}
-              width={24}
-              height={24}
-              className="w-6 h-6"
-            />
+            <Image src={social.icon} alt={social.name} width={24} height={24} />
           </a>
         ))}
       </div>

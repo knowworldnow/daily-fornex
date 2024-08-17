@@ -197,7 +197,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
               <div className="container flex flex-col my-10 lg:flex-row ">
                 <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
                   {/* Render the Table of Contents */}
-                  <TableOfContents content={content || ""} className="mb-6" />
+                  <TableOfContents content={content || ""} />
 
                   <SingleContent post={_post} />
                   <SocialsShare link={router.asPath} />
@@ -218,7 +218,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
             {renderHeaderType()}
 
             <div className="container mt-10">
-              <TableOfContents content={content || ""} className="mb-6" />
+              <TableOfContents content={content || ""} />
 
               <SingleContent post={_post} />
               <SocialsShare link={router.asPath} />

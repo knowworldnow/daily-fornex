@@ -1,38 +1,24 @@
-import React from 'react';
-
-// Helper function to extract headings from the content
-const extractHeadings = (content: string) => {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(content, 'text/html');
-  const headingElements = Array.from(
-    doc.querySelectorAll('h1, h2, h3, h4, h5, h6')
-  );
-
-  return headingElements.map((element) => ({
-    id: element.id,
-    text: element.textContent || '',
-    level: parseInt(element.tagName[1]),
-  }));
-};
+// src/components/TableOfContents.tsx
+import React from "react";
 
 interface TableOfContentsProps {
   content: string;
 }
 
 const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => {
-  const headings = extractHeadings(content);
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(content, "text/html");
 
-  if (headings.length === 0) {
-    return null; // If no headings, don't show TOC
-  }
+  // Extract headings (h2, h3, etc.)
+  const headings = Array.from(doc.querySelectorAll("h2, h3"));
 
   return (
-    <nav aria-label="Table of contents">
-      <h2>On this page</h2>
+    <nav className="toc">
+      <h2>Table of Contents</h2>
       <ul>
-        {headings.map((heading) => (
-          <li key={heading.id} style={{ marginLeft: `${heading.level - 1}rem` }}>
-            <a href={`#${heading.id}`}>{heading.text}</a>
+        {headings.map((heading, index) => (
+          <li key={index}>
+            <a href={`#${heading.id}`}>{heading.textContent}</a>
           </li>
         ))}
       </ul>

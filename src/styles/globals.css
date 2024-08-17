@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.nc-SocialsShare {
+  display: flex;
+  align-items: center;
+}
+
+.nc-SocialsShare a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.nc-SocialsShare a:hover {
+  background-color: #e5e7eb;
+}
+

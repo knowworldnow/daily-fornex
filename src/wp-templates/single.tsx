@@ -276,3 +276,4 @@ Component.query = gql(`
 `);
 
 export default Component;
+

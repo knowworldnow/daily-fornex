@@ -4,7 +4,6 @@ import {
   NcgeneralSettingsFieldsFragmentFragment,
   NcmazFcUserReactionPostActionEnum,
   NcmazFcUserReactionPostNumberUpdateEnum,
-  NcmazFcPostFullFieldsFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -15,7 +14,6 @@ import PageLayout from "@/container/PageLayout";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT } from "@/fragments/mutations";
 import { useMutation } from "@apollo/client";
 import { IS_DEV } from "@/contains/site-settings";
 import { useSelector } from "react-redux";
@@ -70,7 +68,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     };
   }, []);
 
-  const _post = props.data?.post as NcmazFcPostFullFieldsFragment;
+  const _post = props.data?.post || {};
   const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
   const _top10Categories =
     (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
@@ -82,7 +80,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     featuredImage,
     databaseId,
     excerpt,
-    content,
+    content, // Extracted content for TOC
   } = getPostDataFromPostFragment(_post);
 
   useGetPostsNcmazMetaByIds({
@@ -188,8 +186,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
 
               <div className="container flex flex-col my-10 lg:flex-row ">
                 <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
-                  {/* Table of Contents */}
-                  <TableOfContents content={content || ""} className="mb-6" />
+                  <TableOfContents content={content || ""} />
 
                   <SingleContent post={_post} />
                   <SocialsShare link={router.asPath} />
@@ -210,7 +207,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
             {renderHeaderType()}
 
             <div className="container mt-10">
-              <TableOfContents content={content || ""} className="mb-6" />
+              <TableOfContents content={content || ""} />
 
               <SingleContent post={_post} />
               <SocialsShare link={router.asPath} />
@@ -237,7 +234,7 @@ Component.variables = ({ databaseId }, ctx) => {
   };
 };
 
-Component.query = gql(`
+Component.query = gql`
   query GetPostSiglePage(
     $databaseId: ID!
     $post_databaseId: Int
@@ -272,10 +269,6 @@ Component.query = gql(`
       }
     }
   }
-  ${NcmazFcPostFullFieldsFragment}
-  ${PostCardFieldsNOTNcmazMEDIA}
-  ${NcmazFcCategoryFullFieldsFragment}
-  ${NcmazFcGeneralSettingsFieldsFragment}
-`);
+`;
 
 export default Component;

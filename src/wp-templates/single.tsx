@@ -26,7 +26,7 @@ import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
 import SingleTypeAudio from "@/container/singles/single-audio/single-audio";
 import SingleTypeVideo from "@/container/singles/single-video/single-video";
 import SingleTypeGallery from "@/container/singles/single-gallery/single-gallery";
-import SocialsShare from "@/components/SocialsShare"; // Import SocialsShare
+import SocialsShare from "@/components/SocialsShare/SocialsShare"; // Import SocialsShare
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")

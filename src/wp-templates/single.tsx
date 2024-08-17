@@ -1,4 +1,4 @@
-import { gql } from "../__generated__";
+import { gql } from "@apollo/client";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
@@ -46,7 +46,6 @@ const DynamicSingleType5 = dynamic(
 );
 
 const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
-  //  LOADING ----------
   if (props.loading) {
     return <>Loading...</>;
   }
@@ -54,7 +53,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   const router = useRouter();
   const IS_PREVIEW = router.pathname === "/preview";
 
-  // START ----------
   const { isReady, isAuthenticated } = useSelector(
     (state: RootState) => state.viewer.authorizedUser
   );
@@ -83,16 +81,13 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     featuredImage,
     databaseId,
     excerpt,
-    content, // Extracted content for TOC
+    content,
   } = getPostDataFromPostFragment(_post);
 
-  //
   useGetPostsNcmazMetaByIds({
-    posts: (IS_PREVIEW ? [] : [_post]) as TPostCard[],
+    posts: IS_PREVIEW ? [] : [_post],
   });
-  //
 
-  // Query update post view count
   const [handleUpdateReactionCount, { reset }] = useMutation(
     NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT,
     {
@@ -103,13 +98,11 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     }
   );
 
-  // update view count
   useEffect(() => {
     if (!isReady || IS_PREVIEW || !isUpdateViewCount) {
       return;
     }
 
-    // user chua dang nhap, va update view count voi user la null
     if (isAuthenticated === false) {
       handleUpdateReactionCount({
         variables: {
@@ -121,12 +114,10 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
       return;
     }
 
-    // user da dang nhap, va luc nay viewer dang fetch.
     if (!viewer?.databaseId) {
       return;
     }
 
-    // khi viewer fetch xong, luc nay viewer da co databaseId, va se update view count voi user la viewer
     handleUpdateReactionCount({
       variables: {
         post_id: databaseId,
@@ -284,3 +275,4 @@ Component.query = gql`
 `;
 
 export default Component;
+

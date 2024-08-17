@@ -32,15 +32,3 @@
   transition: filter 0.3s ease; /* Smooth transition */
 }
 
-/* Make the icons white in dark mode */
-.dark .nc-SocialsShare img {
-  filter: invert(1);
-}
-
-.dark .nc-SocialsShare a {
-  background-color: #333333; /* Dark background for dark mode */
-}
-
-.dark .nc-SocialsShare a:hover {
-  background-color: #444444; /* Slight change on hover in dark mode */
-}

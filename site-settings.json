@@ -36,17 +36,17 @@
 		"site_description": "Your Daily Dose of Updated Info",
 		"site_keywords": "Daily Fornex",
 		"site_authors": [
-		{
-			"name": "Shoumya Chowdhury",
-			"role": "Web Developer & Blogger",
-			"email": "samchy25@gmail.com"
-		},
-		{
-			"name": "Anmita Das",
-			"role": "EEE Engineer & Blogger",
-			"email": "anmitabristi0182@gmail.com"
-		}
-	],
+			{
+				"name": "Shoumya Chowdhury",
+				"role": "Web Developer & Blogger",
+				"email": "samchy25@gmail.com"
+			},
+			{
+				"name": "Anmita Das",
+				"role": "EEE Engineer & Blogger",
+				"email": "anmitabristi0182@gmail.com"
+			}
+		],
 		"site_email": "admin@dailyfornex.com",
 		"site_phone": "Your Phone",
 		"site_address": "Your Address",
@@ -72,7 +72,6 @@
 			"icon": "/images/socials/x-twitter.svg",
 			"description": "Follow us on Twitter"
 		},
-
 		{
 			"name": "instagram",
 			"url": "https://www.instagram.com/dailyfornex",
@@ -80,7 +79,7 @@
 			"description": "Follow us on Instagram"
 		},
 		{
-			"name": "Pinterest",
+			"name": "pinterest",
 			"url": "https://www.pinterest.com/yourtiktokpage",
 			"icon": "/images/socials/pinterest.svg",
 			"description": "Follow us on Pinterest"
@@ -129,7 +128,7 @@
 		"show_top_categories": true
 	},
 	"post_card": {
-		"show_view_cout": false,
+		"show_view_count": false,
 		"show_comment_count": true
 	},
 	"submissions-settings": {
@@ -218,7 +217,7 @@
 		}
 	},
 	"mobile_nav_sidebar": {
-		"description": "Discover the most outstanding articles on all topics of life. Write your stories and share them with the community. "
+		"description": "Discover the most outstanding articles on all topics of life. Write your stories and share them with the community."
 	},
 	"help_page": {
 		"uri": "/helps",
@@ -273,7 +272,6 @@
 		"uri": "/privacy-policy",
 		"title": "Privacy Policy"
 	},
-
 	"empty_state": {
 		"title": "No results found.",
 		"description": "We couldn’t find any results. Try for something else."

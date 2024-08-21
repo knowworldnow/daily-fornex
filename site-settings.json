@@ -32,18 +32,29 @@
 		"sub_title": "Let's explore the most popular categories"
 	},
 	"site_info": {
-		"site_title": "Ncmaz Nextjs Blog",
-		"site_description": "Ncmaz Nextjs Blog headless WordPress",
-		"site_keywords": "Ncmaz Nextjs Blog",
-		"site_author": "ChisNghiax",
-		"site_email": "Your Email",
+		"site_title": "Daily Fornex",
+		"site_description": "Your Daily Dose of Updated Info",
+		"site_keywords": "Daily Fornex",
+		"site_authors": [
+		{
+			"name": "Shoumya Chowdhury",
+			"role": "Web Developer & Blogger",
+			"email": "samchy25@gmail.com"
+		},
+		{
+			"name": "Anmita Das",
+			"role": "EEE Engineer & Blogger",
+			"email": "anmitabristi0182@gmail.com"
+		}
+	],
+		"site_email": "admin@dailyfornex.com",
 		"site_phone": "Your Phone",
 		"site_address": "Your Address",
 		"site_city": "Your City",
 		"site_state": "Your State",
 		"site_zip": "Your Zip",
 		"site_country": "Your Country",
-		"site_url": "https://www.yoursite.com",
+		"site_url": "https://dailyfornex.com",
 		"site_logo": "/logo.png",
 		"site_logo_light": "/logo-light.png",
 		"site_favicon": "/favicon.png"
@@ -51,28 +62,28 @@
 	"site_socials": [
 		{
 			"name": "facebook",
-			"url": "https://www.facebook.com/yourfacebookpage",
+			"url": "https://www.facebook.com/dailyfornex",
 			"icon": "/images/socials/facebook.svg",
 			"description": "Follow us on Facebook"
 		},
 		{
 			"name": "twitter",
-			"url": "https://twitter.com/yourtwitterpage",
+			"url": "https://twitter.com/dailyfornex",
 			"icon": "/images/socials/x-twitter.svg",
 			"description": "Follow us on Twitter"
 		},
 
 		{
-			"name": "github",
-			"url": "https://www.github.com/yourmediumpage",
-			"icon": "/images/socials/github.svg",
-			"description": "Follow us on Github"
+			"name": "instagram",
+			"url": "https://www.instagram.com/dailyfornex",
+			"icon": "/images/socials/instagram.svg",
+			"description": "Follow us on Instagram"
 		},
 		{
-			"name": "tiktok",
-			"url": "https://www.tiktok.com/yourtiktokpage",
-			"icon": "/images/socials/tiktok.svg",
-			"description": "Follow us on Tiktok"
+			"name": "Pinterest",
+			"url": "https://www.pinterest.com/yourtiktokpage",
+			"icon": "/images/socials/pinterest.svg",
+			"description": "Follow us on Pinterest"
 		}
 	],
 	"site_header": {
@@ -81,10 +92,10 @@
 		}
 	},
 	"site_footer": {
-		"all_rights_reserved_text": "© 2023 ChisNghiax Company, Inc. All rights reserved."
+		"all_rights_reserved_text": "© 2024 Daily Fornex, Inc. All rights reserved."
 	},
 	"single_page": {
-		"show_view_cout": true,
+		"show_view_count": true,
 		"show_comment_count": true
 	},
 	"search_page": {

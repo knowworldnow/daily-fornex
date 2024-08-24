@@ -256,11 +256,12 @@ Component.variables = ({ databaseId }, ctx) => {
 Component.query = gql(`
   query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int,$asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-    ...NcmazFcPostFullFields
+      content
+      ...NcmazFcPostFullFields
     }
     posts(where: {isRelatedOfPostId:$post_databaseId}) {
       nodes {
-      ...PostCardFieldsNOTNcmazMEDIA
+        ...PostCardFieldsNOTNcmazMEDIA
       }
     }
     categories(first:10, where: { orderby: COUNT, order: DESC }) {

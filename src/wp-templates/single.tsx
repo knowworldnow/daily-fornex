@@ -6,7 +6,7 @@ import {
   NcmazFcUserReactionPostNumberUpdateEnum,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
-import SingleContent from "@/container/singles/SingleContent"; 
+import SingleContent from "@/container/singles/SingleContent";
 import SingleType1 from "@/container/singles/single/single";
 import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment";
 import { Sidebar } from "@/container/singles/Sidebar";
@@ -27,7 +27,6 @@ import SingleTypeAudio from "@/container/singles/single-audio/single-audio";
 import SingleTypeVideo from "@/container/singles/single-video/single-video";
 import SingleTypeGallery from "@/container/singles/single-gallery/single-gallery";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
-import TableContent from "@/container/singles/TableContentAnchor"; // Importing the TOC component
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -46,6 +45,7 @@ const DynamicSingleType5 = dynamic(
 );
 
 const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
+  //  LOADING ----------
   if (props.loading) {
     return <>Loading...</>;
   }
@@ -53,6 +53,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   const router = useRouter();
   const IS_PREVIEW = router.pathname === "/preview";
 
+  // START ----------
   const { isReady, isAuthenticated } = useSelector(
     (state: RootState) => state.viewer.authorizedUser
   );
@@ -83,10 +84,13 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     excerpt,
   } = getPostDataFromPostFragment(_post);
 
+  //
   const {} = useGetPostsNcmazMetaByIds({
     posts: (IS_PREVIEW ? [] : [_post]) as TPostCard[],
   });
+  //
 
+  // Query update post view count
   const [handleUpdateReactionCount, { reset }] = useMutation(
     NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT,
     {
@@ -97,11 +101,13 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     }
   );
 
+  // update view count
   useEffect(() => {
     if (!isReady || IS_PREVIEW || !isUpdateViewCount) {
       return;
     }
 
+    // user chua dang nhap, va update view count voi user la null
     if (isAuthenticated === false) {
       handleUpdateReactionCount({
         variables: {
@@ -113,10 +119,12 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
       return;
     }
 
+    // user da dang nhap, va luc nay viewer dang fetch.
     if (!viewer?.databaseId) {
       return;
     }
 
+    // khi viewer fetch xong, luc nay viewer da co databaseId, va se update view count voi user la viewer
     handleUpdateReactionCount({
       variables: {
         post_id: databaseId,
@@ -167,11 +175,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     );
   };
 
-  // Split the content at the first <h2> tag
-  const splitContentAtFirstH2 = (_post.content || "").split(/<h2.*?>/);
-  const beforeFirstH2 = splitContentAtFirstH2[0];
-  const afterFirstH2 = splitContentAtFirstH2.slice(1).join("<h2>");
-
   return (
     <>
       <PageLayout
@@ -191,15 +194,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
 
               <div className="container flex flex-col my-10 lg:flex-row ">
                 <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
-                  {/* Render content before the first <h2> */}
-                  <div dangerouslySetInnerHTML={{ __html: beforeFirstH2 }} />
-
-                  {/* Automatically generated TOC */}
-                  <TableContent content={_post.content} />
-
-                  {/* Render the first <h2> and the remaining content */}
-                  <div dangerouslySetInnerHTML={{ __html: `<h2${afterFirstH2}` }} />
-
+                  <SingleContent post={_post} />
                   <SocialsShare link={router.asPath} />
                 </div>
                 <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
@@ -219,15 +214,8 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
             {renderHeaderType()}
 
             <div className="container mt-10">
-              {/* Render content before the first <h2> */}
-              <div dangerouslySetInnerHTML={{ __html: beforeFirstH2 }} />
-
-              {/* Automatically generated TOC */}
-              <TableContent content={_post.content} />
-
-              {/* Render the first <h2> and the remaining content */}
-              <div dangerouslySetInnerHTML={{ __html: `<h2${afterFirstH2}` }} />
-
+              {/* SINGLE MAIN CONTENT */}
+              <SingleContent post={_post} />
               <SocialsShare link={router.asPath} />
             </div>
 
@@ -256,12 +244,11 @@ Component.variables = ({ databaseId }, ctx) => {
 Component.query = gql(`
   query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int,$asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-      content
-      ...NcmazFcPostFullFields
+    ...NcmazFcPostFullFields
     }
     posts(where: {isRelatedOfPostId:$post_databaseId}) {
       nodes {
-        ...PostCardFieldsNOTNcmazMEDIA
+      ...PostCardFieldsNOTNcmazMEDIA
       }
     }
     categories(first:10, where: { orderby: COUNT, order: DESC }) {

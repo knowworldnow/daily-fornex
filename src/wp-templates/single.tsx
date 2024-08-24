@@ -6,7 +6,7 @@ import {
   NcmazFcUserReactionPostNumberUpdateEnum,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
-import SingleContent from "@/container/singles/SingleContent";
+import SingleContent from "@/container/singles/SingleContent"; 
 import SingleType1 from "@/container/singles/single/single";
 import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment";
 import { Sidebar } from "@/container/singles/Sidebar";

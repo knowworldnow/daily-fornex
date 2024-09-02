@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { FC } from 'react';
 
 interface SocialsShareProps {
@@ -41,7 +40,7 @@ const SocialsShare: FC<SocialsShareProps> = ({ link }) => {
             rel="noopener noreferrer"
             className="flex items-center justify-center h-12 w-12 rounded-full shadow-lg shadow-neutral-800/5 ring-1 ring-neutral-900/5 dark:border dark:border-neutral-700/50 dark:bg-neutral-400 dark:ring-0"
           >
-            <Image src={social.icon} alt={social.name} width={24} height={24} />
+            <img src={social.icon.replace(/\/$/, '')} alt={social.name} width={24} height={24} />
           </a>
         ))}
       </div>

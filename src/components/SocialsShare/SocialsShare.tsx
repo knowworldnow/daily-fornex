@@ -9,22 +9,22 @@ const SocialsShare: FC<SocialsShareProps> = ({ link }) => {
   const socials = [
     {
       name: 'Facebook',
-      url: https://facebook.com/sharer/sharer.php?u=${link},
+      url: `https://facebook.com/sharer/sharer.php?u=${link}`,
       icon: '/images/socials/facebook.svg',
     },
     {
       name: 'Twitter',
-      url: https://twitter.com/intent/tweet?url=${link},
+      url: `https://twitter.com/intent/tweet?url=${link}`,
       icon: '/images/socials/x-twitter.svg',
     },
     {
       name: 'Instagram',
-      url: https://instagram.com,
+      url: `https://instagram.com`,
       icon: '/images/socials/instagram.svg',
     },
     {
       name: 'Pinterest',
-      url: https://pinterest.com/pin/create/button/?url=${link},
+      url: `https://pinterest.com/pin/create/button/?url=${link}`,
       icon: '/images/socials/pinterest.svg',
     },
   ];

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { FC } from 'react';
 
 interface SocialsShareProps {
@@ -8,23 +9,23 @@ const SocialsShare: FC<SocialsShareProps> = ({ link }) => {
   const socials = [
     {
       name: 'Facebook',
-      url: `https://facebook.com/sharer/sharer.php?u=${link}`,
-      icon: '/images/socials/facebook.svg',
+      url: https://facebook.com/sharer/sharer.php?u=${link},
+      icon: '/images/socials/facebook.svg/',
     },
     {
       name: 'Twitter',
-      url: `https://twitter.com/intent/tweet?url=${link}`,
-      icon: '/images/socials/x-twitter.svg',
+      url: https://twitter.com/intent/tweet?url=${link},
+      icon: '/images/socials/x-twitter.svg/',
     },
     {
       name: 'Instagram',
-      url: `https://instagram.com`,
-      icon: '/images/socials/instagram.svg',
+      url: https://instagram.com,
+      icon: '/images/socials/instagram.svg/',
     },
     {
       name: 'Pinterest',
-      url: `https://pinterest.com/pin/create/button/?url=${link}`,
-      icon: '/images/socials/pinterest.svg',
+      url: https://pinterest.com/pin/create/button/?url=${link},
+      icon: '/images/socials/pinterest.svg/',
     },
   ];
 
@@ -40,7 +41,7 @@ const SocialsShare: FC<SocialsShareProps> = ({ link }) => {
             rel="noopener noreferrer"
             className="flex items-center justify-center h-12 w-12 rounded-full shadow-lg shadow-neutral-800/5 ring-1 ring-neutral-900/5 dark:border dark:border-neutral-700/50 dark:bg-neutral-400 dark:ring-0"
           >
-            <img src={social.icon.replace(/\/$/, '')} alt={social.name} width={24} height={24} />
+            <Image src={social.icon} alt={social.name} width={24} height={24} />
           </a>
         ))}
       </div>

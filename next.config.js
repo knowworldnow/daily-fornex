@@ -5,7 +5,7 @@ const { createSecureHeaders } = require('next-secure-headers')
  * @type {import('next').NextConfig}
  **/
 module.exports = withFaust({
-	trailingSlash: true, // Ensures all URLs have a trailing slash
+	trailingSlash: true,
 	reactStrictMode: true,
 	experimental: {
 		typedRoutes: false,
@@ -100,15 +100,6 @@ module.exports = withFaust({
 						{ uri: process.env.NEXT_PUBLIC_WORDPRESS_URL },
 					],
 				}),
-			},
-		]
-	},
-	async redirects() {
-		return [
-			{
-				source: '/:path(.*[^/])', // Matches paths that do not end in a slash
-				destination: '/:path*/',
-				permanent: true, // Ensures a 301 redirect to URLs with trailing slash
 			},
 		]
 	},

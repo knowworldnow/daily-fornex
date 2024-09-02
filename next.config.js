@@ -106,7 +106,7 @@ module.exports = withFaust({
 	async redirects() {
 		return [
 			{
-				source: '/:path*',
+				source: '/:path(.*[^/])', // Matches paths that do not end in a slash
 				destination: '/:path*/',
 				permanent: true, // Ensures a 301 redirect to URLs with trailing slash
 			},

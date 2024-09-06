@@ -1,18 +1,16 @@
 // src/pages/about.tsx
 
 import React from 'react';
-import PageLayout from '@/components/PageLayout'; // Assuming you have a layout component
-import SEO from '@/components/SEO/SEO'; // Import the SEO component
+import PageLayout from '@/container/PageLayout';
 import Heading from '@/components/Heading/Heading';
 
 const AboutPage = () => {
   return (
-    <PageLayout>
-      <SEO
-        title="About Us - Daily Fornex"
-        description="Learn more about Daily Fornex, our mission, and our team. We are dedicated to providing you with the latest news and information on a variety of topics."
-        url="https://dailyfornex.com/about/"
-      />
+    <PageLayout
+      pageTitle="About Us - Daily Fornex"
+      pageDescription="Learn more about Daily Fornex, our mission, and our team. We are dedicated to providing you with the latest news and information on a variety of topics."
+      pageFeaturedImageUrl="https://your-image-url.com/about-featured-image.jpg" // Replace with the actual image URL
+    >
       <div className="container mx-auto py-12">
         <Heading>About Us</Heading>
         <p className="mb-4">

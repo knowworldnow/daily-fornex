@@ -7,14 +7,22 @@ import React from "react";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import AuthorPostsChild from "@/container/author/AuthorPostsChild";
 import Page404Content from "@/container/404Content";
+import SEO from "@/components/SEO/SEO"; // Import the SEO component
 
 const Page: FaustPage<GetAuthorWithPostsQuery> = (props) => {
-  if (!props.data?.user) {
+  const author = props.data?.user;
+
+  if (!author) {
     return <Page404Content />;
   }
 
   return (
     <>
+      <SEO 
+        title={`${author.name} - Author at Daily Fornex`} 
+        description={`Explore articles written by ${author.name} on Daily Fornex.`}
+        url={`https://dailyfornex.com/author/${author.slug}/`}
+      />
       {/* @ts-ignore */}
       <AuthorPostsChild {...(props || [])} />
     </>
@@ -27,6 +35,7 @@ export async function getStaticPaths() {
     fallback: "blocking",
   };
 }
+
 export function getStaticProps(ctx: GetStaticPropsContext) {
   return getNextStaticProps(ctx, {
     Page,
@@ -63,7 +72,7 @@ Page.query = gql(`
       }
     }
     # common query for all page 
-   generalSettings {
+    generalSettings {
       ...NcgeneralSettingsFieldsFragment
     }
     primaryMenuItems: menuItems(where: { location:  $headerLocation  }, first: 80) {

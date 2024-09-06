@@ -20,7 +20,7 @@ import TabFilters from '@/components/TabFilters';
 import getTrans from '@/utils/getTrans';
 import { FireIcon } from '@/components/Icons/Icons';
 import ArchiveFilterListBox from '@/components/ArchiveFilterListBox/ArchiveFilterListBox';
-import SEO from '@/components/SEO'; // Import the SEO component
+import SEO from '../../components/SEO/SEO';
 
 const T = getTrans();
 const GET_POSTS_FIRST_COMMON = 24;

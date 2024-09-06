@@ -55,8 +55,9 @@ Page.variables = ({ params }) => {
 Page.query = gql(`
   query GetAuthorWithPosts($id: ID!, $first: Int, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     user(id: $id, idType: SLUG) {
-      ...NcmazFcUserFullFields
-      posts(first:  $first, where: {orderby: {field: DATE, order: DESC}}) {
+      name
+      slug
+      posts(first: $first, where: {orderby: {field: DATE, order: DESC}}) {
         nodes {
           ...NcmazFcPostCardFields
         }

@@ -1,7 +1,7 @@
 import { GetStaticPropsContext } from "next";
 import { FaustPage, getNextStaticProps } from "@faustwp/core";
-import { gql } from "@/__generated__";
-import { GetAuthorWithPostsQuery, User } from "@/__generated__/graphql"; // Import User type
+import { gql, DocumentNode } from "@apollo/client"; // Ensure correct import
+import { GetAuthorWithPostsQuery, User } from "@/__generated__/graphql";
 import { GET_POSTS_FIRST_COMMON } from "@/contains/contants";
 import React from "react";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
@@ -10,7 +10,7 @@ import Page404Content from "@/container/404Content";
 import SEO from "@/components/SEO/SEO"; // Import the SEO component
 
 const Page: FaustPage<GetAuthorWithPostsQuery> = (props) => {
-  const author = props.data?.user as User | undefined; // Explicitly cast author to User type
+  const author = props.data?.user as User | undefined;
 
   if (!author) {
     return <Page404Content />;
@@ -59,7 +59,9 @@ Page.query = gql(`
       slug
       posts(first: $first, where: {orderby: {field: DATE, order: DESC}}) {
         nodes {
-          ...NcmazFcPostCardFields
+          title
+          excerpt
+          slug
         }
         pageInfo {
           endCursor
@@ -72,7 +74,6 @@ Page.query = gql(`
         ...NcmazFcCategoryFullFieldsFragment
       }
     }
-    # common query for all page 
     generalSettings {
       ...NcgeneralSettingsFieldsFragment
     }
@@ -86,8 +87,7 @@ Page.query = gql(`
         ...NcFooterMenuFieldsFragment
       }
     }
-    # end common query for all page
   }
-`);
+`) as DocumentNode; // Ensure type is correctly set
 
 export default Page;

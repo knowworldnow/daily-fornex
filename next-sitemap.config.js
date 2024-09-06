@@ -5,10 +5,16 @@ const SITE_URL = process.env.NEXT_PUBLIC_URL;
 module.exports = {
   siteUrl: SITE_URL,
   generateRobotsTxt: true,
-  exclude: ['/wordpress-sitemap.xml'],
+  exclude: ['/wordpress-sitemap.xml'], // Exclude specific paths from the sitemap
   robotsTxtOptions: {
+    policies: [
+      { userAgent: '*', allow: '/' }, // Allow all paths by default
+      { userAgent: '*', disallow: '/category/' }, // Disallow indexing of categories
+      { userAgent: '*', disallow: '/tag/' }, // Disallow indexing of tags
+    ],
     additionalSitemaps: [
-      `${SITE_URL}/wordpress-sitemap.xml`, // This adds the WordPress sitemap to the robots.txt
+      `${SITE_URL}/sitemap.xml`, // Primary sitemap
+      `${SITE_URL}/wordpress-sitemap.xml`, // WordPress sitemap
     ],
   },
   transform: (config, path) => {

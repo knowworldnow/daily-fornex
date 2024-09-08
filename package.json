@@ -11,7 +11,8 @@
     "codegen": "graphql-codegen",
     "watch-codegen": "graphql-codegen -w",
     "wc": "graphql-codegen -w",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "generate:rss": "ts-node scripts/generate-rss.ts"
   },
   "prettier": "@epic-web/config/prettier",
   "dependencies": {
@@ -65,6 +66,7 @@
     "react-swipeable": "^7.0.1",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
+    "rss": "^1.2.2",
     "sass": "^1.69.5",
     "tailwindcss": "^3.4.3"
   },
@@ -79,6 +81,7 @@
     "@types/react-dom": "^18.3.0",
     "@types/redux-logger": "^3.0.12",
     "@types/redux-persist": "^4.3.1",
+    "@types/rss": "^0.0.32",
     "concurrently": "^8.2.2",
     "typescript": "5.3.2"
   }

@@ -13,7 +13,6 @@ module.exports = {
       { userAgent: '*', disallow: '/tag/' }, // Disallow indexing of tags
     ],
     additionalSitemaps: [
-      `${SITE_URL}/sitemap.xml`, // Primary sitemap
       `${SITE_URL}/wordpress-sitemap.xml`, // WordPress sitemap
     ],
   },

@@ -12,7 +12,7 @@
     "watch-codegen": "graphql-codegen -w",
     "wc": "graphql-codegen -w",
     "tsc": "tsc",
-    "generate:rss": "node scripts/generate-rss.js"
+    "generate:rss": "ts-node scripts/generate-rss.ts"
   },
   "prettier": "@epic-web/config/prettier",
   "dependencies": {

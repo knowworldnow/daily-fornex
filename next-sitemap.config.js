@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 
-const SITE_URL = process.env.NEXT_PUBLIC_URL;
+const SITE_URL = process.env.NEXT_PUBLIC_URL || 'https://dailyfornex.com';
 
 module.exports = {
   siteUrl: SITE_URL,
@@ -22,7 +22,7 @@ module.exports = {
     }
 
     return {
-      loc: path.endsWith('/') ? path : `${path}/`, // Ensure trailing slash
+      loc: `${SITE_URL}${path}`, // Generate absolute URL
       lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
     };
   },

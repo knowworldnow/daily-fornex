@@ -1,9 +1,7 @@
 /** @type {import('next-sitemap').IConfig} */
 
-const SITE_URL = process.env.NEXT_PUBLIC_URL || 'https://dailyfornex.com';
-
 module.exports = {
-  siteUrl: SITE_URL,
+  siteUrl: 'https://dailyfornex.com',
   generateRobotsTxt: true,
   exclude: ['/wordpress-sitemap.xml'], // Exclude specific paths from the sitemap
   robotsTxtOptions: {
@@ -13,7 +11,7 @@ module.exports = {
       { userAgent: '*', disallow: '/tag/' }, // Disallow indexing of tags
     ],
     additionalSitemaps: [
-      `${SITE_URL}/wordpress-sitemap.xml`, // WordPress sitemap
+      'https://dailyfornex.com/wordpress-sitemap.xml', // WordPress sitemap
     ],
   },
   transform: (config, path) => {
@@ -22,7 +20,7 @@ module.exports = {
     }
 
     return {
-      loc: `${SITE_URL}${path}`, // Generate absolute URL
+      loc: `https://dailyfornex.com${path}`, // Generate absolute URL
       lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
     };
   },

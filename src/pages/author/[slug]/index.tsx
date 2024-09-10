@@ -1,93 +1,69 @@
-import { GetStaticPropsContext } from "next";
-import { FaustPage, getNextStaticProps } from "@faustwp/core";
-import { gql, DocumentNode } from "@apollo/client"; // Ensure correct import
-import { GetAuthorWithPostsQuery, User } from "@/__generated__/graphql";
-import { GET_POSTS_FIRST_COMMON } from "@/contains/contants";
-import React from "react";
-import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
-import AuthorPostsChild from "@/container/author/AuthorPostsChild";
-import Page404Content from "@/container/404Content";
-import SEO from "@/components/SEO/SEO"; // Import the SEO component
+import Head from "next/head";
+import { useRouter } from "next/router";
 
-const Page: FaustPage<GetAuthorWithPostsQuery> = (props) => {
-  const author = props.data?.user as User | undefined;
+interface Props {
+  title?: string | null;
+  description?: string | null;
+  imageUrl?: string | null;
+  url?: string | null;
+  siteName?: string | null;
+}
 
-  if (!author) {
-    return <Page404Content />;
-  }
+/**
+ * Provide SEO related meta tags to a page.
+ *
+ * @param {Props} props The props object.
+ * @param {string} props.title Used for the page title, og:title, twitter:title, etc.
+ * @param {string} props.description Used for the meta description, og:description, twitter:description, etc.
+ * @param {string} props.imageUrl Used for the og:image and twitter:image. NOTE: Must be an absolute URL.
+ * @param {string} props.url Used for the og:url and twitter:url.
+ * @param {string} props.siteName Used for the og:site_name to define the site's name.
+ *
+ * @returns {React.ReactElement} The SEO component
+ */
+export default function SEO({ title, description, imageUrl, url, siteName }: Props) {
+  const router = useRouter();
+  const canonicalUrl = url || `https://dailyfornex.com${router.asPath.endsWith('/') ? router.asPath : `${router.asPath}/`}`;
+  const descriptionNoHtmlTags = description?.replace(/<[^>]*>?/gm, "") || "";
 
   return (
     <>
-      <SEO 
-        title={`${author.name} - Author at Daily Fornex`} 
-        description={`Explore articles written by ${author.name} on Daily Fornex.`}
-        url={`https://dailyfornex.com/author/${author.slug}/`}
-      />
-      {/* @ts-ignore */}
-      <AuthorPostsChild {...(props || [])} />
+      <Head>
+        {/* Add noindex meta tag */}
+        <meta name="robots" content="noindex, follow" />
+        
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={siteName || "Daily Fornex"} />
+        <meta property="twitter:card" content="summary_large_image" />
+
+        {title && (
+          <>
+            <title>{title}</title>
+            <meta name="title" content={title} />
+            <meta property="og:title" content={title} />
+            <meta property="twitter:title" content={title} />
+          </>
+        )}
+
+        {!!descriptionNoHtmlTags && (
+          <>
+            <meta name="description" content={descriptionNoHtmlTags} />
+            <meta property="og:description" content={descriptionNoHtmlTags} />
+            <meta property="twitter:description" content={descriptionNoHtmlTags} />
+          </>
+        )}
+
+        {imageUrl && (
+          <>
+            <meta property="og:image" content={imageUrl} />
+            <meta property="twitter:image" content={imageUrl} />
+          </>
+        )}
+
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="twitter:url" content={canonicalUrl} />
+      </Head>
     </>
   );
-};
-
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
 }
-
-export function getStaticProps(ctx: GetStaticPropsContext) {
-  return getNextStaticProps(ctx, {
-    Page,
-    revalidate: 900,
-  });
-}
-
-Page.variables = ({ params }) => {
-  return {
-    id: params?.slug,
-    first: GET_POSTS_FIRST_COMMON,
-    headerLocation: PRIMARY_LOCATION,
-    footerLocation: FOOTER_LOCATION,
-  };
-};
-
-Page.query = gql(`
-  query GetAuthorWithPosts($id: ID!, $first: Int, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
-    user(id: $id, idType: SLUG) {
-      name
-      slug
-      posts(first: $first, where: {orderby: {field: DATE, order: DESC}}) {
-        nodes {
-          title
-          excerpt
-          slug
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
-    }
-    categories(first:10, where: { orderby: COUNT, order: DESC }) {
-      nodes {
-        ...NcmazFcCategoryFullFieldsFragment
-      }
-    }
-    generalSettings {
-      ...NcgeneralSettingsFieldsFragment
-    }
-    primaryMenuItems: menuItems(where: { location:  $headerLocation  }, first: 80) {
-      nodes {
-        ...NcPrimaryMenuFieldsFragment
-      }
-    }
-    footerMenuItems: menuItems(where: { location:  $footerLocation  }, first: 50) {
-      nodes {
-        ...NcFooterMenuFieldsFragment
-      }
-    }
-  }
-`) as DocumentNode; // Ensure type is correctly set
-
-export default Page;

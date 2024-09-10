@@ -23,7 +23,7 @@ interface Props {
  */
 export default function SEO({ title, description, imageUrl, url, siteName }: Props) {
   const router = useRouter();
-  const canonicalUrl = url || `https://dailyfornex.com${router.asPath}/`;
+  const canonicalUrl = url || `https://dailyfornex.com${router.asPath.endsWith('/') ? router.asPath : `${router.asPath}/`}`;
   const descriptionNoHtmlTags = description?.replace(/<[^>]*>?/gm, "") || "";
 
   return (

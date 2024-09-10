@@ -21,7 +21,7 @@ const Page: FaustPage<PageAuthorFavoritesGetDataQuery> = (props) => {
         <meta name="robots" content="noindex, follow" />
       </Head>
       
-      <AuthorFavoritesChild {...props} />
+      <AuthorFavoritesChild {...(props as object)} />
     </>
   );
 };

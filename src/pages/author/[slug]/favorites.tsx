@@ -1,13 +1,13 @@
 import { GetStaticPropsContext } from "next";
 import { FaustPage, getNextStaticProps } from "@faustwp/core";
-import { gql, DocumentNode } from "@apollo/client";
+import { gql, DocumentNode } from "@apollo/client"; // Ensure correct import
 import { GetAuthorWithPostsQuery, User } from "@/__generated__/graphql";
 import { GET_POSTS_FIRST_COMMON } from "@/contains/contants";
 import React from "react";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import AuthorPostsChild from "@/container/author/AuthorPostsChild";
 import Page404Content from "@/container/404Content";
-import SEO from "@/components/SEO/SEO";
+import SEO from "@/components/SEO/SEO"; // Import the SEO component
 
 const Page: FaustPage<GetAuthorWithPostsQuery> = (props) => {
   const author = props.data?.user as User | undefined;
@@ -22,8 +22,6 @@ const Page: FaustPage<GetAuthorWithPostsQuery> = (props) => {
         title={`${author.name} - Author at Daily Fornex`} 
         description={`Explore articles written by ${author.name} on Daily Fornex.`}
         url={`https://dailyfornex.com/author/${author.slug}/`}
-        // Add noindex meta tag to prevent indexing
-        noindex={true}
       />
       {/* @ts-ignore */}
       <AuthorPostsChild {...(props || [])} />
@@ -90,6 +88,7 @@ Page.query = gql(`
       }
     }
   }
-`) as DocumentNode;
+`) as DocumentNode; // Ensure type is correctly set
 
 export default Page;
+

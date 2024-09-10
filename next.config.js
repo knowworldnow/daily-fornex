@@ -94,9 +94,7 @@ module.exports = withFaust({
       {
         source: '/:path*',
         headers: createSecureHeaders({
-          // XSS Protection enabled (consider setting it to true if not intentionally disabled)
-          xssProtection: true,
-          // Use frame-ancestors in CSP for framing instead of frameGuard
+          xssProtection: "1; mode=block",  // Corrected value
           contentSecurityPolicy: {
             directives: {
               frameAncestors: [process.env.NEXT_PUBLIC_WORDPRESS_URL],

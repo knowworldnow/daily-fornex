@@ -1,31 +1,32 @@
-import Head from "next/head";
 import { GetStaticPropsContext } from "next";
 import { FaustPage, getNextStaticProps } from "@faustwp/core";
-import { gql } from "@/__generated__";
-import { PageAuthorFavoritesGetDataQuery } from "@/__generated__/graphql";
+import { gql, DocumentNode } from "@apollo/client";
+import { GetAuthorWithPostsQuery, User } from "@/__generated__/graphql";
+import { GET_POSTS_FIRST_COMMON } from "@/contains/contants";
 import React from "react";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
-import AuthorFavoritesChild from "@/container/author/AuthorFavoritesChild";
+import AuthorPostsChild from "@/container/author/AuthorPostsChild";
+import Page404Content from "@/container/404Content";
+import SEO from "@/components/SEO/SEO";
 
-// Define or import the correct type for props expected by AuthorFavoritesChild
-type AuthorFavoritesChildProps = PageAuthorFavoritesGetDataQuery;
+const Page: FaustPage<GetAuthorWithPostsQuery> = (props) => {
+  const author = props.data?.user as User | undefined;
 
-const Page: FaustPage<AuthorFavoritesChildProps> = (props) => {
-  const { data } = props;
-
-  if (!data?.user) {
-    return <div>User not found</div>; // Basic error handling
+  if (!author) {
+    return <Page404Content />;
   }
 
   return (
     <>
-      <Head>
-        {/* Add noindex meta tag to prevent indexing */}
-        <meta name="robots" content="noindex, follow" />
-      </Head>
-      
-      {/* Pass props with the correct type */}
-      <AuthorFavoritesChild {...props as AuthorFavoritesChildProps} />
+      <SEO 
+        title={`${author.name} - Author at Daily Fornex`} 
+        description={`Explore articles written by ${author.name} on Daily Fornex.`}
+        url={`https://dailyfornex.com/author/${author.slug}/`}
+        // Add noindex meta tag to prevent indexing
+        noindex={true}
+      />
+      {/* @ts-ignore */}
+      <AuthorPostsChild {...(props || [])} />
     </>
   );
 };
@@ -47,15 +48,28 @@ export function getStaticProps(ctx: GetStaticPropsContext) {
 Page.variables = ({ params }) => {
   return {
     id: params?.slug,
+    first: GET_POSTS_FIRST_COMMON,
     headerLocation: PRIMARY_LOCATION,
     footerLocation: FOOTER_LOCATION,
   };
 };
 
 Page.query = gql(`
-  query PageAuthorFavoritesGetData($id: ID!, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
+  query GetAuthorWithPosts($id: ID!, $first: Int, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     user(id: $id, idType: SLUG) {
-      ...NcmazFcUserFullFields
+      name
+      slug
+      posts(first: $first, where: {orderby: {field: DATE, order: DESC}}) {
+        nodes {
+          title
+          excerpt
+          slug
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
     }
     categories(first:10, where: { orderby: COUNT, order: DESC }) {
       nodes {
@@ -76,6 +90,6 @@ Page.query = gql(`
       }
     }
   }
-`);
+`) as DocumentNode;
 
 export default Page;

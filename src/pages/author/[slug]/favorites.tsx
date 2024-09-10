@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { GetStaticPropsContext } from "next";
 import { FaustPage, getNextStaticProps } from "@faustwp/core";
 import { gql } from "@/__generated__";
@@ -7,10 +8,20 @@ import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import AuthorFavoritesChild from "@/container/author/AuthorFavoritesChild";
 
 const Page: FaustPage<PageAuthorFavoritesGetDataQuery> = (props) => {
+  const { data } = props;
+
+  if (!data?.user) {
+    return <div>User not found</div>; // Basic error handling
+  }
+
   return (
     <>
-      {/* @ts-ignore */}
-      <AuthorFavoritesChild {...(props || {})} />
+      <Head>
+        {/* Add noindex meta tag to prevent indexing */}
+        <meta name="robots" content="noindex, follow" />
+      </Head>
+      
+      <AuthorFavoritesChild {...props} />
     </>
   );
 };
@@ -21,6 +32,7 @@ export async function getStaticPaths() {
     fallback: "blocking",
   };
 }
+
 export function getStaticProps(ctx: GetStaticPropsContext) {
   return getNextStaticProps(ctx, {
     Page,
@@ -46,8 +58,7 @@ Page.query = gql(`
         ...NcmazFcCategoryFullFieldsFragment
       }
     }
-    # common query for all page 
-   generalSettings {
+    generalSettings {
       ...NcgeneralSettingsFieldsFragment
     }
     primaryMenuItems: menuItems(where: { location:  $headerLocation  }, first: 80) {
@@ -60,7 +71,6 @@ Page.query = gql(`
         ...NcFooterMenuFieldsFragment
       }
     }
-    # end common query for all page
   }
 `);
 

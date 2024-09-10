@@ -7,7 +7,10 @@ import React from "react";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import AuthorFavoritesChild from "@/container/author/AuthorFavoritesChild";
 
-const Page: FaustPage<PageAuthorFavoritesGetDataQuery> = (props) => {
+// Define or import the correct type for props expected by AuthorFavoritesChild
+type AuthorFavoritesChildProps = PageAuthorFavoritesGetDataQuery;
+
+const Page: FaustPage<AuthorFavoritesChildProps> = (props) => {
   const { data } = props;
 
   if (!data?.user) {
@@ -21,7 +24,8 @@ const Page: FaustPage<PageAuthorFavoritesGetDataQuery> = (props) => {
         <meta name="robots" content="noindex, follow" />
       </Head>
       
-      <AuthorFavoritesChild {...props} />
+      {/* Pass props with the correct type */}
+      <AuthorFavoritesChild {...props as AuthorFavoritesChildProps} />
     </>
   );
 };

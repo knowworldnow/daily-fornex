@@ -70,10 +70,7 @@ const Card14: FC<Card14Props> = ({
 				</h2>
 
 				<div className="mt-4 flex items-center rounded-full bg-white bg-opacity-20 p-2 text-xs font-medium text-neutral-50 backdrop-blur-lg backdrop-filter sm:mt-5 sm:p-2.5 sm:text-[13px]">
-					<Link
-						href={author?.uri || ''}
-						className="relative flex items-center space-x-2 rtl:space-x-reverse"
-					>
+					<div className="relative flex items-center space-x-2 rtl:space-x-reverse">
 						<Avatar
 							radius="rounded-full"
 							containerClassName="ring-2 ring-white"
@@ -84,7 +81,7 @@ const Card14: FC<Card14Props> = ({
 						<span className="block truncate text-white">
 							{author.name || ''}
 						</span>
-					</Link>
+					</div>
 					<>
 						<span className="mx-[6px]">·</span>
 						<span className="truncate font-normal">

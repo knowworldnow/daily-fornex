@@ -39,7 +39,6 @@ const Card11: FC<Card11Props> = ({
 			className={`nc-Card11 group relative flex flex-col overflow-hidden rounded-3xl bg-white dark:bg-neutral-900 ${className}`}
 			onMouseEnter={() => setIsHover(true)}
 			onMouseLeave={() => setIsHover(false)}
-			//
 		>
 			<div
 				className={`relative z-10 block w-full flex-shrink-0 overflow-hidden rounded-t-3xl ${ratio}`}
@@ -55,7 +54,7 @@ const Card11: FC<Card11Props> = ({
 
 			<div className="flex flex-1 flex-col space-y-3 rounded-b-3xl border border-t-0 border-neutral-100 px-3.5 py-4 dark:border-neutral-800">
 				{!hiddenAuthor ? (
-					<PostCardMeta meta={{ author, date }} />
+					<PostCardMeta meta={{ author, date }} disableAuthorLink={true} />
 				) : (
 					<span className="text-xs text-neutral-500">{date}</span>
 				)}

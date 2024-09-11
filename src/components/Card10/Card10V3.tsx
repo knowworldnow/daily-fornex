@@ -6,6 +6,7 @@ import CategoryBadgeList from '@/components/CategoryBadgeList/CategoryBadgeList'
 import PostFeaturedMedia from '@/components/PostFeaturedMedia/PostFeaturedMedia'
 import CardAuthor2 from '@/components/CardAuthor2/CardAuthor2'
 import Link from 'next/link'
+import NcImage from '@/components/NcImage/NcImage' // Ensure this import is correct
 import { CommonPostCardProps } from '../Card2/Card2'
 import { getPostDataFromPostFragment } from '@/utils/getPostDataFromPostFragment'
 

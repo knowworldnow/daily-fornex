@@ -1,6 +1,5 @@
 import { FC } from 'react'
 import Avatar from '@/components/Avatar/Avatar'
-import Link from 'next/link'
 import { NC_POST_CARD_FRAGMENT, NC_POST_FULL_FRAGMENT } from '@/fragments'
 import { FragmentType } from '@/__generated__'
 import { getImageDataFromImageFragment } from '@/utils/getImageDataFromImageFragment'
@@ -33,10 +32,7 @@ const PostMeta2: FC<PostMeta2Props> = ({
 				size === 'normal' ? 'text-xs' : 'text-base'
 			} ${className}`}
 		>
-			<Link
-				href={author?.uri || ''}
-				className="flex items-center space-x-2 rtl:space-x-reverse"
-			>
+			<div className="flex items-center space-x-2 rtl:space-x-reverse">
 				<Avatar
 					radius={avatarRounded}
 					sizeClass={
@@ -51,12 +47,12 @@ const PostMeta2: FC<PostMeta2Props> = ({
 					}
 					userName={author?.name || 'R'}
 				/>
-			</Link>
+			</div>
 			<div className="ms-3">
 				<div className="flex items-center">
-					<Link href={author?.uri || ''} className="block font-semibold">
+					<span className="block font-semibold">
 						{author?.name || 'R'}
-					</Link>
+					</span>
 
 					{!hiddenCategories && (
 						<>
@@ -64,14 +60,13 @@ const PostMeta2: FC<PostMeta2Props> = ({
 							<div className="ms-0">
 								<span className="text-xs">🏷 </span>
 								{categories?.nodes?.map((cat, index, arr) => (
-									<Link
+									<span
 										key={cat.databaseId}
-										href={cat.uri || ''}
 										className="font-semibold"
 									>
 										{cat.name}
 										{index < arr.length - 1 && <span>, </span>}
-									</Link>
+									</span>
 								))}
 							</div>
 						</>

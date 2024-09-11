@@ -2,10 +2,9 @@ import { FC } from 'react'
 import CategoryBadgeList from '@/components/CategoryBadgeList/CategoryBadgeList'
 import PostTypeFeaturedIcon from '@/components/PostTypeFeaturedIcon/PostTypeFeaturedIcon'
 import Link from 'next/link'
-import Image from 'next/image'
+import MyImage from '../MyImage'
 import { CommonPostCardProps } from '../Card2/Card2'
 import { getPostDataFromPostFragment } from '@/utils/getPostDataFromPostFragment'
-import MyImage from '../MyImage'
 
 export interface Card8Props extends CommonPostCardProps {}
 
@@ -69,6 +68,10 @@ const Card8: FC<Card8Props> = ({ className = 'h-full', post }) => {
 						className="text-sm text-neutral-300"
 						dangerouslySetInnerHTML={{ __html: excerpt || '' }}
 					></div>
+				</div>
+				<div className="mt-4 text-sm text-neutral-300">
+					<span>{author?.name}</span>
+					<span> · {new Date(date).toLocaleDateString()}</span>
 				</div>
 			</div>
 		</div>

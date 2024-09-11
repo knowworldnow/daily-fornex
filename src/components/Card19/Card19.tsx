@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { CommonPostCardProps } from '../Card2/Card2'
 import { getPostDataFromPostFragment } from '@/utils/getPostDataFromPostFragment'
 import MyImage from '../MyImage'
+
 export interface Card19Props extends CommonPostCardProps {
 	ratio?: string
 	titleClass?: string
@@ -25,12 +26,8 @@ const Card19: FC<Card19Props> = ({
 }) => {
 	const {
 		title,
-		link,
 		date,
 		categories,
-		excerpt,
-		author,
-		postFormats,
 		featuredImage,
 		ncPostMetaData,
 		commentCount,

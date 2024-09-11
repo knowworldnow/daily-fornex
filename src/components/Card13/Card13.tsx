@@ -48,7 +48,7 @@ const Card13: FC<Card13Props> = ({ className = '', post }) => {
 					{ncFormatDate(date || '')}
 				</span>
 				<div className="mt-auto hidden sm:block">
-					<PostCardMeta meta={{ author, date }} />
+					<PostCardMeta meta={{ author, date }} disableAuthorLink={true} />
 				</div>
 			</div>
 

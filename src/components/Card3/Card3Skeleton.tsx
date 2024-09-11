@@ -1,13 +1,4 @@
 import { FC } from 'react'
-import NcImage from '@/components/NcImage/NcImage'
-import PostCardMeta from '@/components/PostCardMeta/PostCardMeta'
-import PostCardSaveAction from '@/components/PostCardSaveAction/PostCardSaveAction'
-import PostCardLikeAndComment from '@/components/PostCardLikeAndComment/PostCardLikeAndComment'
-import CategoryBadgeList from '@/components/CategoryBadgeList/CategoryBadgeList'
-import PostTypeFeaturedIcon from '@/components/PostTypeFeaturedIcon/PostTypeFeaturedIcon'
-import Link from 'next/link'
-import { CommonPostCardProps } from '../Card2/Card2'
-import { getPostDataFromPostFragment } from '@/utils/getPostDataFromPostFragment'
 import Skeleton from 'react-loading-skeleton'
 import PostCardLikeCommentSaveSkeleton from '../Skeleton/PostCardLikeCommentSaveSkeleton'
 

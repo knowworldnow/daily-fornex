@@ -47,6 +47,7 @@ const Card5: FC<Card5Props> = ({ className = '', post }) => {
 					readingTime={ncPostMetaData?.readingTime || 1}
 					author={author}
 					date={date}
+					disableAuthorLink={true} // Disable the link for the author name
 				/>
 			</div>
 		</div>

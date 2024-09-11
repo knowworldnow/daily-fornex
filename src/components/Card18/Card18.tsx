@@ -12,7 +12,6 @@ import MyImage from '../MyImage'
 export interface Card18Props extends CommonPostCardProps {
 	ratio?: string
 	titleClass?: string
-
 	hoverClass?: string
 	showCategories?: boolean
 }

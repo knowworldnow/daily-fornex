@@ -87,6 +87,7 @@ const Card7: FC<Card7Props> = ({
 					readingTime={ncPostMetaData?.readingTime || 1}
 					date={date}
 					author={author}
+					disableAuthorLink={true} // Disable the author link here
 				/>
 			</div>
 		</div>

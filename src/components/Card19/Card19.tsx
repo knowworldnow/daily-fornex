@@ -28,7 +28,6 @@ const Card19: FC<Card19Props> = ({
 		title,
 		date,
 		categories,
-		author,
 		featuredImage,
 		ncPostMetaData,
 		commentCount,
@@ -79,7 +78,7 @@ const Card19: FC<Card19Props> = ({
 					/>
 					<PostTypeFeaturedIcon
 						className="absolute left-3 top-3 group-hover:hidden"
-						postType={post.postFormats || ''}
+						postType={(post.postFormats && post.postFormats.nodes[0]?.slug) || ''}
 						wrapSize="w-7 h-7"
 						iconSize="w-4 h-4"
 					/>

@@ -28,6 +28,7 @@ const Card19: FC<Card19Props> = ({
 		title,
 		date,
 		categories,
+		author,
 		featuredImage,
 		ncPostMetaData,
 		commentCount,
@@ -66,12 +67,8 @@ const Card19: FC<Card19Props> = ({
 					postDatabseId={databaseId || 0}
 				/>
 			</div>
-			<div className={`relative flex w-full items-start ${ratio}`}></div>
-			{postFormats === 'audio' ? (
-				<div className="absolute inset-0">
-					<PostFeaturedMedia post={post} />
-				</div>
-			) : (
+
+			<div className={`relative flex w-full items-start ${ratio}`}>
 				<Link href={uri}>
 					<MyImage
 						sizes="(max-width: 600px) 480px, 800px"
@@ -82,19 +79,19 @@ const Card19: FC<Card19Props> = ({
 					/>
 					<PostTypeFeaturedIcon
 						className="absolute left-3 top-3 group-hover:hidden"
-						postType={postFormats}
+						postType={post.postFormats || ''}
 						wrapSize="w-7 h-7"
 						iconSize="w-4 h-4"
 					/>
 					<span className="absolute inset-0 bg-black bg-opacity-10 opacity-0 transition-opacity group-hover:opacity-100"></span>
 				</Link>
-			)}
+			</div>
+
 			<Link
 				href={uri}
 				className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black opacity-80"
 			></Link>
 			<div className="absolute inset-x-0 bottom-0 flex flex-grow flex-col p-5 sm:p-10">
-				<Link href={uri} className="absolute inset-0"></Link>
 				{showCategories && (
 					<div className="mb-3">
 						<CategoryBadgeList categories={categories?.nodes || []} />

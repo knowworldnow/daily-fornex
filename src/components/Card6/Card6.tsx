@@ -43,7 +43,10 @@ const Card6: FC<Card6Props> = ({ className = 'h-full', post }) => {
 							title={title || ''}
 						></Link>
 					</h2>
-					<PostCardMeta meta={{ author, date }} />
+					<PostCardMeta 
+						meta={{ author, date }} 
+						disableAuthorLink={true}  // Disable the link for the author name
+					/>
 				</div>
 				<div className="mt-auto flex flex-wrap items-center justify-between">
 					<PostCardLikeAndComment

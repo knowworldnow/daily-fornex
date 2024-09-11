@@ -2,7 +2,6 @@ import { FC } from 'react'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import Avatar from '@/components/Avatar/Avatar'
 import NcImage from '@/components/NcImage/NcImage'
-import Link from 'next/link'
 import { NC_USER_FULL_FIELDS_FRAGMENT } from '@/fragments'
 import { FragmentType } from '@/__generated__'
 import { getUserDataFromUserCardFragment } from '@/utils/getUserDataFromUserCardFragment'
@@ -16,11 +15,10 @@ const CardAuthorBox2: FC<CardAuthorBox2Props> = ({
 	className = '',
 	author,
 }) => {
-	const { databaseId, featuredImageMeta, name, uri, ncUserMeta, bgImageMeta } =
+	const { featuredImageMeta, name, ncUserMeta, bgImageMeta } =
 		getUserDataFromUserCardFragment(author)
 	return (
-		<Link
-			href={uri}
+		<div
 			className={`nc-CardAuthorBox2 flex flex-col overflow-hidden rounded-3xl bg-white dark:bg-neutral-800 ${className}`}
 		>
 			<div className="relative flex-shrink-0">
@@ -59,7 +57,7 @@ const CardAuthorBox2: FC<CardAuthorBox2Props> = ({
 					</span>
 				</div>
 			</div>
-		</Link>
+		</div>
 	)
 }
 

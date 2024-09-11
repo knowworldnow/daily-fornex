@@ -15,6 +15,7 @@ export interface CardAuthor2Props {
 	className?: string
 	readingTime?: number
 	hoverReadingTime?: boolean
+	disableAuthorLink?: boolean // New prop to disable author link
 }
 
 const CardAuthor2: FC<CardAuthor2Props> = ({
@@ -23,6 +24,7 @@ const CardAuthor2: FC<CardAuthor2Props> = ({
 	readingTime,
 	date,
 	hoverReadingTime = false,
+	disableAuthorLink = false, // Default value is false
 }) => {
 	const { databaseId, uri, name, featuredImageMeta } =
 		getUserDataFromUserCardFragment(
@@ -30,10 +32,7 @@ const CardAuthor2: FC<CardAuthor2Props> = ({
 		)
 
 	return (
-		<Link
-			href={uri || ''}
-			className={`nc-CardAuthor2 relative inline-flex items-center ${className}`}
-		>
+		<div className={`nc-CardAuthor2 relative inline-flex items-center ${className}`}>
 			<Avatar
 				sizeClass="h-10 w-10 text-base"
 				containerClassName="flex-shrink-0 me-3"
@@ -42,11 +41,17 @@ const CardAuthor2: FC<CardAuthor2Props> = ({
 				userName={name || ''}
 			/>
 			<div>
-				<h2
-					className={`text-sm font-medium capitalize text-neutral-700 hover:text-black dark:text-neutral-300 dark:hover:text-white`}
-				>
-					{name}
-				</h2>
+				{disableAuthorLink ? (
+					<h2 className={`text-sm font-medium capitalize text-neutral-700 dark:text-neutral-300`}>
+						{name}
+					</h2>
+				) : (
+					<Link href={uri || ''}>
+						<h2 className={`text-sm font-medium capitalize text-neutral-700 hover:text-black dark:text-neutral-300 dark:hover:text-white`}>
+							{name}
+						</h2>
+					</Link>
+				)}
 				<span
 					className={`mt-1 flex items-center text-xs text-neutral-500 dark:text-neutral-400`}
 				>
@@ -71,7 +76,7 @@ const CardAuthor2: FC<CardAuthor2Props> = ({
 					)}
 				</span>
 			</div>
-		</Link>
+		</div>
 	)
 }
 

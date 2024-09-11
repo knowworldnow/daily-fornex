@@ -19,6 +19,7 @@ export interface PostCardMetaV2Props {
     className?: string
     titleClassName?: string
     avatarSize?: string
+    disableAuthorLink?: boolean // Add this prop to control link rendering
 }
 
 const PostCardMetaV2: FC<PostCardMetaV2Props> = ({
@@ -27,6 +28,7 @@ const PostCardMetaV2: FC<PostCardMetaV2Props> = ({
     className = 'leading-none text-xs',
     titleClassName = 'text-base',
     avatarSize = 'h-9 w-9 text-base',
+    disableAuthorLink = false, // Default to false
 }) => {
     const { date, title, uri } = meta
 
@@ -63,9 +65,17 @@ const PostCardMetaV2: FC<PostCardMetaV2Props> = ({
                     </h2>
 
                     <div className="mt-1.5 flex">
-                        <span className="block font-medium capitalize text-neutral-700 dark:text-neutral-300">
-                            {author?.name || ''}
-                        </span>
+                        {disableAuthorLink ? (
+                            <span className="block font-medium capitalize text-neutral-700 dark:text-neutral-300">
+                                {author?.name || ''}
+                            </span>
+                        ) : (
+                            <Link href={author?.uri || ''} className="flex">
+                                <span className="block font-medium capitalize text-neutral-700 hover:text-black dark:text-neutral-300 dark:hover:text-white">
+                                    {author?.name || ''}
+                                </span>
+                            </Link>
+                        )}
                         <span className="mx-[6px] font-medium text-neutral-500 dark:text-neutral-400">
                             ·
                         </span>

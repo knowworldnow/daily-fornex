@@ -1,7 +1,5 @@
 import { FC } from 'react'
-
 import Avatar from '@/components/Avatar/Avatar'
-import Link from 'next/link'
 import { NcmazFcUserFullFieldsFragment } from '@/__generated__/graphql'
 import { getImageDataFromImageFragment } from '@/utils/getImageDataFromImageFragment'
 
@@ -11,12 +9,9 @@ export interface CardAuthorProps {
 }
 
 const CardAuthor: FC<CardAuthorProps> = ({ className = '', author }) => {
-	const { databaseId, name, ncUserMeta, uri } = author
+	const { name, ncUserMeta } = author
 	return (
-		<Link
-			href={uri || ''}
-			className={`nc-CardAuthor flex items-center ${className}`}
-		>
+		<div className={`nc-CardAuthor flex items-center ${className}`}>
 			<Avatar
 				sizeClass="h-10 w-10 text-base"
 				containerClassName="flex-shrink-0 me-4"
@@ -39,7 +34,7 @@ const CardAuthor: FC<CardAuthorProps> = ({ className = '', author }) => {
 					{ncUserMeta?.ncBio}
 				</span>
 			</div>
-		</Link>
+		</div>
 	)
 }
 

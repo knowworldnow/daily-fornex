@@ -1,6 +1,6 @@
 'use client'
+
 import { FC, useState } from 'react'
-import NcImage from '@/components/NcImage/NcImage'
 import PostCardSaveAction from '@/components/PostCardSaveAction/PostCardSaveAction'
 import CategoryBadgeList from '@/components/CategoryBadgeList/CategoryBadgeList'
 import PostFeaturedMedia from '@/components/PostFeaturedMedia/PostFeaturedMedia'
@@ -166,7 +166,7 @@ const Card10V3: FC<Card10V3Props> = ({
                     hoverReadingTime={false}
                     date={date}
                     readingTime={ncPostMetaData?.readingTime || 1}
-                    disableAuthorLink={true} // Disable the author link here
+                    // Removed the disableAuthorLink prop
                 />
             </div>
         </div>

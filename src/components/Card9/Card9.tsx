@@ -47,13 +47,13 @@ const Card9: FC<Card9Props> = ({
 							title={title || ''}
 						></span>
 					</h2>
-					<Link href={author?.uri || ''} className="relative mt-2.5 flex">
-						<span className="block truncate font-medium capitalize text-neutral-200 hover:text-white">
+					<div className="relative mt-2.5 flex">
+						<span className="block truncate font-medium capitalize text-neutral-200">
 							{author?.name}
 						</span>
 						<span className="mx-[6px] font-medium">·</span>
 						<span className="truncate font-normal">{ncFormatDate(date)}</span>
-					</Link>
+					</div>
 				</div>
 			</div>
 		)

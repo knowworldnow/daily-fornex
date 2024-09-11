@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import PostCardMeta from '@/components/PostCardMeta/PostCardMeta'
 import Link from 'next/link'
-import Image from 'next/image'
 import { CommonPostCardProps } from '../Card2/Card2'
 import { getPostDataFromPostFragment } from '@/utils/getPostDataFromPostFragment'
 import MyImage from '../MyImage'
@@ -11,17 +10,12 @@ export interface Card3SmallProps extends CommonPostCardProps {}
 const Card3Small: FC<Card3SmallProps> = ({ className = 'h-full', post }) => {
 	const {
 		title,
-		link,
 		date,
 		categories,
 		excerpt,
 		author,
-		postFormats,
 		featuredImage,
-		ncPostMetaData,
-		commentCount,
 		uri,
-		databaseId,
 	} = getPostDataFromPostFragment(post)
 
 	return (
@@ -34,7 +28,7 @@ const Card3Small: FC<Card3SmallProps> = ({ className = 'h-full', post }) => {
 				title={title || ''}
 			></Link>
 			<div className="relative space-y-2">
-				<PostCardMeta meta={{ author, date }} />
+				<PostCardMeta meta={{ author, date }} disableAuthorLink /> {/* Author link removed */}
 				<h2 className="nc-card-title block text-sm font-medium text-neutral-900 sm:text-base sm:font-semibold dark:text-neutral-100">
 					<Link
 						dangerouslySetInnerHTML={{ __html: title }}

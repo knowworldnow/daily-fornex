@@ -3,7 +3,7 @@
 module.exports = {
   siteUrl: 'https://dailyfornex.com',
   generateRobotsTxt: true,
-  exclude: ['/wordpress-sitemap.xml'], // Exclude specific paths from the sitemap
+  exclude: ['/wordpress-sitemap.xml', '/posts/'], // Exclude specific paths from the sitemap
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: '/' }, // Allow all paths by default

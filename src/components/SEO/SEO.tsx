@@ -10,7 +10,7 @@ interface Props {
 }
 
 /**
- * Provide SEO related meta tags to a page.
+ * Provide SEO-related meta tags to a page.
  *
  * @param {Props} props The props object.
  * @param {string} props.title Used for the page title, og:title, twitter:title, etc.
@@ -27,40 +27,38 @@ export default function SEO({ title, description, imageUrl, url, siteName }: Pro
   const descriptionNoHtmlTags = description?.replace(/<[^>]*>?/gm, "") || "";
 
   return (
-    <>
-      <Head>
-        <link rel="canonical" href={canonicalUrl} />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content={siteName || "Daily Fornex"} />
-        <meta property="twitter:card" content="summary_large_image" />
+    <Head>
+      <link rel="canonical" href={canonicalUrl} />
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content={siteName || "Daily Fornex"} />
+      <meta property="twitter:card" content="summary_large_image" />
 
-        {title && (
-          <>
-            <title>{title}</title>
-            <meta name="title" content={title} />
-            <meta property="og:title" content={title} />
-            <meta property="twitter:title" content={title} />
-          </>
-        )}
+      {title && (
+        <>
+          <title>{title}</title>
+          <meta name="title" content={title} />
+          <meta property="og:title" content={title} />
+          <meta property="twitter:title" content={title} />
+        </>
+      )}
 
-        {!!descriptionNoHtmlTags && (
-          <>
-            <meta name="description" content={descriptionNoHtmlTags} />
-            <meta property="og:description" content={descriptionNoHtmlTags} />
-            <meta property="twitter:description" content={descriptionNoHtmlTags} />
-          </>
-        )}
+      {descriptionNoHtmlTags && (
+        <>
+          <meta name="description" content={descriptionNoHtmlTags} />
+          <meta property="og:description" content={descriptionNoHtmlTags} />
+          <meta property="twitter:description" content={descriptionNoHtmlTags} />
+        </>
+      )}
 
-        {imageUrl && (
-          <>
-            <meta property="og:image" content={imageUrl} />
-            <meta property="twitter:image" content={imageUrl} />
-          </>
-        )}
+      {imageUrl && (
+        <>
+          <meta property="og:image" content={imageUrl} />
+          <meta property="twitter:image" content={imageUrl} />
+        </>
+      )}
 
-        <meta property="og:url" content={canonicalUrl} />
-        <meta property="twitter:url" content={canonicalUrl} />
-      </Head>
-    </>
+      <meta property="og:url" content={canonicalUrl} />
+      <meta property="twitter:url" content={canonicalUrl} />
+    </Head>
   );
 }

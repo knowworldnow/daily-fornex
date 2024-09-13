@@ -1,6 +1,6 @@
 import { gql } from "../__generated__";
 import {
-  GetPostSiglePageQuery, // Corrected this line
+  GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
   NcmazFcUserReactionPostActionEnum,
   NcmazFcUserReactionPostNumberUpdateEnum,
@@ -26,6 +26,20 @@ import SingleTypeAudio from "@/container/singles/single-audio/single-audio";
 import SingleTypeVideo from "@/container/singles/single-video/single-video";
 import SingleTypeGallery from "@/container/singles/single-gallery/single-gallery";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
+
+// Add this mutation definition
+const NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT = gql`
+  mutation UpdateUserReactionPostCount($post_id: ID!, $reaction: ReactionTypeEnum!, $number: Int!, $user_id: ID) {
+    updateUserReactionPostCount(
+      input: { postId: $post_id, reaction: $reaction, number: $number, userId: $user_id }
+    ) {
+      post {
+        id
+        reactionCount
+      }
+    }
+  }
+`;
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -229,13 +243,7 @@ Component.variables = ({ databaseId }, ctx) => {
 };
 
 Component.query = gql`
-  query GetPostSiglePage(
-    $databaseId: ID!
-    $post_databaseId: Int
-    $asPreview: Boolean = false
-    $headerLocation: MenuLocationEnum!
-    $footerLocation: MenuLocationEnum!
-  ) {
+  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int, $asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
       ...NcmazFcPostFullFields
     }
@@ -266,4 +274,3 @@ Component.query = gql`
 `;
 
 export default Component;
-

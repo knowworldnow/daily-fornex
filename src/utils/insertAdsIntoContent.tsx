@@ -2,7 +2,7 @@
 
 import React from 'react';
 import parse from 'html-react-parser';
-import AdSenseAd from '@/components/AdSenseAd';
+import AdSenseAd from '@/components/AdSenseAd'; 
 
 export function insertAdsIntoContent(content: string): React.ReactNode[] {
   // Split the content by paragraph end tags

@@ -1,5 +1,4 @@
 import { gql } from "../__generated__";
-import { DocumentNode } from 'graphql'; // Correct import from graphql package
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
@@ -232,7 +231,16 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   );
 };
 
-// Explicitly cast the query to DocumentNode
+Component.variables = ({ databaseId }, ctx) => {
+  return {
+    databaseId,
+    post_databaseId: Number(databaseId || 0),
+    asPreview: ctx?.asPreview,
+    headerLocation: PRIMARY_LOCATION,
+    footerLocation: FOOTER_LOCATION,
+  };
+};
+
 Component.query = gql(
   query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int,$asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
@@ -253,15 +261,15 @@ Component.query = gql(
     }
     primaryMenuItems: menuItems(where: {location:$headerLocation}, first: 80) {
       nodes {
-      ...NcPrimaryMenuFieldsFragment
+        ...NcPrimaryMenuFieldsFragment
       }
     }
     footerMenuItems: menuItems(where: {location:$footerLocation}, first: 40) {
       nodes {
-      ...NcFooterMenuFieldsFragment
+        ...NcFooterMenuFieldsFragment
       }
     }
   }
-) as DocumentNode;
+);
 
 export default Component;

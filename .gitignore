@@ -34,7 +34,6 @@ yarn-error.log*
 .vercel
 .yarn
 .next
-.faust
 
 ## Build artifacts for sitemaps
 /public/sitemap*.xml

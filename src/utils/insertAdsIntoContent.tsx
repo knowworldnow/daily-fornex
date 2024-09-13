@@ -1,3 +1,5 @@
+// src/utils/insertAdsIntoContent.tsx
+
 import React from 'react';
 import parse from 'html-react-parser';
 import AdSenseAd from '@/components/AdSenseAd';
@@ -14,7 +16,6 @@ export function insertAdsIntoContent(content: string): React.ReactNode[] {
   paragraphs.forEach((para, index) => {
     // Re-add the closing </p> tag if it was present
     const paraWithP = para.endsWith('</p>') ? para : `${para}</p>`;
-
     // Parse the paragraph HTML into React elements
     contentElements.push(parse(paraWithP));
 

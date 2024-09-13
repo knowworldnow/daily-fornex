@@ -6,7 +6,7 @@ import {
   NcmazFcUserReactionPostNumberUpdateEnum,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
-import SingleContent from "@/container/singles/SingleContent";
+import SingleContent from "@/container/singles/SingleContent"; // This uses the updated SingleContent
 import SingleType1 from "@/container/singles/single/single";
 import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment";
 import { Sidebar } from "@/container/singles/Sidebar";
@@ -261,15 +261,16 @@ Component.query = gql(`
     }
     primaryMenuItems: menuItems(where: {location:$headerLocation}, first: 80) {
       nodes {
-        ...NcPrimaryMenuFieldsFragment
+      ...NcPrimaryMenuFieldsFragment
       }
     }
     footerMenuItems: menuItems(where: {location:$footerLocation}, first: 40) {
       nodes {
-        ...NcFooterMenuFieldsFragment
+      ...NcFooterMenuFieldsFragment
       }
     }
   }
 `);
 
 export default Component;
+

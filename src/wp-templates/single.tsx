@@ -1,4 +1,4 @@
-import { gql } from "../__generated__";
+import { gql, DocumentNode } from "../__generated__";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
@@ -6,7 +6,7 @@ import {
   NcmazFcUserReactionPostNumberUpdateEnum,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
-import SingleContent from "@/container/singles/SingleContent"; // This uses the updated SingleContent
+import SingleContent from "@/container/singles/SingleContent";
 import SingleType1 from "@/container/singles/single/single";
 import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment";
 import { Sidebar } from "@/container/singles/Sidebar";
@@ -231,16 +231,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   );
 };
 
-Component.variables = ({ databaseId }, ctx) => {
-  return {
-    databaseId,
-    post_databaseId: Number(databaseId || 0),
-    asPreview: ctx?.asPreview,
-    headerLocation: PRIMARY_LOCATION,
-    footerLocation: FOOTER_LOCATION,
-  };
-};
-
+// Explicitly cast the query to DocumentNode
 Component.query = gql(`
   query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int,$asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
@@ -270,7 +261,6 @@ Component.query = gql(`
       }
     }
   }
-`);
+`) as DocumentNode;
 
 export default Component;
-

@@ -1,275 +1,287 @@
-import { gql } from "../__generated__";
-import {
-  GetPostSiglePageQuery,
-  NcgeneralSettingsFieldsFragmentFragment,
-  NcmazFcUserReactionPostActionEnum,
-  NcmazFcUserReactionPostNumberUpdateEnum,
-} from "../__generated__/graphql";
-import { FaustTemplate } from "@faustwp/core";
-import SingleContent from "@/container/singles/SingleContent";
-import SingleType1 from "@/container/singles/single/single";
-import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment";
-import { Sidebar } from "@/container/singles/Sidebar";
-import PageLayout from "@/container/PageLayout";
-import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import { NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT } from "@/fragments/mutations";
-import { useMutation } from "@apollo/client";
-import { IS_DEV } from "@/contains/site-settings";
-import { useSelector } from "react-redux";
-import { RootState } from "@/stores/store";
-import useGetPostsNcmazMetaByIds from "@/hooks/useGetPostsNcmazMetaByIds";
-import { TPostCard } from "@/components/Card2/Card2";
-import { useRouter } from "next/router";
-import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
-import SingleTypeAudio from "@/container/singles/single-audio/single-audio";
-import SingleTypeVideo from "@/container/singles/single-video/single-video";
-import SingleTypeGallery from "@/container/singles/single-gallery/single-gallery";
-import SocialsShare from "@/components/SocialsShare/SocialsShare";
+'use client'
 
-const DynamicSingleRelatedPosts = dynamic(
-  () => import("@/container/singles/SingleRelatedPosts")
-);
-const DynamicSingleType2 = dynamic(
-  () => import("../container/singles/single-2/single-2")
-);
-const DynamicSingleType3 = dynamic(
-  () => import("../container/singles/single-3/single-3")
-);
-const DynamicSingleType4 = dynamic(
-  () => import("../container/singles/single-4/single-4")
-);
-const DynamicSingleType5 = dynamic(
-  () => import("../container/singles/single-5/single-5")
-);
+import { FC, useRef, useEffect, useState } from 'react';
+import Tag from '@/components/Tag/Tag';
+import SingleAuthor from './SingleAuthor';
+import useIntersectionObserver from '@/hooks/useIntersectionObserver';
+import PostCardLikeAction from '@/components/PostCardLikeAction/PostCardLikeAction';
+import PostCardCommentBtn from '@/components/PostCardCommentBtn/PostCardCommentBtn';
+import { ArrowUpIcon } from '@heroicons/react/24/solid';
+import { GetPostSiglePageQuery } from '@/__generated__/graphql';
+import { getPostDataFromPostFragment } from '@/utils/getPostDataFromPostFragment';
+import NcBookmark from '@/components/NcBookmark/NcBookmark';
+import SingleCommentWrap from './SingleCommentWrap';
+import { Transition } from '@headlessui/react';
+import TableContentAnchor from './TableContentAnchor';
+import Alert from '@/components/Alert';
+import { clsx } from 'clsx';
+import { useMusicPlayer } from '@/hooks/useMusicPlayer';
 
-const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
-  //  LOADING ----------
-  if (props.loading) {
-    return <>Loading...</>;
-  }
+export interface SingleContentProps {
+  post: GetPostSiglePageQuery['post'];
+}
 
-  const router = useRouter();
-  const IS_PREVIEW = router.pathname === "/preview";
+const SingleContent: FC<SingleContentProps> = ({ post }) => {
+  const endedAnchorRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLButtonElement>(null);
+  const [isShowScrollToTop, setIsShowScrollToTop] = useState<boolean>(false);
 
-  // START ----------
-  const { isReady, isAuthenticated } = useSelector(
-    (state: RootState) => state.viewer.authorizedUser
-  );
-  const { viewer } = useSelector((state: RootState) => state.viewer);
-  const [isUpdateViewCount, setIsUpdateViewCount] = useState(false);
+  const endedAnchorEntry = useIntersectionObserver(endedAnchorRef, {
+    threshold: 0,
+    root: null,
+    rootMargin: '0%',
+    freezeOnceVisible: false,
+  });
+
+  const {
+    content,
+    author,
+    databaseId,
+    commentCount,
+    commentStatus,
+    tags,
+    status,
+    date,
+  } = getPostDataFromPostFragment(post || {});
 
   useEffect(() => {
-    const timeOutUpdateViewCount = setTimeout(() => {
-      setIsUpdateViewCount(true);
-    }, 5000);
+    const handleProgressIndicator = () => {
+      const entryContent = contentRef.current;
+      const progressBarContent = progressRef.current;
 
+      if (!entryContent || !progressBarContent) {
+        return;
+      }
+
+      const totalEntryH = entryContent.offsetTop + entryContent.offsetHeight;
+      let winScroll =
+        document.body.scrollTop || document.documentElement.scrollTop;
+
+      let scrolled = totalEntryH ? (winScroll / totalEntryH) * 100 : 0;
+
+      progressBarContent.innerText = scrolled.toFixed(0) + '%';
+
+      if (scrolled >= 100) {
+        setIsShowScrollToTop(true);
+      } else {
+        setIsShowScrollToTop(false);
+      }
+    };
+
+    const handleProgressIndicatorHeadeEvent = () => {
+      window?.requestAnimationFrame(handleProgressIndicator);
+    };
+    handleProgressIndicator();
+    window?.addEventListener('scroll', handleProgressIndicatorHeadeEvent);
     return () => {
-      clearTimeout(timeOutUpdateViewCount);
+      window?.removeEventListener(
+        'scroll',
+        handleProgressIndicatorHeadeEvent
+      );
     };
   }, []);
 
-  const _post = props.data?.post || {};
-  const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
-  const _top10Categories =
-    (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
-
-  const {
-    title,
-    ncPostMetaData,
-    postFormats,
-    featuredImage,
-    databaseId,
-    excerpt,
-  } = getPostDataFromPostFragment(_post);
-
-  //
-  const {} = useGetPostsNcmazMetaByIds({
-    posts: (IS_PREVIEW ? [] : [_post]) as TPostCard[],
-  });
-  //
-
-  // Query update post view count
-  const [handleUpdateReactionCount, { reset }] = useMutation(
-    NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT,
-    {
-      onCompleted: (data) => {
-        IS_DEV && console.log("___update post view data: ", data);
-        reset();
-      },
+  const renderAlert = () => {
+    if (status === 'publish') {
+      return null;
     }
-  );
-
-  // update view count
-  useEffect(() => {
-    if (!isReady || IS_PREVIEW || !isUpdateViewCount) {
-      return;
-    }
-
-    // user chua dang nhap, va update view count voi user la null
-    if (isAuthenticated === false) {
-      handleUpdateReactionCount({
-        variables: {
-          post_id: databaseId,
-          reaction: NcmazFcUserReactionPostActionEnum.View,
-          number: NcmazFcUserReactionPostNumberUpdateEnum.Add_1,
-        },
-      });
-      return;
-    }
-
-    // user da dang nhap, va luc nay viewer dang fetch.
-    if (!viewer?.databaseId) {
-      return;
-    }
-
-    // khi viewer fetch xong, luc nay viewer da co databaseId, va se update view count voi user la viewer
-    handleUpdateReactionCount({
-      variables: {
-        post_id: databaseId,
-        reaction: NcmazFcUserReactionPostActionEnum.View,
-        number: NcmazFcUserReactionPostNumberUpdateEnum.Add_1,
-        user_id: viewer?.databaseId,
-      },
-    });
-  }, [
-    databaseId,
-    isReady,
-    isAuthenticated,
-    viewer?.databaseId,
-    IS_PREVIEW,
-    isUpdateViewCount,
-  ]);
-
-  const renderHeaderType = () => {
-    const pData = { ...(_post || {}) };
-
-    if (postFormats === "audio") {
-      return <SingleTypeAudio post={pData} />;
-    }
-    if (postFormats === "video") {
-      return <SingleTypeVideo post={pData} />;
-    }
-    if (postFormats === "gallery") {
-      return <SingleTypeGallery post={pData} />;
-    }
-
-    if (ncPostMetaData?.template?.[0] === "style2") {
-      return <DynamicSingleType2 post={pData} />;
-    }
-    if (ncPostMetaData?.template?.[0] === "style3") {
-      return <DynamicSingleType3 post={pData} />;
-    }
-    if (ncPostMetaData?.template?.[0] === "style4") {
-      return <DynamicSingleType4 post={pData} />;
-    }
-    if (ncPostMetaData?.template?.[0] === "style5") {
-      return <DynamicSingleType5 post={pData} />;
+    if (status === 'future') {
+      return (
+        <Alert type='warning'>
+          This post is scheduled. It will be published on {date}.
+        </Alert>
+      );
     }
     return (
-      <SingleType1
-        showRightSidebar={!!ncPostMetaData?.showRightSidebar}
-        post={pData}
-      />
+      <>
+        <Alert type='warning'>
+          This post is {status}. It will not be visible on the website until it
+          is published.
+        </Alert>
+      </>
     );
   };
 
+  const insertAds = (content: string) => {
+    const paragraphs = content.split('</p>');
+    const adCode = `
+      <div class="adsbygoogle" style="display:block; text-align:center;">
+        <ins class="adsbygoogle"
+             style="display:block; text-align:center;"
+             data-ad-layout="in-article"
+             data-ad-format="fluid"
+             data-ad-client="ca-pub-7892867039237421"
+             data-ad-slot="7560629194"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>`;
+    
+    [4, 14, 24, 34, 44, 54, 64].forEach((position) => {
+      if (paragraphs.length > position) {
+        paragraphs.splice(position, 0, adCode);
+      }
+    });
+
+    return paragraphs.join('</p>');
+  };
+
+  const showLikeAndCommentSticky =
+    !endedAnchorEntry?.intersectionRatio &&
+    (endedAnchorEntry?.boundingClientRect.top || 0) > 0;
+
   return (
-    <>
-      <PageLayout
-        headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
-        footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-        pageFeaturedImageUrl={featuredImage?.sourceUrl}
-        pageTitle={title}
-        pageDescription={excerpt || ""}
-        generalSettings={
-          props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
-        }
-      >
-        {ncPostMetaData?.showRightSidebar ? (
-          <div>
-            <div className={`relative`}>
-              {renderHeaderType()}
+    <div className='relative flex flex-col'>
+      <div className='nc-SingleContent flex-1 space-y-10'>
+        {/*    */}
+        {renderAlert()}
 
-              <div className="container flex flex-col my-10 lg:flex-row ">
-                <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
-                  <SingleContent post={_post} />
-                  <SocialsShare link={router.asPath} />
-                </div>
-                <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-                  <Sidebar categories={_top10Categories} />
-                </div>
-              </div>
+        {/* ENTRY CONTENT */}
+        <div
+          id='single-entry-content'
+          className='prose mx-auto max-w-screen-md lg:prose-lg dark:prose-invert'
+          ref={contentRef}
+          dangerouslySetInnerHTML={{
+            __html: insertAds(content),
+          }}
+        />
 
-              {/* RELATED POSTS */}
-              <DynamicSingleRelatedPosts
-                posts={_relatedPosts}
-                postDatabaseId={databaseId}
+        {/* TAGS */}
+        {tags?.nodes?.length ? (
+          <div className='mx-auto flex max-w-screen-md flex-wrap'>
+            {tags.nodes.map((item) => (
+              <Tag
+                hideCount
+                key={item.databaseId}
+                name={'#' + (item.name || '')}
+                uri={item.uri || ''}
+                className='mb-2 me-2 border border-neutral-200 dark:border-neutral-800'
               />
-            </div>
+            ))}
           </div>
-        ) : (
-          <div>
-            {renderHeaderType()}
+        ) : null}
 
-            <div className="container mt-10">
-              {/* SINGLE MAIN CONTENT */}
-              <SingleContent post={_post} />
-              <SocialsShare link={router.asPath} />
-            </div>
+        {/* AUTHOR */}
+        <div className='mx-auto max-w-screen-md border-b border-t border-neutral-100 dark:border-neutral-700'></div>
+        <div className='mx-auto max-w-screen-md'>
+          <SingleAuthor author={author} />
+        </div>
 
-            {/* RELATED POSTS */}
-            <DynamicSingleRelatedPosts
-              posts={_relatedPosts}
+        {/* COMMENTS LIST - not delete comments id */}
+        {commentStatus === 'open' ? (
+          <div
+            id='comments'
+            className='mx-auto max-w-screen-md scroll-mt-10 sm:scroll-mt-20'
+          >
+            <SingleCommentWrap
+              commentCount={commentCount || 0}
               postDatabaseId={databaseId}
             />
           </div>
-        )}
-      </PageLayout>
-    </>
+        ) : null}
+        <div className='!my-0' ref={endedAnchorRef}></div>
+      </div>
+
+      {/* sticky action */}
+      <StickyAction
+        showLikeAndCommentSticky={showLikeAndCommentSticky}
+        isShowScrollToTop={isShowScrollToTop}
+        post={post}
+        ref={progressRef}
+      />
+    </div>
   );
 };
 
-Component.variables = ({ databaseId }, ctx) => {
-  return {
-    databaseId,
-    post_databaseId: Number(databaseId || 0),
-    asPreview: ctx?.asPreview,
-    headerLocation: PRIMARY_LOCATION,
-    footerLocation: FOOTER_LOCATION,
-  };
-};
+const StickyAction = forwardRef(function (
+  {
+    showLikeAndCommentSticky,
+    post,
+    isShowScrollToTop,
+  }: {
+    showLikeAndCommentSticky: boolean;
+    post: GetPostSiglePageQuery['post'];
+    isShowScrollToTop: boolean;
+  },
+  progressRef
+) {
+  const { content, databaseId, ncPostMetaData, uri, commentCount } =
+    getPostDataFromPostFragment(post || {});
 
-Component.query = gql(`
-  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int,$asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
-    post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-    ...NcmazFcPostFullFields
-    }
-    posts(where: {isRelatedOfPostId:$post_databaseId}) {
-      nodes {
-      ...PostCardFieldsNOTNcmazMEDIA
-      }
-    }
-    categories(first:10, where: { orderby: COUNT, order: DESC }) {
-      nodes {
-        ...NcmazFcCategoryFullFieldsFragment
-      }
-    }
-    generalSettings {
-      ...NcgeneralSettingsFieldsFragment
-    }
-    primaryMenuItems: menuItems(where: {location:$headerLocation}, first: 80) {
-      nodes {
-        ...NcPrimaryMenuFieldsFragment
-      }
-    }
-    footerMenuItems: menuItems(where: {location:$footerLocation}, first: 40) {
-      nodes {
-        ...NcFooterMenuFieldsFragment
-      }
-    }
-  }
-`);
+  const { postData: musicPlayerPostData } = useMusicPlayer();
 
-export default Component;
+  const hasMusic = musicPlayerPostData?.databaseId;
+  const stickyActionClassName = clsx(
+    'sticky z-40 mt-8 inline-flex self-center',
+    hasMusic ? 'bottom-14 sm:bottom-14' : 'bottom-5 sm:bottom-8'
+  );
+
+  return (
+    <div className={stickyActionClassName}>
+      <Transition
+        as={'div'}
+        show={showLikeAndCommentSticky}
+        enter='transition-opacity duration-75'
+        enterFrom='opacity-0'
+        enterTo='opacity-100'
+        leave='transition-opacity duration-150'
+        leaveFrom='opacity-100'
+        leaveTo='opacity-0'
+        className={
+          'inline-flex items-center justify-center gap-1 self-center sm:gap-2'
+        }
+      >
+        <>
+          <div className='flex items-center justify-center gap-1 rounded-full bg-white p-1.5 text-xs shadow-lg ring-1 ring-neutral-900/5 ring-offset-1 sm:gap-2 dark:bg-neutral-800'>
+            <PostCardLikeAction
+              likeCount={ncPostMetaData?.likesCount || 0}
+              postDatabseId={databaseId}
+            />
+            <div className='h-4 border-s border-neutral-200 dark:border-neutral-700'></div>
+            <PostCardCommentBtn
+              isATagOnSingle
+              commentCount={commentCount || 0}
+              linkToPost={uri || ''}
+            />
+            <div className='h-4 border-s border-neutral-200 dark:border-neutral-700'></div>
+            <NcBookmark postDatabseId={databaseId} />
+            <div className='h-4 border-s border-neutral-200 dark:border-neutral-700'></div>
+
+            <button
+              className={`h-9 w-9 items-center justify-center rounded-full bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800 ${
+                isShowScrollToTop ? 'flex' : 'hidden'
+              }`}
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              title='Go to top'
+            >
+              <ArrowUpIcon className='h-4 w-4' />
+            </button>
+
+            <button
+              ref={progressRef as any}
+              className={`h-9 w-9 items-center justify-center ${
+                isShowScrollToTop ? 'hidden' : 'flex'
+              }`}
+              title='Go to top'
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            >
+              %
+            </button>
+          </div>
+
+          <TableContentAnchor
+            className='flex items-center justify-center gap-2 rounded-full bg-white p-1.5 text-xs shadow-lg ring-1 ring-neutral-900/5 ring-offset-1 dark:bg-neutral-800'
+            content={content}
+          />
+        </>
+      </Transition>
+    </div>
+  );
+});
+
+export default SingleContent;

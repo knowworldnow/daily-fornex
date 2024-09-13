@@ -16,7 +16,7 @@ import TableContentAnchor from './TableContentAnchor'
 import Alert from '@/components/Alert'
 import { clsx } from 'clsx'
 import { useMusicPlayer } from '@/hooks/useMusicPlayer'
-import { insertAdsIntoContent } from '@/utils/insertAdsIntoContent'
+import { insertAdsIntoContent } from '@/utils/insertAdsIntoContent';
 import React from 'react' // Make sure to import React
 
 export interface SingleContentProps {

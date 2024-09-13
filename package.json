@@ -4,7 +4,7 @@
   "version": "2.6.2",
   "scripts": {
     "dev": "npm run generate && concurrently \"faust dev\" \"npm run watch-codegen\"",
-    "build": "faust build && next build"
+    "build": "faust build && next build",
     "postbuild": "next-sitemap",
     "generate": "faust generatePossibleTypes",
     "start": "faust start",

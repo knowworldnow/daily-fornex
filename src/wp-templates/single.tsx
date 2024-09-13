@@ -1,6 +1,6 @@
 import { gql } from "../__generated__";
 import {
-  GetPostSiglePageQuery,
+  GetPostSinglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
   NcmazFcUserReactionPostActionEnum,
   NcmazFcUserReactionPostNumberUpdateEnum,
@@ -44,8 +44,8 @@ const DynamicSingleType5 = dynamic(
   () => import("../container/singles/single-5/single-5")
 );
 
-const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
-  //  LOADING ----------
+const Component: FaustTemplate<GetPostSinglePageQuery> = (props) => {
+  // LOADING ----------
   if (props.loading) {
     return <>Loading...</>;
   }
@@ -84,11 +84,9 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     excerpt,
   } = getPostDataFromPostFragment(_post);
 
-  //
-  const {} = useGetPostsNcmazMetaByIds({
+  useGetPostsNcmazMetaByIds({
     posts: (IS_PREVIEW ? [] : [_post]) as TPostCard[],
   });
-  //
 
   // Query update post view count
   const [handleUpdateReactionCount, { reset }] = useMutation(
@@ -101,13 +99,13 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     }
   );
 
-  // update view count
+  // Update view count
   useEffect(() => {
     if (!isReady || IS_PREVIEW || !isUpdateViewCount) {
       return;
     }
 
-    // user chua dang nhap, va update view count voi user la null
+    // User not logged in, update view count with user as null
     if (isAuthenticated === false) {
       handleUpdateReactionCount({
         variables: {
@@ -119,12 +117,12 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
       return;
     }
 
-    // user da dang nhap, va luc nay viewer dang fetch.
+    // User logged in, viewer fetching in progress
     if (!viewer?.databaseId) {
       return;
     }
 
-    // khi viewer fetch xong, luc nay viewer da co databaseId, va se update view count voi user la viewer
+    // Viewer fetched, update view count with user as viewer
     handleUpdateReactionCount({
       variables: {
         post_id: databaseId,
@@ -189,7 +187,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
       >
         {ncPostMetaData?.showRightSidebar ? (
           <div>
-            <div className={relative}>
+            <div className="relative">
               {renderHeaderType()}
 
               <div className="container flex flex-col my-10 lg:flex-row ">
@@ -241,17 +239,23 @@ Component.variables = ({ databaseId }, ctx) => {
   };
 };
 
-Component.query = gql(
-  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int,$asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
+Component.query = gql`
+  query GetPostSinglePage(
+    $databaseId: ID!,
+    $post_databaseId: Int,
+    $asPreview: Boolean = false,
+    $headerLocation: MenuLocationEnum!,
+    $footerLocation: MenuLocationEnum!
+  ) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-    ...NcmazFcPostFullFields
+      ...NcmazFcPostFullFields
     }
-    posts(where: {isRelatedOfPostId:$post_databaseId}) {
+    posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {
-      ...PostCardFieldsNOTNcmazMEDIA
+        ...PostCardFieldsNOTNcmazMEDIA
       }
     }
-    categories(first:10, where: { orderby: COUNT, order: DESC }) {
+    categories(first: 10, where: { orderby: COUNT, order: DESC }) {
       nodes {
         ...NcmazFcCategoryFullFieldsFragment
       }
@@ -259,17 +263,23 @@ Component.query = gql(
     generalSettings {
       ...NcgeneralSettingsFieldsFragment
     }
-    primaryMenuItems: menuItems(where: {location:$headerLocation}, first: 80) {
+    primaryMenuItems: menuItems(
+      where: { location: $headerLocation }
+      first: 80
+    ) {
       nodes {
         ...NcPrimaryMenuFieldsFragment
       }
     }
-    footerMenuItems: menuItems(where: {location:$footerLocation}, first: 40) {
+    footerMenuItems: menuItems(
+      where: { location: $footerLocation }
+      first: 40
+    ) {
       nodes {
         ...NcFooterMenuFieldsFragment
       }
     }
   }
-);
+`;
 
 export default Component;

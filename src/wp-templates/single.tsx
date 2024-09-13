@@ -1,6 +1,6 @@
 import { gql } from "../__generated__";
 import {
-  GetPostSinglePageQuery,
+  GetPostSiglePageQuery, // Corrected this line
   NcgeneralSettingsFieldsFragmentFragment,
   NcmazFcUserReactionPostActionEnum,
   NcmazFcUserReactionPostNumberUpdateEnum,
@@ -14,7 +14,6 @@ import PageLayout from "@/container/PageLayout";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT } from "@/fragments/mutations";
 import { useMutation } from "@apollo/client";
 import { IS_DEV } from "@/contains/site-settings";
 import { useSelector } from "react-redux";
@@ -44,8 +43,7 @@ const DynamicSingleType5 = dynamic(
   () => import("../container/singles/single-5/single-5")
 );
 
-const Component: FaustTemplate<GetPostSinglePageQuery> = (props) => {
-  // LOADING ----------
+const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   if (props.loading) {
     return <>Loading...</>;
   }
@@ -53,7 +51,6 @@ const Component: FaustTemplate<GetPostSinglePageQuery> = (props) => {
   const router = useRouter();
   const IS_PREVIEW = router.pathname === "/preview";
 
-  // START ----------
   const { isReady, isAuthenticated } = useSelector(
     (state: RootState) => state.viewer.authorizedUser
   );
@@ -88,7 +85,6 @@ const Component: FaustTemplate<GetPostSinglePageQuery> = (props) => {
     posts: (IS_PREVIEW ? [] : [_post]) as TPostCard[],
   });
 
-  // Query update post view count
   const [handleUpdateReactionCount, { reset }] = useMutation(
     NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT,
     {
@@ -99,13 +95,11 @@ const Component: FaustTemplate<GetPostSinglePageQuery> = (props) => {
     }
   );
 
-  // Update view count
   useEffect(() => {
     if (!isReady || IS_PREVIEW || !isUpdateViewCount) {
       return;
     }
 
-    // User not logged in, update view count with user as null
     if (isAuthenticated === false) {
       handleUpdateReactionCount({
         variables: {
@@ -117,12 +111,10 @@ const Component: FaustTemplate<GetPostSinglePageQuery> = (props) => {
       return;
     }
 
-    // User logged in, viewer fetching in progress
     if (!viewer?.databaseId) {
       return;
     }
 
-    // Viewer fetched, update view count with user as viewer
     handleUpdateReactionCount({
       variables: {
         post_id: databaseId,
@@ -200,7 +192,6 @@ const Component: FaustTemplate<GetPostSinglePageQuery> = (props) => {
                 </div>
               </div>
 
-              {/* RELATED POSTS */}
               <DynamicSingleRelatedPosts
                 posts={_relatedPosts}
                 postDatabaseId={databaseId}
@@ -212,12 +203,10 @@ const Component: FaustTemplate<GetPostSinglePageQuery> = (props) => {
             {renderHeaderType()}
 
             <div className="container mt-10">
-              {/* SINGLE MAIN CONTENT */}
               <SingleContent post={_post} />
               <SocialsShare link={router.asPath} />
             </div>
 
-            {/* RELATED POSTS */}
             <DynamicSingleRelatedPosts
               posts={_relatedPosts}
               postDatabaseId={databaseId}
@@ -240,11 +229,11 @@ Component.variables = ({ databaseId }, ctx) => {
 };
 
 Component.query = gql`
-  query GetPostSinglePage(
-    $databaseId: ID!,
-    $post_databaseId: Int,
-    $asPreview: Boolean = false,
-    $headerLocation: MenuLocationEnum!,
+  query GetPostSiglePage(
+    $databaseId: ID!
+    $post_databaseId: Int
+    $asPreview: Boolean = false
+    $headerLocation: MenuLocationEnum!
     $footerLocation: MenuLocationEnum!
   ) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
@@ -263,18 +252,12 @@ Component.query = gql`
     generalSettings {
       ...NcgeneralSettingsFieldsFragment
     }
-    primaryMenuItems: menuItems(
-      where: { location: $headerLocation }
-      first: 80
-    ) {
+    primaryMenuItems: menuItems(where: { location: $headerLocation }, first: 80) {
       nodes {
         ...NcPrimaryMenuFieldsFragment
       }
     }
-    footerMenuItems: menuItems(
-      where: { location: $footerLocation }
-      first: 40
-    ) {
+    footerMenuItems: menuItems(where: { location: $footerLocation }, first: 40) {
       nodes {
         ...NcFooterMenuFieldsFragment
       }
@@ -283,3 +266,4 @@ Component.query = gql`
 `;
 
 export default Component;
+

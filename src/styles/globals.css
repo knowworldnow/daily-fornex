@@ -38,3 +38,10 @@ img {
   transition: filter 0.3s ease; /* Smooth transition */
 }
 
+/* Sticky AdSense Widget */
+.adsense-widget.sticky {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  top: 10px; /* Adjust this value as needed */
+  z-index: 100; /* Ensure it stays on top of other elements */
+}

@@ -1,4 +1,5 @@
-import { gql, DocumentNode } from "../__generated__";
+import { gql } from "../__generated__";
+import { DocumentNode } from 'graphql'; // Correct import from graphql package
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,

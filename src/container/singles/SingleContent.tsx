@@ -1,6 +1,7 @@
 'use client';
 
 import React, { FC, forwardRef, useRef, useEffect, useState, useMemo } from 'react';
+import throttle from 'lodash/throttle';
 import Tag from '@/components/Tag/Tag';
 import dynamic from 'next/dynamic';
 import { ArrowUpIcon } from '@heroicons/react/24/solid';

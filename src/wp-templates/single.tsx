@@ -12,36 +12,17 @@ import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment
 import { Sidebar } from "@/container/singles/Sidebar";
 import PageLayout from "@/container/PageLayout";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
-import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT } from "@/fragments/mutations";
 import { useMutation } from "@apollo/client";
-import { IS_DEV } from "@/contains/site-settings";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
-import useGetPostsNcmazMetaByIds from "@/hooks/useGetPostsNcmazMetaByIds";
 import { TPostCard } from "@/components/Card2/Card2";
 import { useRouter } from "next/router";
 import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
-import SingleTypeAudio from "@/container/singles/single-audio/single-audio";
-import SingleTypeVideo from "@/container/singles/single-video/single-video";
-import SingleTypeGallery from "@/container/singles/single-gallery/single-gallery";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
-);
-const DynamicSingleType2 = dynamic(
-  () => import("../container/singles/single-2/single-2")
-);
-const DynamicSingleType3 = dynamic(
-  () => import("../container/singles/single-3/single-3")
-);
-const DynamicSingleType4 = dynamic(
-  () => import("../container/singles/single-4/single-4")
-);
-const DynamicSingleType5 = dynamic(
-  () => import("../container/singles/single-5/single-5")
 );
 
 const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
@@ -53,7 +34,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   const router = useRouter();
   const IS_PREVIEW = router.pathname === "/preview";
 
-  // START ----------
   const { isReady, isAuthenticated } = useSelector(
     (state: RootState) => state.viewer.authorizedUser
   );
@@ -78,89 +58,16 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   const {
     title,
     ncPostMetaData,
-    postFormats,
     featuredImage,
     databaseId,
     excerpt,
   } = getPostDataFromPostFragment(_post);
 
-  //
-  const {} = useGetPostsNcmazMetaByIds({
-    posts: (IS_PREVIEW ? [] : [_post]) as TPostCard[],
-  });
-  //
-
-  // Query update post view count
-  const [handleUpdateReactionCount, { reset }] = useMutation(
-    NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT,
-    {
-      onCompleted: (data) => {
-        IS_DEV && console.log("___update post view data: ", data);
-        reset();
-      },
-    }
-  );
-
-  // update view count
-  useEffect(() => {
-    if (!isReady || IS_PREVIEW || !isUpdateViewCount) {
-      return;
-    }
-
-    // user chua dang nhap, va update view count voi user la null
-    if (isAuthenticated === false) {
-      handleUpdateReactionCount({
-        variables: {
-          post_id: databaseId,
-          reaction: NcmazFcUserReactionPostActionEnum.View,
-          number: NcmazFcUserReactionPostNumberUpdateEnum.Add_1,
-        },
-      });
-      return;
-    }
-
-    // user da dang nhap, va luc nay viewer dang fetch.
-    if (!viewer?.databaseId) {
-      return;
-    }
-
-    // khi viewer fetch xong, luc nay viewer da co databaseId, va se update view count voi user la viewer
-    handleUpdateReactionCount({
-      variables: {
-        post_id: databaseId,
-        reaction: NcmazFcUserReactionPostActionEnum.View,
-        number: NcmazFcUserReactionPostNumberUpdateEnum.Add_1,
-        user_id: viewer?.databaseId,
-      },
-    });
-  }, [
-    databaseId,
-    isReady,
-    isAuthenticated,
-    viewer?.databaseId,
-    IS_PREVIEW,
-    isUpdateViewCount,
-  ]);
-
   const renderHeaderType = () => {
-    const pData = { ...(_post || {}) };
-
-    if (ncPostMetaData?.template?.[0] === "style2") {
-      return <DynamicSingleType2 post={pData} />;
-    }
-    if (ncPostMetaData?.template?.[0] === "style3") {
-      return <DynamicSingleType3 post={pData} />;
-    }
-    if (ncPostMetaData?.template?.[0] === "style4") {
-      return <DynamicSingleType4 post={pData} />;
-    }
-    if (ncPostMetaData?.template?.[0] === "style5") {
-      return <DynamicSingleType5 post={pData} />;
-    }
     return (
       <SingleType1
         showRightSidebar={!!ncPostMetaData?.showRightSidebar}
-        post={pData}
+        post={_post}
       />
     );
   };
@@ -192,7 +99,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
                 </div>
               </div>
 
-              {/* RELATED POSTS */}
               <DynamicSingleRelatedPosts
                 posts={_relatedPosts}
                 postDatabaseId={databaseId}
@@ -204,12 +110,10 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
             {renderHeaderType()}
 
             <div className="container mt-10">
-              {/* SINGLE MAIN CONTENT */}
               <SingleContent post={_post} />
               <SocialsShare link={router.asPath} />
             </div>
 
-            {/* RELATED POSTS */}
             <DynamicSingleRelatedPosts
               posts={_relatedPosts}
               postDatabaseId={databaseId}

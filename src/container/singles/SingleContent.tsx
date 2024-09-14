@@ -16,6 +16,7 @@ import TableContentAnchor from './TableContentAnchor';
 import Alert from '@/components/Alert';
 import { clsx } from 'clsx';
 import { useMusicPlayer } from '@/hooks/useMusicPlayer';
+import ReactDOMServer from 'react-dom/server';
 
 export interface SingleContentProps {
     post: GetPostSiglePageQuery['post'];
@@ -100,16 +101,17 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
     };
 
     const renderTOCBeforeFirstH2 = () => {
+        const tocHTML = ReactDOMServer.renderToString(
+            <TableContentAnchor content={content} className="mb-5" />
+        );
+
         const parser = new DOMParser();
         const doc = parser.parseFromString(content, 'text/html');
         const firstH2 = doc.querySelector('h2');
 
         if (firstH2) {
             const tocContainer = document.createElement('div');
-            const tocElement = (
-                <TableContentAnchor content={content} className="mb-5" />
-            );
-            tocContainer.appendChild(tocElement);
+            tocContainer.innerHTML = tocHTML;
             firstH2.parentNode?.insertBefore(tocContainer, firstH2);
         }
 

@@ -15,8 +15,9 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import { TPostCard } from "@/components/Card2/Card2";
-import { useRouter } from "next/router";
+import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1"; // Add this import
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
+import { useRouter } from "next/router";
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")

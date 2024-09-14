@@ -4,7 +4,6 @@ import {
   NcgeneralSettingsFieldsFragmentFragment,
   NcmazFcUserReactionPostActionEnum,
   NcmazFcUserReactionPostNumberUpdateEnum,
-  NcmazFcPostFullFieldsFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -30,30 +29,31 @@ import SingleTypeGallery from "@/container/singles/single-gallery/single-gallery
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
 
 const DynamicSingleRelatedPosts = dynamic(
-  () => import("@/container/singles/SingleRelatedPosts"),
-  { ssr: false }
+  () => import("@/container/singles/SingleRelatedPosts")
 );
 const DynamicSingleType2 = dynamic(
-  () => import("../container/singles/single-2/single-2"),
-  { ssr: false }
+  () => import("../container/singles/single-2/single-2")
 );
 const DynamicSingleType3 = dynamic(
-  () => import("../container/singles/single-3/single-3"),
-  { ssr: false }
+  () => import("../container/singles/single-3/single-3")
 );
 const DynamicSingleType4 = dynamic(
-  () => import("../container/singles/single-4/single-4"),
-  { ssr: false }
+  () => import("../container/singles/single-4/single-4")
 );
 const DynamicSingleType5 = dynamic(
-  () => import("../container/singles/single-5/single-5"),
-  { ssr: false }
+  () => import("../container/singles/single-5/single-5")
 );
 
 const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
+  //  LOADING ----------
+  if (props.loading) {
+    return <>Loading...</>;
+  }
+
   const router = useRouter();
   const IS_PREVIEW = router.pathname === "/preview";
 
+  // START ----------
   const { isReady, isAuthenticated } = useSelector(
     (state: RootState) => state.viewer.authorizedUser
   );
@@ -70,7 +70,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     };
   }, []);
 
-  const _post = props.data?.post as NcmazFcPostFullFieldsFragment || {} as NcmazFcPostFullFieldsFragment;
+  const _post = props.data?.post || {};
   const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
   const _top10Categories =
     (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
@@ -84,24 +84,30 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     excerpt,
   } = getPostDataFromPostFragment(_post);
 
-  useGetPostsNcmazMetaByIds({
-    posts: IS_PREVIEW ? [] : [_post],
+  //
+  const {} = useGetPostsNcmazMetaByIds({
+    posts: (IS_PREVIEW ? [] : [_post]) as TPostCard[],
   });
+  //
 
-  const [handleUpdateReactionCount] = useMutation(
+  // Query update post view count
+  const [handleUpdateReactionCount, { reset }] = useMutation(
     NC_MUTATION_UPDATE_USER_REACTION_POST_COUNT,
     {
       onCompleted: (data) => {
         IS_DEV && console.log("___update post view data: ", data);
+        reset();
       },
     }
   );
 
+  // update view count
   useEffect(() => {
     if (!isReady || IS_PREVIEW || !isUpdateViewCount) {
       return;
     }
 
+    // user chua dang nhap, va update view count voi user la null
     if (isAuthenticated === false) {
       handleUpdateReactionCount({
         variables: {
@@ -113,10 +119,12 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
       return;
     }
 
+    // user da dang nhap, va luc nay viewer dang fetch.
     if (!viewer?.databaseId) {
       return;
     }
 
+    // khi viewer fetch xong, luc nay viewer da co databaseId, va se update view count voi user la viewer
     handleUpdateReactionCount({
       variables: {
         post_id: databaseId,
@@ -125,7 +133,14 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
         user_id: viewer?.databaseId,
       },
     });
-  }, [databaseId, isReady, isAuthenticated, viewer?.databaseId, IS_PREVIEW, isUpdateViewCount]);
+  }, [
+    databaseId,
+    isReady,
+    isAuthenticated,
+    viewer?.databaseId,
+    IS_PREVIEW,
+    isUpdateViewCount,
+  ]);
 
   const renderHeaderType = () => {
     const pData = { ...(_post || {}) };
@@ -153,46 +168,66 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
       return <DynamicSingleType5 post={pData} />;
     }
     return (
-      <SingleType1 showRightSidebar={!!ncPostMetaData?.showRightSidebar} post={pData} />
+      <SingleType1
+        showRightSidebar={!!ncPostMetaData?.showRightSidebar}
+        post={pData}
+      />
     );
   };
 
   return (
-    <PageLayout
-      headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
-      footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-      pageFeaturedImageUrl={featuredImage?.sourceUrl}
-      pageTitle={title}
-      pageDescription={excerpt || ""}
-      generalSettings={
-        props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
-      }
-    >
-      {ncPostMetaData?.showRightSidebar ? (
-        <div className="relative">
-          {renderHeaderType()}
-          <div className="container flex flex-col my-10 lg:flex-row ">
-            <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
+    <>
+      <PageLayout
+        headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
+        footerMenuItems={props.data?.footerMenuItems?.nodes || []}
+        pageFeaturedImageUrl={featuredImage?.sourceUrl}
+        pageTitle={title}
+        pageDescription={excerpt || ""}
+        generalSettings={
+          props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
+        }
+      >
+        {ncPostMetaData?.showRightSidebar ? (
+          <div>
+            <div className={`relative`}>
+              {renderHeaderType()}
+
+              <div className="container flex flex-col my-10 lg:flex-row ">
+                <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
+                  <SingleContent post={_post} />
+                  <SocialsShare link={router.asPath} />
+                </div>
+                <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
+                  <Sidebar categories={_top10Categories} />
+                </div>
+              </div>
+
+              {/* RELATED POSTS */}
+              <DynamicSingleRelatedPosts
+                posts={_relatedPosts}
+                postDatabaseId={databaseId}
+              />
+            </div>
+          </div>
+        ) : (
+          <div>
+            {renderHeaderType()}
+
+            <div className="container mt-10">
+              {/* SINGLE MAIN CONTENT */}
               <SingleContent post={_post} />
               <SocialsShare link={router.asPath} />
             </div>
-            <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-              <Sidebar categories={_top10Categories} />
-            </div>
+
+            {/* RELATED POSTS */}
+            <DynamicSingleRelatedPosts
+              posts={_relatedPosts}
+              postDatabaseId={databaseId}
+            />
           </div>
-          <DynamicSingleRelatedPosts posts={_relatedPosts} postDatabaseId={databaseId} />
-        </div>
-      ) : (
-        <div>
-          {renderHeaderType()}
-          <div className="container mt-10">
-            <SingleContent post={_post} />
-            <SocialsShare link={router.asPath} />
-          </div>
-          <DynamicSingleRelatedPosts posts={_relatedPosts} postDatabaseId={databaseId} />
-        </div>
-      )}
-    </PageLayout>
+        )}
+      </PageLayout>
+    </>
   );
 };
 
@@ -206,23 +241,17 @@ Component.variables = ({ databaseId }, ctx) => {
   };
 };
 
-Component.query = gql`
-  query GetPostSiglePage(
-    $databaseId: ID!,
-    $post_databaseId: Int,
-    $asPreview: Boolean = false,
-    $headerLocation: MenuLocationEnum!,
-    $footerLocation: MenuLocationEnum!
-  ) {
+Component.query = gql(`
+  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int,$asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-      ...NcmazFcPostFullFields
+    ...NcmazFcPostFullFields
     }
-    posts(where: { isRelatedOfPostId: $post_databaseId }) {
+    posts(where: {isRelatedOfPostId:$post_databaseId}) {
       nodes {
-        ...PostCardFieldsNOTNcmazMEDIA
+      ...PostCardFieldsNOTNcmazMEDIA
       }
     }
-    categories(first: 10, where: { orderby: COUNT, order: DESC }) {
+    categories(first:10, where: { orderby: COUNT, order: DESC }) {
       nodes {
         ...NcmazFcCategoryFullFieldsFragment
       }
@@ -230,17 +259,17 @@ Component.query = gql`
     generalSettings {
       ...NcgeneralSettingsFieldsFragment
     }
-    primaryMenuItems: menuItems(where: { location: $headerLocation }, first: 80) {
+    primaryMenuItems: menuItems(where: {location:$headerLocation}, first: 80) {
       nodes {
         ...NcPrimaryMenuFieldsFragment
       }
     }
-    footerMenuItems: menuItems(where: { location: $footerLocation }, first: 40) {
+    footerMenuItems: menuItems(where: {location:$footerLocation}, first: 40) {
       nodes {
         ...NcFooterMenuFieldsFragment
       }
     }
   }
-`;
+`);
 
 export default Component;

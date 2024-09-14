@@ -7,7 +7,6 @@ import { GetPostSiglePageQuery } from '@/__generated__/graphql'
 import { getPostDataFromPostFragment } from '@/utils/getPostDataFromPostFragment'
 import SingleCommentWrap from './SingleCommentWrap'
 import Alert from '@/components/Alert'
-import TableContentAnchor from './TableContentAnchor'
 
 export interface SingleContentProps {
     post: GetPostSiglePageQuery['post']
@@ -27,22 +26,6 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
         date,
     } = getPostDataFromPostFragment(post || {})
 
-    useEffect(() => {
-        if (contentRef.current) {
-            const doc = new DOMParser().parseFromString(content, 'text/html')
-            const firstParagraph = doc.querySelector('p')
-
-            if (firstParagraph) {
-                const tocElement = doc.querySelector('.table-of-contents')
-                if (tocElement) {
-                    firstParagraph.insertAdjacentElement('afterend', tocElement)
-                }
-            }
-
-            contentRef.current.innerHTML = doc.body.innerHTML
-        }
-    }, [content])
-
     const renderAlert = () => {
         if (status === 'publish') {
             return null
@@ -55,12 +38,10 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
             )
         }
         return (
-            <>
-                <Alert type="warning">
-                    This post is {status}. It will not be visible on the website until it
-                    is published.
-                </Alert>
-            </>
+            <Alert type="warning">
+                This post is {status}. It will not be visible on the website until it
+                is published.
+            </Alert>
         )
     }
 
@@ -69,12 +50,6 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
             <div className="nc-SingleContent flex-1 space-y-10">
                 {/* Alert for post status */}
                 {renderAlert()}
-
-                {/* TOC Anchor */}
-                <TableContentAnchor
-                    className="mx-auto max-w-screen-md"
-                    content={content}
-                />
 
                 {/* ENTRY CONTENT */}
                 <div

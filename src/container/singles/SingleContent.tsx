@@ -16,7 +16,6 @@ import TableContentAnchor from './TableContentAnchor';
 import Alert from '@/components/Alert';
 import { clsx } from 'clsx';
 import { useMusicPlayer } from '@/hooks/useMusicPlayer';
-import ReactDOMServer from 'react-dom/server';
 
 export interface SingleContentProps {
     post: GetPostSiglePageQuery['post'];
@@ -26,6 +25,7 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
     const endedAnchorRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const progressRef = useRef<HTMLButtonElement>(null);
+
     const [isShowScrollToTop, setIsShowScrollToTop] = useState<boolean>(false);
 
     const endedAnchorEntry = useIntersectionObserver(endedAnchorRef, {
@@ -80,6 +80,22 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
         };
     }, []);
 
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(content, 'text/html');
+
+            const firstParagraph = doc.querySelector('p');
+            const tocElement = document.querySelector('.table-of-contents');
+
+            if (firstParagraph && tocElement) {
+                firstParagraph.parentNode.insertBefore(tocElement, firstParagraph.nextSibling);
+            }
+
+            contentRef.current.innerHTML = doc.body.innerHTML;
+        }
+    }, [content]);
+
     const renderAlert = () => {
         if (status === 'publish') {
             return null;
@@ -100,24 +116,6 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
         );
     };
 
-    const renderTOCBeforeFirstH2 = () => {
-        const tocHTML = ReactDOMServer.renderToString(
-            <TableContentAnchor content={content} className="mb-5" />
-        );
-
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(content, 'text/html');
-        const firstH2 = doc.querySelector('h2');
-
-        if (firstH2) {
-            const tocContainer = document.createElement('div');
-            tocContainer.innerHTML = tocHTML;
-            firstH2.parentNode?.insertBefore(tocContainer, firstH2);
-        }
-
-        return doc.body.innerHTML;
-    };
-
     const showLikeAndCommentSticky =
         !endedAnchorEntry?.intersectionRatio &&
         (endedAnchorEntry?.boundingClientRect.top || 0) > 0;
@@ -125,18 +123,20 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
     return (
         <div className="relative flex flex-col">
             <div className="nc-SingleContent flex-1 space-y-10">
+                {/*    */}
                 {renderAlert()}
 
+                {/* ENTRY CONTENT */}
                 <div
                     id="single-entry-content"
                     className="prose mx-auto max-w-screen-md lg:prose-lg dark:prose-invert"
                     ref={contentRef}
-                    dangerouslySetInnerHTML={{ __html: renderTOCBeforeFirstH2() }}
                 />
 
+                {/* TAGS */}
                 {tags?.nodes?.length ? (
                     <div className="mx-auto flex max-w-screen-md flex-wrap">
-                        {tags.nodes.map(item => (
+                        {tags.nodes.map((item) => (
                             <Tag
                                 hideCount
                                 key={item.databaseId}
@@ -148,11 +148,13 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
                     </div>
                 ) : null}
 
+                {/* AUTHOR */}
                 <div className="mx-auto max-w-screen-md border-b border-t border-neutral-100 dark:border-neutral-700"></div>
                 <div className="mx-auto max-w-screen-md">
                     <SingleAuthor author={author} />
                 </div>
 
+                {/* COMMENTS LIST - not delete comments id */}
                 {commentStatus === 'open' ? (
                     <div
                         id="comments"
@@ -167,6 +169,7 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
                 <div className="!my-0" ref={endedAnchorRef}></div>
             </div>
 
+            {/* sticky action */}
             <StickyAction
                 showLikeAndCommentSticky={showLikeAndCommentSticky}
                 isShowScrollToTop={isShowScrollToTop}
@@ -178,19 +181,10 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
 };
 
 const StickyAction = forwardRef(function (
-    {
-        showLikeAndCommentSticky,
-        post,
-        isShowScrollToTop,
-    }: {
-        showLikeAndCommentSticky: boolean;
-        post: GetPostSiglePageQuery['post'];
-        isShowScrollToTop: boolean;
-    },
-    progressRef,
+    { showLikeAndCommentSticky, post, isShowScrollToTop },
+    progressRef
 ) {
-    const { content, databaseId, ncPostMetaData, uri, commentCount } =
-        getPostDataFromPostFragment(post || {});
+    const { content, databaseId, ncPostMetaData, uri, commentCount } = getPostDataFromPostFragment(post || {});
 
     const { postData: musicPlayerPostData } = useMusicPlayer();
 
@@ -211,9 +205,7 @@ const StickyAction = forwardRef(function (
                 leave="transition-opacity duration-150"
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
-                className={
-                    'inline-flex items-center justify-center gap-1 self-center sm:gap-2'
-                }
+                className={'inline-flex items-center justify-center gap-1 self-center sm:gap-2'}
             >
                 <>
                     <div className="flex items-center justify-center gap-1 rounded-full bg-white p-1.5 text-xs shadow-lg ring-1 ring-neutral-900/5 ring-offset-1 sm:gap-2 dark:bg-neutral-800">

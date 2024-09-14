@@ -1,7 +1,8 @@
-import { gql } from "../__generated__";
+import { gql } from "@apollo/client";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
+  NcmazFcPostFullFieldsFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -15,17 +16,14 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import { TPostCard } from "@/components/Card2/Card2";
-import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
-import SocialsShare from "@/components/SocialsShare/SocialsShare";
 import { useRouter } from "next/router";
-import TableContent from "@/container/singles/TableContentAnchor";
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
 );
 
 const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
-  // Loading state
+  //  LOADING ----------
   if (props.loading) {
     return <>Loading...</>;
   }
@@ -51,15 +49,13 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
 
   const _post = props.data?.post || {};
   const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
-  const _top10Categories =
-    (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
+  const _top10Categories = (props.data?.categories?.nodes) || [];
 
   const {
     title,
     ncPostMetaData,
     featuredImage,
     databaseId,
-    content,
     excerpt,
   } = getPostDataFromPostFragment(_post);
 
@@ -89,13 +85,13 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
             <div className={`relative`}>
               {renderHeaderType()}
 
-              <div className="container flex flex-col my-10 lg:flex-row">
+              <div className="container flex flex-col my-10 lg:flex-row ">
                 <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
                   <SingleContent post={_post} />
                   <SocialsShare link={router.asPath} />
                 </div>
                 <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-                  <Sidebar content={content || ""} />
+                  <Sidebar content={_post.content || ""} />
                 </div>
               </div>
 
@@ -135,12 +131,18 @@ Component.variables = ({ databaseId }, ctx) => {
   };
 };
 
-Component.query = gql(`
-  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int, $asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
+Component.query = gql`
+  query GetPostSiglePage(
+    $databaseId: ID!
+    $post_databaseId: Int
+    $asPreview: Boolean = false
+    $headerLocation: MenuLocationEnum!
+    $footerLocation: MenuLocationEnum!
+  ) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
       ...NcmazFcPostFullFieldsFragment
     }
-    posts(where: {isRelatedOfPostId: $post_databaseId}) {
+    posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {
         ...PostCardFieldsNOTNcmazMEDIA
       }
@@ -153,24 +155,20 @@ Component.query = gql(`
     generalSettings {
       ...NcgeneralSettingsFieldsFragment
     }
-    primaryMenuItems: menuItems(where: {location: $headerLocation}, first: 80) {
+    primaryMenuItems: menuItems(
+      where: { location: $headerLocation }
+      first: 80
+    ) {
       nodes {
         ...NcPrimaryMenuFieldsFragment
       }
     }
-    footerMenuItems: menuItems(where: {location: $footerLocation}, first: 40) {
+    footerMenuItems: menuItems(where: { location: $footerLocation }, first: 40) {
       nodes {
         ...NcFooterMenuFieldsFragment
       }
     }
   }
-
-  fragment NcmazFcPostFullFieldsFragment on Post {
-    title
-    content
-    databaseId
-    # Add other fields you need
-  }
-`);
+`;
 
 export default Component;

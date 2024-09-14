@@ -2,7 +2,6 @@ import { gql } from "@apollo/client";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
-  NcmazFcPostFullFieldsFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -16,6 +15,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import { TPostCard } from "@/components/Card2/Card2";
+import SocialsShare from "@/components/SocialsShare/SocialsShare"; // Ensure this import is correct
 import { useRouter } from "next/router";
 
 const DynamicSingleRelatedPosts = dynamic(

@@ -1,63 +1,44 @@
-import { getWordPressProps, WordPressTemplate, getApolloClient } from "@faustwp/core";
+import { getWordPressProps, WordPressTemplate } from "@faustwp/core";
 import { GetStaticProps } from "next";
 import { WordPressTemplateProps } from "../types";
-import { gql } from "@apollo/client";
 
 export default function Page(props: WordPressTemplateProps) {
   return <WordPressTemplate {...props} />;
 }
 
-// Get the Apollo Client instance
-const client = getApolloClient();
-
-async function fetchAllPosts() {
-  const { data } = await client.query({
-    query: gql`
-      query GetAllPostSlugs {
-        posts(first: 1000) {
-          nodes {
-            uri
-          }
-        }
-      }
-    `,
-  });
-
-  return data.posts.nodes.map((node: { uri: string }) => node.uri);
-}
-
-async function fetchAllCategories() {
-  const { data } = await client.query({
-    query: gql`
-      query GetAllCategorySlugs {
-        categories(first: 1000) {
-          nodes {
-            uri
-          }
-        }
-      }
-    `,
-  });
-
-  return data.categories.nodes.map((node: { uri: string }) => node.uri);
-}
-
 export async function myGetPaths() {
-  let posts = await fetchAllPosts();
-  let categories = await fetchAllCategories();
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_WORDPRESS_URL?.replace(/\/$/, "") +
+      "/wp-json/wp/v2/posts?per_page=50&_fields=slug"
+  );
+  const getAllCategories = await fetch(
+    process.env.NEXT_PUBLIC_WORDPRESS_URL?.replace(/\/$/, "") +
+      "/wp-json/wp/v2/categories?per_page=20&_fields=slug"
+  );
 
-  // Ensure there is at least one post and category to prevent errors
+  let posts = (await response.json()) as any[];
+  let categories = (await getAllCategories.json()) as any[];
+
   if (!categories?.length) {
-    categories = ["/category/uncategorized/"];
+    categories = [{ slug: "uncategorized" }];
   }
   if (!posts?.length) {
-    posts = ["/hello-world/"];
+    posts = [{ slug: "hello-world" }];
   }
 
-  const paths = [...categories, ...posts];
+  posts = [
+    ...categories.map((category) => ({ slug: "category/" + category.slug })),
+    ...posts,
+    { slug: "home-2" },
+    { slug: "home-3-podcast" },
+    { slug: "home-4-video" },
+    { slug: "home-5-gallery" },
+    { slug: "home-6" },
+    { slug: "search/posts/" },
+  ];
 
-  return paths.map((uri) => ({
-    params: { wordpressNode: uri.replace(/^\/|\/$/g, "").split("/") },
+  return posts.map((page) => ({
+    params: { wordpressNode: [page.slug] },
   }));
 }
 
@@ -70,6 +51,6 @@ export async function getStaticPaths() {
   };
 }
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
-  return await getWordPressProps({ ctx, revalidate: 900 });
+export const getStaticProps: GetStaticProps = (ctx) => {
+  return getWordPressProps({ ctx, revalidate: 900 });
 };

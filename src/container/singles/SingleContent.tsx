@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, forwardRef, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import Tag from '@/components/Tag/Tag';
 import SingleAuthor from './SingleAuthor';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
@@ -85,11 +85,10 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(content, 'text/html');
 
-            const firstParagraph = doc.querySelector('p');
             const tocElement = document.querySelector('.table-of-contents');
 
-            if (firstParagraph && tocElement) {
-                firstParagraph.parentNode.insertBefore(tocElement, firstParagraph.nextSibling);
+            if (tocElement) {
+                doc.body.insertBefore(tocElement, doc.body.firstChild);
             }
 
             contentRef.current.innerHTML = doc.body.innerHTML;

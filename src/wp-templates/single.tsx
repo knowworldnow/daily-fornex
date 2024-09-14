@@ -145,16 +145,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   const renderHeaderType = () => {
     const pData = { ...(_post || {}) };
 
-    if (postFormats === "audio") {
-      return <SingleTypeAudio post={pData} />;
-    }
-    if (postFormats === "video") {
-      return <SingleTypeVideo post={pData} />;
-    }
-    if (postFormats === "gallery") {
-      return <SingleTypeGallery post={pData} />;
-    }
-
     if (ncPostMetaData?.template?.[0] === "style2") {
       return <DynamicSingleType2 post={pData} />;
     }

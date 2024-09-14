@@ -1,14 +1,15 @@
-import { getWordPressProps, WordPressTemplate } from "@faustwp/core";
+import { getWordPressProps, WordPressTemplate, getApolloClient } from "@faustwp/core";
 import { GetStaticProps } from "next";
 import { WordPressTemplateProps } from "../types";
-import { client } from "../client"; // Adjust the path as needed
 import { gql } from "@apollo/client";
 
 export default function Page(props: WordPressTemplateProps) {
   return <WordPressTemplate {...props} />;
 }
 
-// Fetch all posts using GraphQL
+// Get the Apollo Client instance
+const client = getApolloClient();
+
 async function fetchAllPosts() {
   const { data } = await client.query({
     query: gql`
@@ -25,7 +26,6 @@ async function fetchAllPosts() {
   return data.posts.nodes.map((node: { uri: string }) => node.uri);
 }
 
-// Fetch all categories using GraphQL
 async function fetchAllCategories() {
   const { data } = await client.query({
     query: gql`

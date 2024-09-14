@@ -1,7 +1,8 @@
-import { gql } from "@apollo/client";
+import { gql } from "../__generated__";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
+  NcmazFcPostFullFieldsFragmentFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -15,7 +16,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import { TPostCard } from "@/components/Card2/Card2";
-import SocialsShare from "@/components/SocialsShare/SocialsShare"; // Ensure this import is correct
+import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
+import SocialsShare from "@/components/SocialsShare/SocialsShare";
 import { useRouter } from "next/router";
 
 const DynamicSingleRelatedPosts = dynamic(
@@ -47,9 +49,10 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     };
   }, []);
 
-  const _post = props.data?.post || {};
+  const _post = props.data?.post || {} as NcmazFcPostFullFieldsFragmentFragment;
   const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
-  const _top10Categories = (props.data?.categories?.nodes) || [];
+  const _top10Categories =
+    (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
 
   const {
     title,
@@ -168,6 +171,13 @@ Component.query = gql`
         ...NcFooterMenuFieldsFragment
       }
     }
+  }
+
+  fragment NcmazFcPostFullFieldsFragment on Post {
+    title
+    content
+    databaseId
+    # Include other fields you need here
   }
 `;
 

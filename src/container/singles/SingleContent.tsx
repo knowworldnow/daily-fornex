@@ -12,8 +12,6 @@ import { Transition } from '@headlessui/react';
 import Alert from '@/components/Alert';
 import { clsx } from 'clsx';
 import { useMusicPlayer } from '@/hooks/useMusicPlayer';
-import parse from 'html-react-parser';
-import AdSenseAd from '@/components/AdSenseAd';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import PostCardLikeAction from '@/components/PostCardLikeAction/PostCardLikeAction';
 import PostCardCommentBtn from '@/components/PostCardCommentBtn/PostCardCommentBtn';
@@ -28,22 +26,6 @@ const TableContentAnchor = dynamic(() => import('./TableContentAnchor'), {
 const SingleAuthor = dynamic(() => import('./SingleAuthor'), {
   loading: () => <p>Loading author info...</p>,
 });
-
-// Define the insertAds function here
-const insertAds = (content: string) => {
-  const parsedContent = parse(content);
-  const contentArray = React.Children.toArray(parsedContent);
-
-  const adPositions = [4, 14, 24, 34, 44, 54, 64];
-
-  adPositions.forEach((position, index) => {
-    if (contentArray.length > position) {
-      contentArray.splice(position + index, 0, <AdSenseAd key={`ad-${position}`} />);
-    }
-  });
-
-  return contentArray;
-};
 
 export interface SingleContentProps {
   post: GetPostSiglePageQuery['post'];
@@ -143,9 +125,8 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
           id='single-entry-content'
           className='prose mx-auto max-w-screen-md lg:prose-lg dark:prose-invert'
           ref={contentRef}
-        >
-          {insertAds(content)}
-        </div>
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
 
         {/* TAGS */}
         {tags?.nodes?.length ? (

@@ -70,13 +70,24 @@ export default class Document extends NextDocument {
           <meta name="application-name" content="Ncmaz Nextjs" />
           <meta name="theme-color" content="#172A53" />
 
-          {/* Google AdSense */}
+          {/* Google AdSense Auto Ads */}
           <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7892867039237421"
             crossOrigin="anonymous"
           ></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (adsbygoogle = window.adsbygoogle || []).push({
+                  google_ad_client: "ca-pub-7892867039237421",
+                  enable_page_level_ads: true
+                });
+              `,
+            }}
+          ></script>
 
+          {/* Theme and Banner Scripts */}
           <script
             dangerouslySetInnerHTML={{
               __html: `

@@ -1,4 +1,6 @@
-import { gql } from "../__generated__";
+// src/wp-templates/single.tsx
+
+import { gql } from "@apollo/client"; // Corrected import
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,

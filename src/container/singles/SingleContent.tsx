@@ -12,6 +12,7 @@ import { getPostDataFromPostFragment } from '@/utils/getPostDataFromPostFragment
 import NcBookmark from '@/components/NcBookmark/NcBookmark'
 import SingleCommentWrap from './SingleCommentWrap'
 import { Transition } from '@headlessui/react'
+import TableContentAnchor from './TableContentAnchor'
 import Alert from '@/components/Alert'
 import { clsx } from 'clsx'
 import { useMusicPlayer } from '@/hooks/useMusicPlayer'
@@ -250,6 +251,11 @@ const StickyAction = forwardRef(function (
 							%
 						</button>
 					</div>
+
+					<TableContentAnchor
+						className="flex items-center justify-center gap-2 rounded-full bg-white p-1.5 text-xs shadow-lg ring-1 ring-neutral-900/5 ring-offset-1 dark:bg-neutral-800"
+						content={content}
+					/>
 				</>
 			</Transition>
 		</div>

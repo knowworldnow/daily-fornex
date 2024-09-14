@@ -15,16 +15,17 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import { TPostCard } from "@/components/Card2/Card2";
-import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1"; // Add this import
+import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
 import { useRouter } from "next/router";
+import TableContent from "@/container/singles/TableContentAnchor"; // Import TOC component
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
 );
 
 const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
-  //  LOADING ----------
+  // Loading state
   if (props.loading) {
     return <>Loading...</>;
   }
@@ -58,6 +59,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     ncPostMetaData,
     featuredImage,
     databaseId,
+    content,
     excerpt,
   } = getPostDataFromPostFragment(_post);
 
@@ -87,13 +89,15 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
             <div className={`relative`}>
               {renderHeaderType()}
 
-              <div className="container flex flex-col my-10 lg:flex-row ">
+              <div className="container flex flex-col my-10 lg:flex-row">
                 <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
                   <SingleContent post={_post} />
                   <SocialsShare link={router.asPath} />
                 </div>
                 <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-                  <Sidebar content={_post.content || ""} />
+                  <Sidebar>
+                    <TableContent content={content || ""} />
+                  </Sidebar>
                 </div>
               </div>
 

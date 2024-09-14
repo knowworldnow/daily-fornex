@@ -12,6 +12,7 @@ import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment
 import { Sidebar } from "@/container/singles/Sidebar";
 import PageLayout from "@/container/PageLayout";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
+import dynamic from "next/dynamic";  // <-- Added the missing import for dynamic
 import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useSelector } from "react-redux";

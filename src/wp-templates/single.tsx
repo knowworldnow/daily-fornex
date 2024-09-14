@@ -1,6 +1,5 @@
-// src/wp-templates/single.tsx
-
-import { gql } from "@apollo/client"; // Corrected import
+import React from "react";
+import { gql } from "@apollo/client";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
@@ -53,7 +52,7 @@ const DynamicSingleType5 = dynamic(
 );
 
 const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
-  //  LOADING ----------
+  // LOADING ----------
   if (props.loading) {
     return <>Loading...</>;
   }

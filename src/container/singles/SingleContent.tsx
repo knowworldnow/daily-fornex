@@ -81,7 +81,7 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
     }, []);
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && contentRef.current) {
             const parser = new DOMParser();
             const doc = parser.parseFromString(content, 'text/html');
 
@@ -91,7 +91,9 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
                 doc.body.insertBefore(tocElement, doc.body.firstChild);
             }
 
-            contentRef.current.innerHTML = doc.body.innerHTML;
+            if (contentRef.current) {
+                contentRef.current.innerHTML = doc.body.innerHTML;
+            }
         }
     }, [content]);
 
@@ -122,17 +124,14 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
     return (
         <div className="relative flex flex-col">
             <div className="nc-SingleContent flex-1 space-y-10">
-                {/*    */}
                 {renderAlert()}
 
-                {/* ENTRY CONTENT */}
                 <div
                     id="single-entry-content"
                     className="prose mx-auto max-w-screen-md lg:prose-lg dark:prose-invert"
                     ref={contentRef}
                 />
 
-                {/* TAGS */}
                 {tags?.nodes?.length ? (
                     <div className="mx-auto flex max-w-screen-md flex-wrap">
                         {tags.nodes.map((item) => (
@@ -147,13 +146,11 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
                     </div>
                 ) : null}
 
-                {/* AUTHOR */}
                 <div className="mx-auto max-w-screen-md border-b border-t border-neutral-100 dark:border-neutral-700"></div>
                 <div className="mx-auto max-w-screen-md">
                     <SingleAuthor author={author} />
                 </div>
 
-                {/* COMMENTS LIST - not delete comments id */}
                 {commentStatus === 'open' ? (
                     <div
                         id="comments"
@@ -168,7 +165,6 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
                 <div className="!my-0" ref={endedAnchorRef}></div>
             </div>
 
-            {/* sticky action */}
             <StickyAction
                 showLikeAndCommentSticky={showLikeAndCommentSticky}
                 isShowScrollToTop={isShowScrollToTop}

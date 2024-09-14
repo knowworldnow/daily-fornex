@@ -18,7 +18,7 @@ import { TPostCard } from "@/components/Card2/Card2";
 import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
 import { useRouter } from "next/router";
-import TableContent from "@/container/singles/TableContentAnchor"; // Import TOC component
+import TableContent from "@/container/singles/TableContentAnchor";
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -95,7 +95,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
                   <SocialsShare link={router.asPath} />
                 </div>
                 <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-                  <Sidebar>
+                  <Sidebar content={content || ""}>
                     <TableContent content={content || ""} />
                   </Sidebar>
                 </div>
@@ -140,7 +140,7 @@ Component.variables = ({ databaseId }, ctx) => {
 Component.query = gql(`
   query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int, $asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-      ...NcmazFcPostFullFields
+      ...NcmazFcPostFullFieldsFragment
     }
     posts(where: {isRelatedOfPostId: $post_databaseId}) {
       nodes {
@@ -165,6 +165,13 @@ Component.query = gql(`
         ...NcFooterMenuFieldsFragment
       }
     }
+  }
+
+  fragment NcmazFcPostFullFieldsFragment on Post {
+    title
+    content
+    databaseId
+    # Add other fields you need
   }
 `);
 

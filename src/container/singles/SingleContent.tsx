@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState, forwardRef } from 'react'; // Import forwardRef here
 import Tag from '@/components/Tag/Tag';
 import SingleAuthor from './SingleAuthor';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';

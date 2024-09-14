@@ -44,7 +44,7 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
     freezeOnceVisible: false,
   });
 
-  // Use useMemo to memoize post data
+  // Memoize post data
   const postData = useMemo(() => getPostDataFromPostFragment(post || {}), [post]);
   const {
     content,
@@ -67,9 +67,9 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
       }
 
       const totalEntryH = entryContent.offsetTop + entryContent.offsetHeight;
-      let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
 
-      let scrolled = totalEntryH ? (winScroll / totalEntryH) * 100 : 0;
+      const scrolled = totalEntryH ? (winScroll / totalEntryH) * 100 : 0;
 
       progressBarContent.innerText = scrolled.toFixed(0) + '%';
 
@@ -80,15 +80,15 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
       }
     };
 
-    const throttledHandleProgress = throttle(handleProgressIndicator, 100);
+    const throttledHandleProgress = throttle(handleProgressIndicator, 200);
 
     window.addEventListener('scroll', throttledHandleProgress);
     return () => {
       window.removeEventListener('scroll', throttledHandleProgress);
+      throttledHandleProgress.cancel();
     };
   }, [isShowScrollToTop]);
 
-  // Corrected renderAlert function with explicit return type
   const renderAlert = (): React.ReactNode => {
     if (status === 'publish') {
       return null;
@@ -105,14 +105,13 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
         </Alert>
       );
     } else {
-      // Handle case when status is undefined or null
       return null;
     }
   };
 
   const showLikeAndCommentSticky =
     !endedAnchorEntry?.intersectionRatio &&
-    (endedAnchorEntry?.boundingClientRect.top || 0) > 0;
+    (endedAnchorEntry?.boundingClientRect?.top || 0) > 0;
 
   return (
     <div className='relative flex flex-col'>
@@ -210,9 +209,7 @@ const StickyAction = React.memo(
           leave='transition-opacity duration-150'
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
-          className={
-            'inline-flex items-center justify-center gap-1 self-center sm:gap-2'
-          }
+          className='inline-flex items-center justify-center gap-1 self-center sm:gap-2'
         >
           <>
             <div className='flex items-center justify-center gap-1 rounded-full bg-white p-1.5 text-xs shadow-lg ring-1 ring-neutral-900/5 ring-offset-1 sm:gap-2 dark:bg-neutral-800'>
@@ -231,7 +228,7 @@ const StickyAction = React.memo(
               <div className='h-4 border-s border-neutral-200 dark:border-neutral-700'></div>
 
               <button
-                className={`h-9 w-9 items-center justify-center rounded-full bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800 ${
+                className={`h-9 w-9 flex items-center justify-center rounded-full bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800 ${
                   isShowScrollToTop ? 'flex' : 'hidden'
                 }`}
                 onClick={() => {
@@ -244,10 +241,10 @@ const StickyAction = React.memo(
 
               <button
                 ref={progressRef as any}
-                className={`h-9 w-9 items-center justify-center ${
+                className={`h-9 w-9 flex items-center justify-center ${
                   isShowScrollToTop ? 'hidden' : 'flex'
                 }`}
-                title='Go to top'
+                title='Scroll Progress'
                 onClick={() => {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}

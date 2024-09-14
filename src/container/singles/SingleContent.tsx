@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, forwardRef, useRef, useEffect, useState } from 'react';
+import React, { FC, forwardRef, useRef, useEffect, useState, useMemo } from 'react';
 import Tag from '@/components/Tag/Tag';
 import dynamic from 'next/dynamic';
 import { ArrowUpIcon } from '@heroicons/react/24/solid';
@@ -17,6 +17,7 @@ import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import PostCardLikeAction from '@/components/PostCardLikeAction/PostCardLikeAction';
 import PostCardCommentBtn from '@/components/PostCardCommentBtn/PostCardCommentBtn';
 
+// Dynamically import components to optimize performance
 const SingleCommentWrap = dynamic(() => import('./SingleCommentWrap'), {
   loading: () => <p>Loading comments...</p>,
 });
@@ -60,6 +61,8 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
     freezeOnceVisible: false,
   });
 
+  // Use useMemo to memoize post data
+  const postData = useMemo(() => getPostDataFromPostFragment(post || {}), [post]);
   const {
     content,
     author,
@@ -69,14 +72,59 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
     tags,
     status,
     date,
-  } = getPostDataFromPostFragment(post || {});
+  } = postData;
 
   useEffect(() => {
-    // ... your existing useEffect code
-  }, []);
+    const handleProgressIndicator = () => {
+      const entryContent = contentRef.current;
+      const progressBarContent = progressRef.current;
 
-  const renderAlert = () => {
-    // ... your existing renderAlert code
+      if (!entryContent || !progressBarContent) {
+        return;
+      }
+
+      const totalEntryH = entryContent.offsetTop + entryContent.offsetHeight;
+      let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+
+      let scrolled = totalEntryH ? (winScroll / totalEntryH) * 100 : 0;
+
+      progressBarContent.innerText = scrolled.toFixed(0) + '%';
+
+      if (scrolled >= 100 && !isShowScrollToTop) {
+        setIsShowScrollToTop(true);
+      } else if (scrolled < 100 && isShowScrollToTop) {
+        setIsShowScrollToTop(false);
+      }
+    };
+
+    const throttledHandleProgress = throttle(handleProgressIndicator, 100);
+
+    window.addEventListener('scroll', throttledHandleProgress);
+    return () => {
+      window.removeEventListener('scroll', throttledHandleProgress);
+    };
+  }, [isShowScrollToTop]);
+
+  // Corrected renderAlert function with explicit return type
+  const renderAlert = (): React.ReactNode => {
+    if (status === 'publish') {
+      return null;
+    } else if (status === 'future') {
+      return (
+        <Alert type='warning'>
+          This post is scheduled. It will be published on {date}.
+        </Alert>
+      );
+    } else if (status) {
+      return (
+        <Alert type='warning'>
+          This post is {status}. It will not be visible on the website until it is published.
+        </Alert>
+      );
+    } else {
+      // Handle case when status is undefined or null
+      return null;
+    }
   };
 
   const showLikeAndCommentSticky =
@@ -145,57 +193,96 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
   );
 };
 
-const StickyAction = forwardRef(function (
-  {
-    showLikeAndCommentSticky,
-    post,
-    isShowScrollToTop,
-  }: {
-    showLikeAndCommentSticky: boolean;
-    post: GetPostSiglePageQuery['post'];
-    isShowScrollToTop: boolean;
-  },
-  progressRef
-) {
-  const { content, databaseId, ncPostMetaData, uri, commentCount } =
-    getPostDataFromPostFragment(post || {});
+const StickyAction = React.memo(
+  forwardRef(function (
+    {
+      showLikeAndCommentSticky,
+      post,
+      isShowScrollToTop,
+    }: {
+      showLikeAndCommentSticky: boolean;
+      post: GetPostSiglePageQuery['post'];
+      isShowScrollToTop: boolean;
+    },
+    progressRef
+  ) {
+    const { content, databaseId, ncPostMetaData, uri, commentCount } =
+      getPostDataFromPostFragment(post || {});
 
-  const { postData: musicPlayerPostData } = useMusicPlayer();
+    const { postData: musicPlayerPostData } = useMusicPlayer();
 
-  const hasMusic = musicPlayerPostData?.databaseId;
-  const stickyActionClassName = clsx(
-    'sticky z-40 mt-8 inline-flex self-center',
-    hasMusic ? 'bottom-14 sm:bottom-14' : 'bottom-5 sm:bottom-8'
-  );
+    const hasMusic = musicPlayerPostData?.databaseId;
+    const stickyActionClassName = clsx(
+      'sticky z-40 mt-8 inline-flex self-center',
+      hasMusic ? 'bottom-14 sm:bottom-14' : 'bottom-5 sm:bottom-8'
+    );
 
-  return (
-    <div className={stickyActionClassName}>
-      <Transition
-        as={'div'}
-        show={showLikeAndCommentSticky}
-        enter='transition-opacity duration-75'
-        enterFrom='opacity-0'
-        enterTo='opacity-100'
-        leave='transition-opacity duration-150'
-        leaveFrom='opacity-100'
-        leaveTo='opacity-0'
-        className={
-          'inline-flex items-center justify-center gap-1 self-center sm:gap-2'
-        }
-      >
-        <>
-          <div className='flex items-center justify-center gap-1 rounded-full bg-white p-1.5 text-xs shadow-lg ring-1 ring-neutral-900/5 ring-offset-1 sm:gap-2 dark:bg-neutral-800'>
-            {/* ... other elements */}
-          </div>
+    return (
+      <div className={stickyActionClassName}>
+        <Transition
+          as={'div'}
+          show={showLikeAndCommentSticky}
+          enter='transition-opacity duration-75'
+          enterFrom='opacity-0'
+          enterTo='opacity-100'
+          leave='transition-opacity duration-150'
+          leaveFrom='opacity-100'
+          leaveTo='opacity-0'
+          className={
+            'inline-flex items-center justify-center gap-1 self-center sm:gap-2'
+          }
+        >
+          <>
+            <div className='flex items-center justify-center gap-1 rounded-full bg-white p-1.5 text-xs shadow-lg ring-1 ring-neutral-900/5 ring-offset-1 sm:gap-2 dark:bg-neutral-800'>
+              <PostCardLikeAction
+                likeCount={ncPostMetaData?.likesCount || 0}
+                postDatabseId={databaseId}
+              />
+              <div className='h-4 border-s border-neutral-200 dark:border-neutral-700'></div>
+              <PostCardCommentBtn
+                isATagOnSingle
+                commentCount={commentCount || 0}
+                linkToPost={uri || ''}
+              />
+              <div className='h-4 border-s border-neutral-200 dark:border-neutral-700'></div>
+              <NcBookmark postDatabseId={databaseId} />
+              <div className='h-4 border-s border-neutral-200 dark:border-neutral-700'></div>
 
-          <TableContentAnchor
-            className='flex items-center justify-center gap-2 rounded-full bg-white p-1.5 text-xs shadow-lg ring-1 ring-neutral-900/5 ring-offset-1 dark:bg-neutral-800'
-            content={content}
-          />
-        </>
-      </Transition>
-    </div>
-  );
-});
+              <button
+                className={`h-9 w-9 items-center justify-center rounded-full bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800 ${
+                  isShowScrollToTop ? 'flex' : 'hidden'
+                }`}
+                onClick={() => {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                title='Go to top'
+              >
+                <ArrowUpIcon className='h-4 w-4' />
+              </button>
 
-export default SingleContent;
+              <button
+                ref={progressRef as any}
+                className={`h-9 w-9 items-center justify-center ${
+                  isShowScrollToTop ? 'hidden' : 'flex'
+                }`}
+                title='Go to top'
+                onClick={() => {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                %
+              </button>
+            </div>
+
+            <TableContentAnchor
+              className='flex items-center justify-center gap-2 rounded-full bg-white p-1.5 text-xs shadow-lg ring-1 ring-neutral-900/5 ring-offset-1 dark:bg-neutral-800'
+              content={content}
+            />
+          </>
+        </Transition>
+      </div>
+    );
+  })
+);
+
+export default React.memo(SingleContent);

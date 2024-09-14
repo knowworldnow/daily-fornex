@@ -1,4 +1,4 @@
-const { withFaust, getWpHostname } = require('@faustwp/core');
+const { withFaust, getWpHostname } = require('@faustwp/core'); 
 const { createSecureHeaders } = require('next-secure-headers');
 
 /**
@@ -114,6 +114,11 @@ module.exports = withFaust({
         source: '/author/shoumya',
         destination: '/about',
         permanent: true, // Set to true for a 308 redirect
+      },
+      {
+        source: '/index',
+        destination: '/',
+        permanent: true, // Redirects /index to the root /
       },
     ];
   },

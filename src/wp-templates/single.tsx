@@ -49,13 +49,15 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
 
   const _post = props.data?.post || {};
   const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
+  const _top10Categories =
+    (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
 
   const {
     title,
     ncPostMetaData,
     featuredImage,
+    databaseId,
     excerpt,
-    content,
   } = getPostDataFromPostFragment(_post);
 
   const renderHeaderType = () => {
@@ -90,13 +92,13 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
                   <SocialsShare link={router.asPath} />
                 </div>
                 <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-                  <Sidebar content={content} />
+                  <Sidebar content={_post.content || ""} />
                 </div>
               </div>
 
               <DynamicSingleRelatedPosts
                 posts={_relatedPosts}
-                postDatabaseId={_post.databaseId}
+                postDatabaseId={databaseId}
               />
             </div>
           </div>
@@ -111,7 +113,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
 
             <DynamicSingleRelatedPosts
               posts={_relatedPosts}
-              postDatabaseId={_post.databaseId}
+              postDatabaseId={databaseId}
             />
           </div>
         )}
@@ -138,6 +140,11 @@ Component.query = gql(`
     posts(where: {isRelatedOfPostId: $post_databaseId}) {
       nodes {
         ...PostCardFieldsNOTNcmazMEDIA
+      }
+    }
+    categories(first: 10, where: { orderby: COUNT, order: DESC }) {
+      nodes {
+        ...NcmazFcCategoryFullFieldsFragment
       }
     }
     generalSettings {

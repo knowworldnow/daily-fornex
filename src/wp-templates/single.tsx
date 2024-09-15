@@ -2,7 +2,8 @@ import { gql } from "../__generated__";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
-  NcmazFcPostFullFieldsFragmentFragment,
+  // Remove or replace this line:
+  // NcmazFcPostFullFieldsFragmentFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -48,7 +49,8 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     };
   }, []);
 
-  const _post = props.data?.post as NcmazFcPostFullFieldsFragmentFragment;
+  // Update this line to use the correct type
+  const _post = props.data?.post;
   const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
   const _top10Categories =
     (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
@@ -60,7 +62,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     databaseId,
     excerpt,
     content,
-  } = getPostDataFromPostFragment(_post);
+  } = getPostDataFromPostFragment(_post || {});
 
   const renderHeaderType = () => {
     return (
@@ -143,7 +145,19 @@ Component.query = gql`
     $footerLocation: MenuLocationEnum!
   ) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-      ...NcmazFcPostFullFieldsFragment
+      title
+      content
+      databaseId
+      excerpt
+      featuredImage {
+        node {
+          sourceUrl
+        }
+      }
+      ncPostMetaData {
+        showRightSidebar
+      }
+      # Include other fields you need here
     }
     posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {
@@ -173,11 +187,25 @@ Component.query = gql`
     }
   }
 
-  fragment NcmazFcPostFullFieldsFragment on Post {
-    title
-    content
-    databaseId
-    # Include other fields you need here
+  # Define your fragments here if they're not already defined elsewhere
+  fragment PostCardFieldsNOTNcmazMEDIA on Post {
+    # Add the fields you need for PostCardFieldsNOTNcmazMEDIA
+  }
+
+  fragment NcmazFcCategoryFullFieldsFragment on Category {
+    # Add the fields you need for NcmazFcCategoryFullFieldsFragment
+  }
+
+  fragment NcgeneralSettingsFieldsFragment on GeneralSettings {
+    # Add the fields you need for NcgeneralSettingsFieldsFragment
+  }
+
+  fragment NcPrimaryMenuFieldsFragment on MenuItem {
+    # Add the fields you need for NcPrimaryMenuFieldsFragment
+  }
+
+  fragment NcFooterMenuFieldsFragment on MenuItem {
+    # Add the fields you need for NcFooterMenuFieldsFragment
   }
 `;
 

@@ -4,6 +4,7 @@ import {
   NcgeneralSettingsFieldsFragmentFragment,
   NcmazFcImageHasDetailFieldsFragment,
   NcmazFcUserFullFieldsFragment,
+  NcmazFcPostFullFieldsFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -109,7 +110,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
         )}
       </div>
       <DynamicSingleRelatedPosts
-        posts={props.data?.posts?.nodes || []}
+        posts={props.data?.posts?.nodes as NcmazFcPostFullFieldsFragment[] || []}
         postDatabaseId={databaseId}
       />
     </PageLayout>
@@ -158,11 +159,7 @@ Component.query = gql`
     }
     posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {
-        title
-        uri
-        featuredImage {
-          ...NcmazFcImageHasDetailFields
-        }
+        ...NcmazFcPostFullFields
       }
     }
     generalSettings {
@@ -208,6 +205,80 @@ Component.query = gql`
   fragment NcmazFcImageFields on NcmazFcImageFieldsFragment {
     sourceUrl
     altText
+  }
+
+  fragment NcmazFcPostFullFields on Post {
+    databaseId
+    title
+    uri
+    date
+    modified
+    status
+    featuredImage {
+      ...NcmazFcImageHasDetailFields
+    }
+    author {
+      ...NcmazFcUserFullFields
+    }
+    categories {
+      nodes {
+        databaseId
+        name
+        uri
+      }
+    }
+    excerpt
+    commentCount
+    commentStatus
+    postFormats {
+      nodes {
+        name
+        slug
+      }
+    }
+    ncmazVideoUrl {
+      videoUrl
+    }
+    ncmazAudioUrl {
+      audioUrl
+    }
+    ncPostMetaData {
+      fieldGroupName
+      favoriteButtonShortcode
+      frontendDate
+      likesCount
+      marchConfirm
+      newLikesCount
+      showRightSidebar
+      timeUpdate
+      viewsCount
+    }
+    ncmazGalleryImgs {
+      image0 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image1 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image2 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image3 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image4 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image5 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image6 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image7 {
+        ...NcmazFcImageHasDetailFields
+      }
+    }
   }
 `;
 

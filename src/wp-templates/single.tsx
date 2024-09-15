@@ -18,14 +18,23 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     return <>Loading...</>;
   }
 
-  const _post = props.data?.post || {};
+  // Type casting _post to ensure TypeScript knows what fields are present
+  const _post = props.data?.post as {
+    title: string;
+    ncPostMetaData?: { showRightSidebar: boolean };
+    featuredImage?: { node: { sourceUrl: string } };
+    content: string;
+    databaseId: number;
+    excerpt: string;
+  } || {};
+
   const {
-    title = "", // Add a default value to avoid undefined errors
+    title = "",
     ncPostMetaData,
     featuredImage,
-    content = "", // Add a default value to avoid undefined errors
+    content = "",
     databaseId,
-    excerpt = "", // Add a default value to avoid undefined errors
+    excerpt = "",
   } = _post;
 
   return (

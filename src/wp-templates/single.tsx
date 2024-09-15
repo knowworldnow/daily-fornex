@@ -2,15 +2,17 @@ import { gql } from "../__generated__";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
+  NcmazFcUserReactionPostActionEnum,
+  NcmazFcUserReactionPostNumberUpdateEnum,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
 import { Sidebar } from "@/container/singles/Sidebar";
 import PageLayout from "@/container/PageLayout";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import { TPostCard } from "@/components/Card2/Card2";
 import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
-import { useRouter } from "next/router";
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -21,7 +23,13 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     return <>Loading...</>;
   }
 
-  const _post = props.data?.post || {};
+  const _post = props.data?.post;
+
+  // Check if _post exists and has the necessary fields
+  if (!_post) {
+    return <>Post data is missing.</>;
+  }
+
   const {
     title,
     ncPostMetaData,
@@ -82,7 +90,16 @@ Component.variables = ({ databaseId }) => {
 Component.query = gql(`
   query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int) {
     post(id: $databaseId, idType: DATABASE_ID) {
-      ...NcmazFcPostFullFields
+      title
+      ncPostMetaData {
+        showRightSidebar
+      }
+      featuredImage {
+        sourceUrl
+      }
+      content
+      databaseId
+      excerpt
     }
     posts(where: {isRelatedOfPostId:$post_databaseId}) {
       nodes {

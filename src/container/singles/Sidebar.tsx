@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import TableContentAnchor from './TableContentAnchor';  // Assuming this is your TOC component
+import TableContentAnchor from './TableContentAnchor';
 
 export interface SidebarProps {
   content: string;

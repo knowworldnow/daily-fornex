@@ -2,25 +2,15 @@ import { gql } from "../__generated__";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
-  NcmazFcUserReactionPostActionEnum,
-  NcmazFcUserReactionPostNumberUpdateEnum,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
-import SingleType1 from "@/container/singles/single/single";
-import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment";
 import { Sidebar } from "@/container/singles/Sidebar";
 import PageLayout from "@/container/PageLayout";
-import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import { useMutation } from "@apollo/client";
-import { useSelector } from "react-redux";
-import { RootState } from "@/stores/store";
 import { TPostCard } from "@/components/Card2/Card2";
-import { useRouter } from "next/router";
 import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
-import SocialsShare from "@/components/SocialsShare/SocialsShare";
+import { useRouter } from "next/router";
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -39,7 +29,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     content,
     databaseId,
     excerpt,
-  } = getPostDataFromPostFragment(_post);
+  } = _post;
 
   const router = useRouter();
 
@@ -50,15 +40,15 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
       pageFeaturedImageUrl={featuredImage?.sourceUrl}
       pageTitle={title}
       pageDescription={excerpt || ""}
-      generalSettings={props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment}
+      generalSettings={
+        props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
+      }
     >
       {ncPostMetaData?.showRightSidebar ? (
         <div className="relative">
           <div className="container flex flex-col my-10 lg:flex-row">
             <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
-              <SingleType1 post={_post} />
               <SingleContent post={_post} />
-              <SocialsShare link={router.asPath} />
             </div>
             <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
               <Sidebar content={content || ""} />
@@ -71,9 +61,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
         </div>
       ) : (
         <div>
-          <SingleType1 post={_post} />
           <SingleContent post={_post} />
-          <SocialsShare link={router.asPath} />
           <DynamicSingleRelatedPosts
             posts={(props.data?.posts?.nodes as TPostCard[]) || []}
             postDatabaseId={databaseId}
@@ -84,19 +72,16 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   );
 };
 
-Component.variables = ({ databaseId }, ctx) => {
+Component.variables = ({ databaseId }) => {
   return {
     databaseId,
     post_databaseId: Number(databaseId || 0),
-    asPreview: ctx?.asPreview,
-    headerLocation: PRIMARY_LOCATION,
-    footerLocation: FOOTER_LOCATION,
   };
 };
 
 Component.query = gql(`
-  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int,$asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
-    post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
+  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int) {
+    post(id: $databaseId, idType: DATABASE_ID) {
       ...NcmazFcPostFullFields
     }
     posts(where: {isRelatedOfPostId:$post_databaseId}) {
@@ -112,12 +97,12 @@ Component.query = gql(`
     generalSettings {
       ...NcgeneralSettingsFieldsFragment
     }
-    primaryMenuItems: menuItems(where: {location:$headerLocation}, first: 80) {
+    primaryMenuItems: menuItems(where: {location:PRIMARY_LOCATION}, first: 80) {
       nodes {
         ...NcPrimaryMenuFieldsFragment
       }
     }
-    footerMenuItems: menuItems(where: {location:$footerLocation}, first: 40) {
+    footerMenuItems: menuItems(where: {location:FOOTER_LOCATION}, first: 40) {
       nodes {
         ...NcFooterMenuFieldsFragment
       }

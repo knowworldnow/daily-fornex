@@ -1,17 +1,13 @@
 import React, { FC } from 'react';
-import TableContentAnchor from './TableContentAnchor';
+import TableContentAnchor from './TableContentAnchor';  // Assuming this is your TOC component
 
 export interface SidebarProps {
-  className?: string;
   content: string;
 }
 
-export const Sidebar: FC<SidebarProps> = ({
-  className = 'space-y-6',
-  content,
-}) => {
+export const Sidebar: FC<SidebarProps> = ({ content }) => {
   return (
-    <div className={`nc-SingleSidebar lg:sticky lg:top-24 ${className}`}>
+    <div className="nc-SingleSidebar lg:sticky lg:top-24">
       <div className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-700">
         <TableContentAnchor 
           content={content} 

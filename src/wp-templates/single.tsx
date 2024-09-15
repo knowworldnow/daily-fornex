@@ -26,6 +26,12 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     content: string;
     databaseId: number;
     excerpt: string;
+    author: any; // Add proper typing if available
+    commentCount: number;
+    commentStatus: string;
+    tags: any; // Add proper typing if available
+    status: string;
+    date: string;
   } || {};
 
   const {
@@ -36,6 +42,9 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     databaseId,
     excerpt = "",
   } = _post;
+
+  console.log("Post data:", _post);
+  console.log("Categories:", props.data?.categories?.nodes);
 
   return (
     <PageLayout
@@ -53,7 +62,10 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
               <SingleContent post={_post} />
             </div>
             <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-              <Sidebar content={content} />
+              <Sidebar 
+                content={content} 
+                categories={props.data?.categories?.nodes || []}
+              />
             </div>
           </div>
         </div>
@@ -62,7 +74,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
           <SingleContent post={_post} />
         </div>
       )}
-
       <DynamicSingleRelatedPosts postId={databaseId} />
     </PageLayout>
   );
@@ -93,27 +104,70 @@ Component.query = gql(`
       content
       databaseId
       excerpt
+      author {
+        node {
+          name
+          uri
+          avatar {
+            url
+          }
+        }
+      }
+      commentCount
+      commentStatus
+      tags {
+        nodes {
+          databaseId
+          name
+          uri
+        }
+      }
+      status
+      date
     }
     posts(where: {isRelatedOfPostId: $post_databaseId}) {
       nodes {
         title
         uri
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
+      }
+    }
+    categories {
+      nodes {
+        databaseId
+        name
+        uri
+        count
+        ncTaxonomyMeta {
+          color
+          featuredImage {
+            sourceUrl
+          }
+        }
       }
     }
     generalSettings {
       title
       description
     }
-    primaryMenuItems: menuItems(where: {location: PRIMARY}) {
+    primaryMenuItems: menuItems(where: {location: $headerLocation}) {
       nodes {
         label
         url
+        uri
+        order
       }
     }
-    footerMenuItems: menuItems(where: {location: FOOTER}) {
+    footerMenuItems: menuItems(where: {location: $footerLocation}) {
       nodes {
         label
         url
+        uri
+        order
       }
     }
   }

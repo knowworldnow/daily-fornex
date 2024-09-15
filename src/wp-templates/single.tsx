@@ -1,4 +1,4 @@
-import { gql } from "../__generated__";
+import { gql } from "graphql-tag"; // Explicit import from graphql-tag
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
@@ -14,6 +14,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { TPostCard } from "@/components/Card2/Card2";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
+import { DocumentNode } from "graphql"; // Import DocumentNode
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -89,16 +90,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   );
 };
 
-Component.variables = ({ databaseId }, ctx) => {
-  return {
-    databaseId,
-    post_databaseId: Number(databaseId || 0),
-    asPreview: ctx?.asPreview,
-    headerLocation: PRIMARY_LOCATION,
-    footerLocation: FOOTER_LOCATION,
-  };
-};
-
+// Explicitly type the query as DocumentNode
 Component.query = gql(`
   query GetPostSiglePage(
     $databaseId: ID!
@@ -146,6 +138,6 @@ Component.query = gql(`
       }
     }
   }
-`);
+`) as DocumentNode;
 
 export default Component;

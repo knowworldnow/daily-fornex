@@ -10,7 +10,7 @@ import { Sidebar } from "@/container/singles/Sidebar";
 import PageLayout from "@/container/PageLayout";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import SingleType1 from "@/container/singles/single/single"; // <-- Add this import
+import SingleType1 from "@/container/singles/single/single"; // <-- Make sure this import exists
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -39,9 +39,10 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   } = _post;
 
   const renderHeaderType = () => {
+    const showRightSidebar = ncPostMetaData?.showRightSidebar || false; // Safe access
     return (
       <SingleType1
-        showRightSidebar={!!ncPostMetaData?.showRightSidebar}
+        showRightSidebar={showRightSidebar}
         post={_post}
       />
     );

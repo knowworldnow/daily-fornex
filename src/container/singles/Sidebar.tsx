@@ -7,12 +7,17 @@ export interface SidebarProps {
 }
 
 export const Sidebar: FC<SidebarProps> = ({
-  className = 'space-y-6 ',
+  className = 'space-y-6',
   content,
 }) => {
   return (
     <div className={`nc-SingleSidebar lg:sticky lg:top-24 ${className}`}>
-      <TableContentAnchor content={content} />
+      <div className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-700">
+        <TableContentAnchor 
+          content={content} 
+          className="text-sm text-neutral-700 dark:text-neutral-300"
+        />
+      </div>
     </div>
   );
 };

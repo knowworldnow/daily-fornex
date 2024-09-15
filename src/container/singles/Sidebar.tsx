@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import TableContent from './TableContentAnchor';
+import TableContentAnchor from './TableContentAnchor';
 
 export interface SidebarProps {
   className?: string;
@@ -12,7 +12,7 @@ export const Sidebar: FC<SidebarProps> = ({
 }) => {
   return (
     <div className={`nc-SingleSidebar lg:sticky lg:top-24 ${className}`}>
-      <TableContent content={content} />
+      <TableContentAnchor content={content} />
     </div>
   );
 };

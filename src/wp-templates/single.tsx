@@ -2,8 +2,6 @@ import { gql } from "../__generated__";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
-  NcmazFcUserReactionPostActionEnum,
-  NcmazFcUserReactionPostNumberUpdateEnum,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -11,16 +9,9 @@ import SingleType1 from "@/container/singles/single/single";
 import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment";
 import { Sidebar } from "@/container/singles/Sidebar";
 import PageLayout from "@/container/PageLayout";
-import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
-import dynamic from "next/dynamic";  // <-- Added the missing import for dynamic
-import { useEffect, useState } from "react";
-import { useMutation } from "@apollo/client";
-import { useSelector } from "react-redux";
-import { RootState } from "@/stores/store";
-import { TPostCard } from "@/components/Card2/Card2";
-import { useRouter } from "next/router";
-import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
+import dynamic from "next/dynamic";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
+import { useRouter } from "next/router";
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -31,41 +22,90 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     return <>Loading...</>;
   }
 
-  const _post = props.data?.post || {};
+  const router = useRouter();
+
+  const _post = props.data?.post;
+
+  if (!_post) {
+    return <div>Error: Post not found</div>;
+  }
+
   const {
     title,
     ncPostMetaData,
     featuredImage,
-    content,  // <-- Make sure content is being extracted here
     databaseId,
     excerpt,
+    content,
+    date,
+    author,
+    categories,
+    tags,
   } = getPostDataFromPostFragment(_post);
 
   return (
     <PageLayout
       headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
       footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-      pageFeaturedImageUrl={featuredImage?.sourceUrl}
+      pageFeaturedImageUrl={featuredImage?.node?.sourceUrl || ""}
       pageTitle={title}
       pageDescription={excerpt || ""}
-      generalSettings={props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment}
+      generalSettings={
+        props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
+      }
     >
-      {ncPostMetaData?.showRightSidebar ? (
-        <div className="relative">
-          <div className="container flex flex-col my-10 lg:flex-row">
-            <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
-              <SingleContent post={_post} />
-            </div>
-            <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-              <Sidebar content={content || ""} />  {/* Pass the content to the Sidebar */}
-            </div>
+      <SingleType1
+        showRightSidebar={!!ncPostMetaData?.showRightSidebar}
+        post={_post}
+      />
+      <div className="container flex flex-col my-10 lg:flex-row">
+        <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
+          <h1 className="text-3xl font-bold mb-4">{title}</h1>
+          {featuredImage && featuredImage.node && (
+            <img
+              src={featuredImage.node.sourceUrl}
+              alt={title}
+              className="w-full h-auto mb-6 rounded-lg"
+            />
+          )}
+          <div className="flex items-center mb-4 text-sm text-gray-600">
+            <span>{new Date(date).toLocaleDateString()}</span>
+            <span className="mx-2">•</span>
+            <span>By {author?.node?.name}</span>
           </div>
-        </div>
-      ) : (
-        <div>
+          {categories?.nodes && categories.nodes.length > 0 && (
+            <div className="mb-4">
+              {categories.nodes.map((category) => (
+                <span key={category.databaseId} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                  {category.name}
+                </span>
+              ))}
+            </div>
+          )}
+          <div className="prose max-w-none mb-6" dangerouslySetInnerHTML={{ __html: excerpt || "" }} />
           <SingleContent post={_post} />
+          {tags?.nodes && tags.nodes.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-xl font-semibold mb-2">Tags:</h3>
+              {tags.nodes.map((tag) => (
+                <span key={tag.databaseId} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                  {tag.name}
+                </span>
+              ))}
+            </div>
+          )}
+          <SocialsShare link={router.asPath} />
         </div>
-      )}
+        {ncPostMetaData?.showRightSidebar && (
+          <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
+            <Sidebar content={content || ""} />
+          </div>
+        )}
+      </div>
+      <DynamicSingleRelatedPosts
+        posts={props.data?.posts?.nodes || []}
+        postDatabaseId={databaseId}
+      />
     </PageLayout>
   );
 };
@@ -80,35 +120,72 @@ Component.variables = ({ databaseId }, ctx) => {
   };
 };
 
-Component.query = gql(`
-  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int,$asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
+Component.query = gql`
+  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int, $asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-    ...NcmazFcPostFullFields
-    }
-    posts(where: {isRelatedOfPostId:$post_databaseId}) {
-      nodes {
-      ...PostCardFieldsNOTNcmazMEDIA
+      title
+      content
+      databaseId
+      excerpt
+      featuredImage {
+        node {
+          sourceUrl
+        }
+      }
+      date
+      author {
+        node {
+          name
+        }
+      }
+      categories {
+        nodes {
+          databaseId
+          name
+        }
+      }
+      tags {
+        nodes {
+          databaseId
+          name
+        }
+      }
+      ncPostMetaData {
+        showRightSidebar
       }
     }
-    categories(first:10, where: { orderby: COUNT, order: DESC }) {
+    posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {
-        ...NcmazFcCategoryFullFieldsFragment
+        title
+        uri
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
       }
     }
     generalSettings {
-      ...NcgeneralSettingsFieldsFragment
+      title
+      description
     }
-    primaryMenuItems: menuItems(where: {location:$headerLocation}, first: 80) {
+    primaryMenuItems: menuItems(where: { location: $headerLocation }, first: 80) {
       nodes {
-        ...NcPrimaryMenuFieldsFragment
+        label
+        url
+        uri
+        order
       }
     }
-    footerMenuItems: menuItems(where: {location:$footerLocation}, first: 40) {
+    footerMenuItems: menuItems(where: { location: $footerLocation }, first: 40) {
       nodes {
-        ...NcFooterMenuFieldsFragment
+        label
+        url
+        uri
+        order
       }
     }
   }
-`);
+`;
 
 export default Component;

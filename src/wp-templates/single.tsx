@@ -1,4 +1,4 @@
-const gql = (strings: TemplateStringsArray, ...values: any[]) => String.raw({ raw: strings }, ...values);
+import { gql, FaustTemplate } from "@faustwp/core";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
@@ -6,7 +6,6 @@ import {
   NcmazFcUserFullFieldsFragment,
   NcmazFcPostFullFieldsFragment,
 } from "../__generated__/graphql";
-import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
 import SingleType1 from "@/container/singles/single/single";
 import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment";

@@ -10,7 +10,7 @@ import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment
 import { Sidebar } from "@/container/singles/Sidebar";
 import PageLayout from "@/container/PageLayout";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router"; // Import useRouter
+import { useRouter } from "next/router";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
 
 const DynamicSingleRelatedPosts = dynamic(() =>
@@ -22,9 +22,9 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     return <>Loading...</>;
   }
 
-  const router = useRouter(); // Define router
+  const router = useRouter();
   const _post = props.data?.post || {};
-  const { title, ncPostMetaData, featuredImage, databaseId, excerpt } =
+  const { title, ncPostMetaData, featuredImage, databaseId, excerpt, content } =
     getPostDataFromPostFragment(_post);
 
   return (
@@ -48,7 +48,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
                 <SocialsShare link={router.asPath} />
               </div>
               <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-                <Sidebar />
+                <Sidebar content={content || ""} /> {/* Pass the content to Sidebar */}
               </div>
             </div>
             <DynamicSingleRelatedPosts posts={props.data?.posts?.nodes || []} postDatabaseId={databaseId} />
@@ -84,6 +84,7 @@ Component.query = gql(`
       id
       title
       excerpt
+      content
       featuredImage {
         sourceUrl
       }

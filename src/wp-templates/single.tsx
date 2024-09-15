@@ -9,9 +9,8 @@ import SingleType1 from "@/container/singles/single/single";
 import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment";
 import { Sidebar } from "@/container/singles/Sidebar";
 import PageLayout from "@/container/PageLayout";
-import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
+import { useRouter } from "next/router"; // Import useRouter
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
 
 const DynamicSingleRelatedPosts = dynamic(() =>
@@ -23,6 +22,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     return <>Loading...</>;
   }
 
+  const router = useRouter(); // Define router
   const _post = props.data?.post || {};
   const { title, ncPostMetaData, featuredImage, databaseId, excerpt } =
     getPostDataFromPostFragment(_post);

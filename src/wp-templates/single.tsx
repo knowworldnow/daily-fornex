@@ -2,8 +2,6 @@ import { gql } from "../__generated__";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
-  // Remove or replace this line:
-  // NcmazFcPostFullFieldsFragmentFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -31,7 +29,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   }
 
   const router = useRouter();
-  const IS_PREVIEW = router.pathname === "/preview";
 
   const { isReady, isAuthenticated } = useSelector(
     (state: RootState) => state.viewer.authorizedUser
@@ -49,11 +46,14 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     };
   }, []);
 
-  // Update this line to use the correct type
   const _post = props.data?.post;
   const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
   const _top10Categories =
     (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
+
+  if (!_post) {
+    return <div>Error: Post not found</div>;
+  }
 
   const {
     title,
@@ -62,7 +62,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     databaseId,
     excerpt,
     content,
-  } = getPostDataFromPostFragment(_post || {});
+  } = getPostDataFromPostFragment(_post);
 
   const renderHeaderType = () => {
     return (
@@ -74,55 +74,47 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   };
 
   return (
-    <>
-      <PageLayout
-        headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
-        footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-        pageFeaturedImageUrl={featuredImage?.sourceUrl}
-        pageTitle={title}
-        pageDescription={excerpt || ""}
-        generalSettings={
-          props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
-        }
-      >
-        {ncPostMetaData?.showRightSidebar ? (
-          <div>
-            <div className={`relative`}>
-              {renderHeaderType()}
-
-              <div className="container flex flex-col my-10 lg:flex-row ">
-                <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
-                  <SingleContent post={_post} />
-                  <SocialsShare link={router.asPath} />
-                </div>
-                <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-                  <Sidebar content={content || ""} />
-                </div>
-              </div>
-
-              <DynamicSingleRelatedPosts
-                posts={_relatedPosts}
-                postDatabaseId={databaseId}
-              />
-            </div>
-          </div>
-        ) : (
-          <div>
-            {renderHeaderType()}
-
-            <div className="container mt-10">
+    <PageLayout
+      headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
+      footerMenuItems={props.data?.footerMenuItems?.nodes || []}
+      pageFeaturedImageUrl={featuredImage?.node?.sourceUrl || ""}
+      pageTitle={title}
+      pageDescription={excerpt || ""}
+      generalSettings={
+        props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
+      }
+    >
+      {ncPostMetaData?.showRightSidebar ? (
+        <div className="relative">
+          {renderHeaderType()}
+          <div className="container flex flex-col my-10 lg:flex-row">
+            <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
               <SingleContent post={_post} />
               <SocialsShare link={router.asPath} />
             </div>
-
-            <DynamicSingleRelatedPosts
-              posts={_relatedPosts}
-              postDatabaseId={databaseId}
-            />
+            <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
+              <Sidebar content={content || ""} />
+            </div>
           </div>
-        )}
-      </PageLayout>
-    </>
+          <DynamicSingleRelatedPosts
+            posts={_relatedPosts}
+            postDatabaseId={databaseId}
+          />
+        </div>
+      ) : (
+        <div>
+          {renderHeaderType()}
+          <div className="container mt-10">
+            <SingleContent post={_post} />
+            <SocialsShare link={router.asPath} />
+          </div>
+          <DynamicSingleRelatedPosts
+            posts={_relatedPosts}
+            postDatabaseId={databaseId}
+          />
+        </div>
+      )}
+    </PageLayout>
   );
 };
 
@@ -157,55 +149,33 @@ Component.query = gql`
       ncPostMetaData {
         showRightSidebar
       }
-      # Include other fields you need here
     }
     posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {
-        ...PostCardFieldsNOTNcmazMEDIA
+        # Add fields for PostCard
       }
     }
     categories(first: 10, where: { orderby: COUNT, order: DESC }) {
       nodes {
-        ...NcmazFcCategoryFullFieldsFragment
+        # Add fields for Category
       }
     }
     generalSettings {
-      ...NcgeneralSettingsFieldsFragment
+      # Add fields for GeneralSettings
     }
     primaryMenuItems: menuItems(
       where: { location: $headerLocation }
       first: 80
     ) {
       nodes {
-        ...NcPrimaryMenuFieldsFragment
+        # Add fields for PrimaryMenu
       }
     }
     footerMenuItems: menuItems(where: { location: $footerLocation }, first: 40) {
       nodes {
-        ...NcFooterMenuFieldsFragment
+        # Add fields for FooterMenu
       }
     }
-  }
-
-  # Define your fragments here if they're not already defined elsewhere
-  fragment PostCardFieldsNOTNcmazMEDIA on Post {
-    # Add the fields you need for PostCardFieldsNOTNcmazMEDIA
-  }
-
-  fragment NcmazFcCategoryFullFieldsFragment on Category {
-    # Add the fields you need for NcmazFcCategoryFullFieldsFragment
-  }
-
-  fragment NcgeneralSettingsFieldsFragment on GeneralSettings {
-    # Add the fields you need for NcgeneralSettingsFieldsFragment
-  }
-
-  fragment NcPrimaryMenuFieldsFragment on MenuItem {
-    # Add the fields you need for NcPrimaryMenuFieldsFragment
-  }
-
-  fragment NcFooterMenuFieldsFragment on MenuItem {
-    # Add the fields you need for NcFooterMenuFieldsFragment
   }
 `;
 

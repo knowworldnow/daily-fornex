@@ -2,6 +2,7 @@ import { gql } from "../__generated__";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
+  NcmazFcImageHasDetailFieldsFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -43,11 +44,15 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     tags,
   } = getPostDataFromPostFragment(_post);
 
+  const getFeaturedImageUrl = (image: NcmazFcImageHasDetailFieldsFragment | null | undefined): string => {
+    return image?.sourceUrl || "";
+  };
+
   return (
     <PageLayout
       headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
       footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-      pageFeaturedImageUrl={featuredImage?.node?.sourceUrl || ""}
+      pageFeaturedImageUrl={getFeaturedImageUrl(featuredImage)}
       pageTitle={title}
       pageDescription={excerpt || ""}
       generalSettings={
@@ -61,10 +66,10 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
       <div className="container flex flex-col my-10 lg:flex-row">
         <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
           <h1 className="text-3xl font-bold mb-4">{title}</h1>
-          {featuredImage && featuredImage.node && (
+          {featuredImage && featuredImage.sourceUrl && (
             <img
-              src={featuredImage.node.sourceUrl}
-              alt={title}
+              src={featuredImage.sourceUrl}
+              alt={featuredImage.altText || title}
               className="w-full h-auto mb-6 rounded-lg"
             />
           )}
@@ -128,9 +133,7 @@ Component.query = gql`
       databaseId
       excerpt
       featuredImage {
-        node {
-          sourceUrl
-        }
+        ...NcmazFcImageHasDetailFields
       }
       date
       author {
@@ -159,9 +162,7 @@ Component.query = gql`
         title
         uri
         featuredImage {
-          node {
-            sourceUrl
-          }
+          ...NcmazFcImageHasDetailFields
         }
       }
     }
@@ -185,6 +186,12 @@ Component.query = gql`
         order
       }
     }
+  }
+  
+  fragment NcmazFcImageHasDetailFields on NcmazFcImageHasDetailFieldsFragment {
+    sourceUrl
+    altText
+    caption
   }
 `;
 

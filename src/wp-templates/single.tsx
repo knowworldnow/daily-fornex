@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { TPostCard } from "@/components/Card2/Card2";
 import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
+import { DocumentNode } from "@graphql-typed-document-node/core"; // Import DocumentNode
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -110,6 +111,6 @@ Component.query = gql(`
       }
     }
   }
-`) as unknown as DocumentNode; // Casting as DocumentNode
+`) as unknown as DocumentNode; // Properly cast to DocumentNode
 
 export default Component;

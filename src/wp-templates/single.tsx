@@ -14,9 +14,6 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
 
-// Import or define the necessary fragments
-import { NcmazFcPostFullFields, NcgeneralSettingsFieldsFragment } from "@/fragments/fragments";
-
 const DynamicSingleRelatedPosts = dynamic(() =>
   import("@/container/singles/SingleRelatedPosts")
 );
@@ -84,24 +81,40 @@ Component.variables = ({ databaseId }, ctx) => {
 Component.query = gql(`
   query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int, $asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-      ...NcmazFcPostFullFields
+      id
+      title
+      excerpt
+      featuredImage {
+        sourceUrl
+      }
+      ncPostMetaData {
+        showRightSidebar
+      }
     }
     posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {
-        ...PostCardFieldsNOTNcmazMEDIA
+        id
+        title
+        uri
+        excerpt
       }
     }
     generalSettings {
-      ...NcgeneralSettingsFieldsFragment
+      title
+      description
     }
     primaryMenuItems: menuItems(where: { location: $headerLocation }, first: 80) {
       nodes {
-        ...NcPrimaryMenuFieldsFragment
+        id
+        label
+        url
       }
     }
     footerMenuItems: menuItems(where: { location: $footerLocation }, first: 40) {
       nodes {
-        ...NcFooterMenuFieldsFragment
+        id
+        label
+        url
       }
     }
   }

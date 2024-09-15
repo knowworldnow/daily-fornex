@@ -2,6 +2,7 @@ import { gql } from "../__generated__";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
+  NcmazFcPostFullFieldsFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -35,6 +36,8 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     excerpt,
   } = getPostDataFromPostFragment(_post);
 
+  const relatedPosts = props.data?.posts?.nodes as NcmazFcPostFullFieldsFragment[] || [];
+
   const renderHeaderType = () => (
     <SingleType1
       showRightSidebar={!!ncPostMetaData?.showRightSidebar}
@@ -66,7 +69,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
             </div>
           </div>
           <DynamicSingleRelatedPosts
-            posts={props.data?.posts?.nodes || []}
+            posts={relatedPosts}
             postDatabaseId={databaseId}
           />
         </div>
@@ -78,7 +81,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
             <SocialsShare link={router.asPath} />
           </div>
           <DynamicSingleRelatedPosts
-            posts={props.data?.posts?.nodes || []}
+            posts={relatedPosts}
             postDatabaseId={databaseId}
           />
         </div>
@@ -100,42 +103,24 @@ Component.variables = ({ databaseId }, ctx) => {
 Component.query = gql(`
   query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int, $asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-      title
-      content
-      databaseId
-      excerpt
-      featuredImage {
-        sourceUrl
-      }
-      ncPostMetaData {
-        showRightSidebar
-      }
+      ...NcmazFcPostFullFields
     }
     posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {
-        title
-        uri
-        date
-        excerpt
-        featuredImage {
-          sourceUrl
-        }
+        ...NcmazFcPostFullFields
       }
     }
     generalSettings {
-      title
-      description
+      ...NcgeneralSettingsFieldsFragment
     }
     primaryMenuItems: menuItems(where: { location: $headerLocation }, first: 80) {
       nodes {
-        label
-        url
+        ...NcPrimaryMenuFieldsFragment
       }
     }
     footerMenuItems: menuItems(where: { location: $footerLocation }, first: 40) {
       nodes {
-        label
-        url
+        ...NcFooterMenuFieldsFragment
       }
     }
   }

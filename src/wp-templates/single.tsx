@@ -1,4 +1,4 @@
-import { gql } from "../__generated__";
+import { gql } from "@apollo/client"; // Correctly importing gql from @apollo/client
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
@@ -29,7 +29,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     title,
     ncPostMetaData,
     featuredImage,
-    content,  // Ensure 'content' is part of the extracted data
+    content,
     databaseId,
     excerpt,
   } = getPostDataFromPostFragment(_post);
@@ -55,7 +55,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
               <SocialsShare link={router.asPath} />
             </div>
             <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-              <Sidebar content={content || ""} />  {/* Ensure Sidebar receives content */}
+              <Sidebar content={content || ""} />
             </div>
           </div>
         </div>
@@ -114,14 +114,4 @@ Component.query = gql`
       }
     }
     footerMenuItems: menuItems(
-      where: { location: $footerLocation }
-      first: 40
-    ) {
-      nodes {
-        ...NcFooterMenuFieldsFragment
-      }
-    }
-  }
-`;
-
-export default Component;
+      wher

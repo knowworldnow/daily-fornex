@@ -2,12 +2,25 @@ import { gql } from "../__generated__";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
+  NcmazFcUserReactionPostActionEnum,
+  NcmazFcUserReactionPostNumberUpdateEnum,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
-import PageLayout from "@/container/PageLayout";
+import SingleType1 from "@/container/singles/single/single";
+import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment";
 import { Sidebar } from "@/container/singles/Sidebar";
-import dynamic from "next/dynamic";
+import PageLayout from "@/container/PageLayout";
+import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
+import dynamic from "next/dynamic";  // <-- Added the missing import for dynamic
+import { useEffect, useState } from "react";
+import { useMutation } from "@apollo/client";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores/store";
+import { TPostCard } from "@/components/Card2/Card2";
+import { useRouter } from "next/router";
+import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
+import SocialsShare from "@/components/SocialsShare/SocialsShare";
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -18,41 +31,23 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     return <>Loading...</>;
   }
 
-  // Type casting _post to ensure TypeScript knows what fields are present
-  const _post = props.data?.post as {
-    title: string;
-    ncPostMetaData?: { showRightSidebar: boolean };
-    featuredImage?: { node: { sourceUrl: string } };
-    content: string;
-    databaseId: number;
-    excerpt: string;
-    author: any; // Add proper typing if available
-    commentCount: number;
-    commentStatus: string;
-    tags: any; // Add proper typing if available
-    status: string;
-    date: string;
-  } || {};
-
+  const _post = props.data?.post || {};
   const {
-    title = "",
+    title,
     ncPostMetaData,
     featuredImage,
-    content = "",
+    content,  // <-- Make sure content is being extracted here
     databaseId,
-    excerpt = "",
-  } = _post;
-
-  console.log("Post data:", _post);
-  console.log("Categories:", props.data?.categories?.nodes);
+    excerpt,
+  } = getPostDataFromPostFragment(_post);
 
   return (
     <PageLayout
       headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
       footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-      pageFeaturedImageUrl={featuredImage?.node?.sourceUrl || ""}
+      pageFeaturedImageUrl={featuredImage?.sourceUrl}
       pageTitle={title}
-      pageDescription={excerpt}
+      pageDescription={excerpt || ""}
       generalSettings={props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment}
     >
       {ncPostMetaData?.showRightSidebar ? (
@@ -62,10 +57,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
               <SingleContent post={_post} />
             </div>
             <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-              <Sidebar 
-                content={content} 
-                categories={props.data?.categories?.nodes || []}
-              />
+              <Sidebar content={content || ""} />  {/* Pass the content to the Sidebar */}
             </div>
           </div>
         </div>
@@ -74,7 +66,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
           <SingleContent post={_post} />
         </div>
       )}
-      <DynamicSingleRelatedPosts postId={databaseId} />
     </PageLayout>
   );
 };
@@ -90,84 +81,31 @@ Component.variables = ({ databaseId }, ctx) => {
 };
 
 Component.query = gql(`
-  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int, $asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
+  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int,$asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
-      title
-      ncPostMetaData {
-        showRightSidebar
-      }
-      featuredImage {
-        node {
-          sourceUrl
-        }
-      }
-      content
-      databaseId
-      excerpt
-      author {
-        node {
-          name
-          uri
-          avatar {
-            url
-          }
-        }
-      }
-      commentCount
-      commentStatus
-      tags {
-        nodes {
-          databaseId
-          name
-          uri
-        }
-      }
-      status
-      date
+    ...NcmazFcPostFullFields
     }
-    posts(where: {isRelatedOfPostId: $post_databaseId}) {
+    posts(where: {isRelatedOfPostId:$post_databaseId}) {
       nodes {
-        title
-        uri
-        featuredImage {
-          node {
-            sourceUrl
-          }
-        }
+      ...PostCardFieldsNOTNcmazMEDIA
       }
     }
-    categories {
+    categories(first:10, where: { orderby: COUNT, order: DESC }) {
       nodes {
-        databaseId
-        name
-        uri
-        count
-        ncTaxonomyMeta {
-          color
-          featuredImage {
-            sourceUrl
-          }
-        }
+        ...NcmazFcCategoryFullFieldsFragment
       }
     }
     generalSettings {
-      title
-      description
+      ...NcgeneralSettingsFieldsFragment
     }
-    primaryMenuItems: menuItems(where: {location: $headerLocation}) {
+    primaryMenuItems: menuItems(where: {location:$headerLocation}, first: 80) {
       nodes {
-        label
-        url
-        uri
-        order
+        ...NcPrimaryMenuFieldsFragment
       }
     }
-    footerMenuItems: menuItems(where: {location: $footerLocation}) {
+    footerMenuItems: menuItems(where: {location:$footerLocation}, first: 40) {
       nodes {
-        label
-        url
-        uri
-        order
+        ...NcFooterMenuFieldsFragment
       }
     }
   }

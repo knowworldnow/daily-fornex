@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client"; // Correctly importing gql from @apollo/client
+import { gql } from "@apollo/client";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
@@ -14,7 +14,6 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
 
-// Dynamically imported components
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
 );
@@ -69,7 +68,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   );
 };
 
-// Define variables to be used in the query
 Component.variables = ({ databaseId }, ctx) => {
   return {
     databaseId,
@@ -80,7 +78,6 @@ Component.variables = ({ databaseId }, ctx) => {
   };
 };
 
-// GraphQL query to fetch the necessary data
 Component.query = gql`
   query GetPostSiglePage(
     $databaseId: ID!
@@ -105,13 +102,17 @@ Component.query = gql`
     generalSettings {
       ...NcgeneralSettingsFieldsFragment
     }
-    primaryMenuItems: menuItems(
-      where: { location: $headerLocation }
-      first: 80
-    ) {
+    primaryMenuItems: menuItems(where: { location: $headerLocation }, first: 80) {
       nodes {
         ...NcPrimaryMenuFieldsFragment
       }
     }
-    footerMenuItems: menuItems(
-      wher
+    footerMenuItems: menuItems(where: { location: $footerLocation }, first: 40) {
+      nodes {
+        ...NcFooterMenuFieldsFragment
+      }
+    }
+  }
+`;
+
+export default Component;

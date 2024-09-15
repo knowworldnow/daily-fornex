@@ -22,9 +22,12 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
 
   const router = useRouter();
 
-  const _post = props.data?.post || {};
+  // Cast the _post to the correct type
+  const _post = props.data?.post as NcmazFcPostFullFieldsFragment;
+
   const _relatedPosts = (props.data?.posts?.nodes as NcmazFcPostFullFieldsFragment[]) || [];
 
+  // Destructure the properties from _post
   const {
     title,
     ncPostMetaData,
@@ -35,7 +38,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   } = _post;
 
   const renderHeaderType = () => {
-    // Simplified logic here, assuming SingleType1 for demonstration purposes
     return (
       <SingleType1
         showRightSidebar={!!ncPostMetaData?.showRightSidebar}

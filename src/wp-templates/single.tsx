@@ -1,4 +1,4 @@
-import { gql } from "graphql-tag";
+const gql = (strings: TemplateStringsArray, ...values: any[]) => String.raw({ raw: strings }, ...values);
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,

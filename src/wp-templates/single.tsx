@@ -1,4 +1,4 @@
-import { gql } from "../__generated__";
+import { gql, DocumentNode } from "@faustwp/core"; // Ensure correct import
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
@@ -124,6 +124,6 @@ Component.query = gql(`
       }
     }
   }
-`);
+`) as DocumentNode; // Explicitly casting to DocumentNode to ensure correct typing
 
 export default Component;

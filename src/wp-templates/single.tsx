@@ -3,6 +3,7 @@ import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
   NcmazFcImageHasDetailFieldsFragment,
+  NcmazFcUserFullFieldsFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -76,7 +77,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
           <div className="flex items-center mb-4 text-sm text-gray-600">
             <span>{new Date(date).toLocaleDateString()}</span>
             <span className="mx-2">•</span>
-            <span>By {author?.node?.name}</span>
+            <span>By {(author as NcmazFcUserFullFieldsFragment)?.name || "Unknown Author"}</span>
           </div>
           {categories?.nodes && categories.nodes.length > 0 && (
             <div className="mb-4">
@@ -120,8 +121,8 @@ Component.variables = ({ databaseId }, ctx) => {
     databaseId,
     post_databaseId: Number(databaseId || 0),
     asPreview: ctx?.asPreview,
-    headerLocation: PRIMARY_LOCATION,
-    footerLocation: FOOTER_LOCATION,
+    headerLocation: "PRIMARY",
+    footerLocation: "FOOTER",
   };
 };
 
@@ -137,9 +138,7 @@ Component.query = gql`
       }
       date
       author {
-        node {
-          name
-        }
+        ...NcmazFcUserFullFields
       }
       categories {
         nodes {
@@ -192,6 +191,23 @@ Component.query = gql`
     sourceUrl
     altText
     caption
+  }
+
+  fragment NcmazFcUserFullFields on NcmazFcUserFullFieldsFragment {
+    name
+    username
+    uri
+    featuredImageMeta {
+      ...NcmazFcImageFields
+    }
+    bgImageMeta {
+      ...NcmazFcImageFields
+    }
+  }
+
+  fragment NcmazFcImageFields on NcmazFcImageFieldsFragment {
+    sourceUrl
+    altText
   }
 `;
 

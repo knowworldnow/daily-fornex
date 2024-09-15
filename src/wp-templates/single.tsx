@@ -7,7 +7,6 @@ import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
 import PageLayout from "@/container/PageLayout";
 import { Sidebar } from "@/container/singles/Sidebar";
-import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import dynamic from "next/dynamic";
 
 const DynamicSingleRelatedPosts = dynamic(
@@ -21,21 +20,21 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
 
   const _post = props.data?.post || {};
   const {
-    title,
+    title = "", // Add a default value to avoid undefined errors
     ncPostMetaData,
     featuredImage,
-    content,
+    content = "", // Add a default value to avoid undefined errors
     databaseId,
-    excerpt,
+    excerpt = "", // Add a default value to avoid undefined errors
   } = _post;
 
   return (
     <PageLayout
       headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
       footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-      pageFeaturedImageUrl={featuredImage?.node?.sourceUrl}
+      pageFeaturedImageUrl={featuredImage?.node?.sourceUrl || ""}
       pageTitle={title}
-      pageDescription={excerpt || ""}
+      pageDescription={excerpt}
       generalSettings={props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment}
     >
       {ncPostMetaData?.showRightSidebar ? (
@@ -45,7 +44,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
               <SingleContent post={_post} />
             </div>
             <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-              <Sidebar content={content || ""} />
+              <Sidebar content={content} />
             </div>
           </div>
         </div>
@@ -89,12 +88,6 @@ Component.query = gql(`
     posts(where: {isRelatedOfPostId: $post_databaseId}) {
       nodes {
         title
-        uri
-      }
-    }
-    categories(first: 10, where: {orderby: COUNT, order: DESC}) {
-      nodes {
-        name
         uri
       }
     }

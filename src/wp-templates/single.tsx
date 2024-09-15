@@ -2,17 +2,13 @@ import { gql } from "../__generated__";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
-  NcmazFcUserReactionPostActionEnum,
-  NcmazFcUserReactionPostNumberUpdateEnum,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
-import { Sidebar } from "@/container/singles/Sidebar";
 import PageLayout from "@/container/PageLayout";
+import { Sidebar } from "@/container/singles/Sidebar";
+import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
-import { TPostCard } from "@/components/Card2/Card2";
-import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -23,13 +19,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     return <>Loading...</>;
   }
 
-  const _post = props.data?.post;
-
-  // Check if _post exists and has the necessary fields
-  if (!_post) {
-    return <>Post data is missing.</>;
-  }
-
+  const _post = props.data?.post || {};
   const {
     title,
     ncPostMetaData,
@@ -39,18 +29,14 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     excerpt,
   } = _post;
 
-  const router = useRouter();
-
   return (
     <PageLayout
       headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
       footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-      pageFeaturedImageUrl={featuredImage?.sourceUrl}
+      pageFeaturedImageUrl={featuredImage?.node?.sourceUrl}
       pageTitle={title}
       pageDescription={excerpt || ""}
-      generalSettings={
-        props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
-      }
+      generalSettings={props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment}
     >
       {ncPostMetaData?.showRightSidebar ? (
         <div className="relative">
@@ -62,66 +48,70 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
               <Sidebar content={content || ""} />
             </div>
           </div>
-          <DynamicSingleRelatedPosts
-            posts={(props.data?.posts?.nodes as TPostCard[]) || []}
-            postDatabaseId={databaseId}
-          />
         </div>
       ) : (
         <div>
           <SingleContent post={_post} />
-          <DynamicSingleRelatedPosts
-            posts={(props.data?.posts?.nodes as TPostCard[]) || []}
-            postDatabaseId={databaseId}
-          />
         </div>
       )}
+
+      <DynamicSingleRelatedPosts postId={databaseId} />
     </PageLayout>
   );
 };
 
-Component.variables = ({ databaseId }) => {
+Component.variables = ({ databaseId }, ctx) => {
   return {
     databaseId,
     post_databaseId: Number(databaseId || 0),
+    asPreview: ctx?.asPreview,
+    headerLocation: PRIMARY_LOCATION,
+    footerLocation: FOOTER_LOCATION,
   };
 };
 
 Component.query = gql(`
-  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int) {
-    post(id: $databaseId, idType: DATABASE_ID) {
+  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int, $asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
+    post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
       title
       ncPostMetaData {
         showRightSidebar
       }
       featuredImage {
-        sourceUrl
+        node {
+          sourceUrl
+        }
       }
       content
       databaseId
       excerpt
     }
-    posts(where: {isRelatedOfPostId:$post_databaseId}) {
+    posts(where: {isRelatedOfPostId: $post_databaseId}) {
       nodes {
-        ...PostCardFieldsNOTNcmazMEDIA
+        title
+        uri
       }
     }
-    categories(first: 10, where: { orderby: COUNT, order: DESC }) {
+    categories(first: 10, where: {orderby: COUNT, order: DESC}) {
       nodes {
-        ...NcmazFcCategoryFullFieldsFragment
+        name
+        uri
       }
     }
     generalSettings {
-      ...NcgeneralSettingsFieldsFragment
+      title
+      description
     }
-    primaryMenuItems: menuItems(where: {location:PRIMARY_LOCATION}, first: 80) {
+    primaryMenuItems: menuItems(where: {location: PRIMARY}) {
       nodes {
-        ...NcPrimaryMenuFieldsFragment
+        label
+        url
       }
     }
-    footerMenuItems: menuItems(where: {location:FOOTER_LOCATION}, first: 40) {
+    footerMenuItems: menuItems(where: {location: FOOTER}) {
       nodes {
-        ...NcFooterMenuFieldsFragment
+        label
+        url
       }
     }
   }

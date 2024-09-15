@@ -1,8 +1,8 @@
-import { gql } from "@apollo/client";
+import { gql } from "../__generated__"; // Import gql from your generated types
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
-} from "../__generated__/graphql";
+} from "../__generated__/graphql"; // Adjust the path if needed
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
 import SingleType1 from "@/container/singles/single/single";
@@ -78,7 +78,7 @@ Component.variables = ({ databaseId }, ctx) => {
   };
 };
 
-Component.query = gql`
+Component.query = gql(`
   query GetPostSiglePage(
     $databaseId: ID!
     $post_databaseId: Int
@@ -113,6 +113,6 @@ Component.query = gql`
       }
     }
   }
-`;
+`);
 
 export default Component;

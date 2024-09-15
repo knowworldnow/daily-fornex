@@ -105,7 +105,9 @@ Component.query = gql(`
       databaseId
       excerpt
       featuredImage {
-        sourceUrl
+        node {
+          sourceUrl
+        }
       }
       ncPostMetaData {
         showRightSidebar
@@ -118,7 +120,9 @@ Component.query = gql(`
         date
         excerpt
         featuredImage {
-          sourceUrl
+          node {
+            sourceUrl
+          }
         }
       }
     }

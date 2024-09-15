@@ -113,31 +113,41 @@ Component.query = gql(`
     }
     posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {
-        # Add fields for PostCard
+        title
+        uri
+        date
+        excerpt
+        featuredImage {
+          sourceUrl
+        }
       }
     }
     categories(first: 10, where: { orderby: COUNT, order: DESC }) {
       nodes {
-        # Add fields for Category
+        name
+        uri
       }
     }
     generalSettings {
-      # Add fields for GeneralSettings
+      title
+      description
     }
     primaryMenuItems: menuItems(
       where: { location: $headerLocation }
       first: 80
     ) {
       nodes {
-        # Add fields for PrimaryMenu
+        label
+        url
       }
     }
     footerMenuItems: menuItems(where: { location: $footerLocation }, first: 40) {
       nodes {
-        # Add fields for FooterMenu
+        label
+        url
       }
     }
   }
-`) as DocumentNode;
+`);
 
 export default Component;

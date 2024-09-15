@@ -11,13 +11,9 @@ import { Sidebar } from "@/container/singles/Sidebar";
 import PageLayout from "@/container/PageLayout";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/stores/store";
-import { TPostCard } from "@/components/Card2/Card2";
-import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
-import SocialsShare from "@/components/SocialsShare/SocialsShare";
 import { useRouter } from "next/router";
+import { TPostCard } from "@/components/Card2/Card2";
+import SocialsShare from "@/components/SocialsShare/SocialsShare";
 
 const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
@@ -105,8 +101,8 @@ Component.variables = ({ databaseId }, ctx) => {
   };
 };
 
-// Correcting the gql usage here:
-Component.query = gql`
+// Correct usage of gql for the GraphQL query
+Component.query = gql(`
   query GetPostSiglePage(
     $databaseId: ID!
     $post_databaseId: Int
@@ -153,6 +149,6 @@ Component.query = gql`
       }
     }
   }
-`;
+`);
 
 export default Component;

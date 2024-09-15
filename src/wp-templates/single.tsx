@@ -1,8 +1,7 @@
-import { gql } from "graphql-tag"; // Import from graphql-tag
+import { gql } from "graphql-tag";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
-  NcmazFcPostFullFieldsFragment,
 } from "../__generated__/graphql";
 import { FaustTemplate } from "@faustwp/core";
 import SingleContent from "@/container/singles/SingleContent";
@@ -15,8 +14,11 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
 
-const DynamicSingleRelatedPosts = dynamic(
-  () => import("@/container/singles/SingleRelatedPosts")
+// Import or define the necessary fragments
+import { NcmazFcPostFullFields, NcgeneralSettingsFieldsFragment } from "@/fragments/fragments";
+
+const DynamicSingleRelatedPosts = dynamic(() =>
+  import("@/container/singles/SingleRelatedPosts")
 );
 
 const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
@@ -24,32 +26,15 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     return <>Loading...</>;
   }
 
-  const router = useRouter();
-
   const _post = props.data?.post || {};
-  const {
-    title,
-    ncPostMetaData,
-    featuredImage,
-    content,
-    databaseId,
-    excerpt,
-  } = getPostDataFromPostFragment(_post);
-
-  const relatedPosts = props.data?.posts?.nodes as NcmazFcPostFullFieldsFragment[] || [];
-
-  const renderHeaderType = () => (
-    <SingleType1
-      showRightSidebar={!!ncPostMetaData?.showRightSidebar}
-      post={_post}
-    />
-  );
+  const { title, ncPostMetaData, featuredImage, databaseId, excerpt } =
+    getPostDataFromPostFragment(_post);
 
   return (
     <PageLayout
       headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
       footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-      pageFeaturedImageUrl={featuredImage?.sourceUrl || ""}
+      pageFeaturedImageUrl={featuredImage?.sourceUrl}
       pageTitle={title}
       pageDescription={excerpt || ""}
       generalSettings={
@@ -57,33 +42,29 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
       }
     >
       {ncPostMetaData?.showRightSidebar ? (
-        <div className="relative">
-          {renderHeaderType()}
-          <div className="container flex flex-col my-10 lg:flex-row">
-            <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
-              <SingleContent post={_post} />
-              <SocialsShare link={router.asPath} />
+        <div>
+          <div className={`relative`}>
+            <SingleType1 showRightSidebar={!!ncPostMetaData?.showRightSidebar} post={_post} />
+            <div className="container flex flex-col my-10 lg:flex-row ">
+              <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
+                <SingleContent post={_post} />
+                <SocialsShare link={router.asPath} />
+              </div>
+              <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
+                <Sidebar />
+              </div>
             </div>
-            <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-              <Sidebar content={content || ""} />
-            </div>
+            <DynamicSingleRelatedPosts posts={props.data?.posts?.nodes || []} postDatabaseId={databaseId} />
           </div>
-          <DynamicSingleRelatedPosts
-            posts={relatedPosts}
-            postDatabaseId={databaseId}
-          />
         </div>
       ) : (
         <div>
-          {renderHeaderType()}
+          <SingleType1 showRightSidebar={!!ncPostMetaData?.showRightSidebar} post={_post} />
           <div className="container mt-10">
             <SingleContent post={_post} />
             <SocialsShare link={router.asPath} />
           </div>
-          <DynamicSingleRelatedPosts
-            posts={relatedPosts}
-            postDatabaseId={databaseId}
-          />
+          <DynamicSingleRelatedPosts posts={props.data?.posts?.nodes || []} postDatabaseId={databaseId} />
         </div>
       )}
     </PageLayout>
@@ -107,7 +88,7 @@ Component.query = gql(`
     }
     posts(where: { isRelatedOfPostId: $post_databaseId }) {
       nodes {
-        ...NcmazFcPostFullFields
+        ...PostCardFieldsNOTNcmazMEDIA
       }
     }
     generalSettings {

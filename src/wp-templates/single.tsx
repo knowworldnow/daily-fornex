@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from "@faustwp/core";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,

@@ -59,7 +59,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     featuredImage,
     databaseId,
     excerpt,
-    content, // Ensure content is fetched here
+    content,
   } = getPostDataFromPostFragment(_post);
 
   const renderHeaderType = () => {
@@ -94,7 +94,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
                   <SocialsShare link={router.asPath} />
                 </div>
                 <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-                  <Sidebar content={content || ""} /> {/* Passing content correctly */}
+                  <Sidebar content={content || ""} />
                 </div>
               </div>
 

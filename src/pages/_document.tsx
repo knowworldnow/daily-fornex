@@ -70,24 +70,15 @@ export default class Document extends NextDocument {
           <meta name="application-name" content="Ncmaz Nextjs" />
           <meta name="theme-color" content="#172A53" />
 
-          {/* Google AdSense Auto Ads */}
+          {/* Google AdSense Auto Ads - Updated Implementation */}
           <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7892867039237421"
             crossOrigin="anonymous"
-          ></script>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                (adsbygoogle = window.adsbygoogle || []).push({
-                  google_ad_client: "ca-pub-7892867039237421",
-                  enable_page_level_ads: true
-                });
-              `,
-            }}
+            data-ad-client="ca-pub-7892867039237421"
           ></script>
 
-          {/* Theme and Banner Scripts */}
+          {/* Theme Script */}
           <script
             dangerouslySetInnerHTML={{
               __html: `
@@ -101,6 +92,8 @@ export default class Document extends NextDocument {
               `,
             }}
           />
+
+          {/* Banner Script */}
           <script
             dangerouslySetInnerHTML={{
               __html: `
@@ -116,9 +109,7 @@ export default class Document extends NextDocument {
           />
         </Head>
         <body
-          className={
-            'relative bg-white text-base text-neutral-900 dark:bg-neutral-900/95 dark:text-neutral-100'
-          }
+          className="relative bg-white text-base text-neutral-900 dark:bg-neutral-900/95 dark:text-neutral-100"
         >
           <Main />
           <NextScript />

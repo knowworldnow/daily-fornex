@@ -13,7 +13,6 @@ import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { TPostCard } from "@/components/Card2/Card2";
-import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";  // Importing the correct type
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
 
 const DynamicSingleRelatedPosts = dynamic(
@@ -28,8 +27,6 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   const router = useRouter();
   const _post = props.data?.post || {};
   const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
-  const _top10Categories =
-    (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
 
   const {
     title,
@@ -102,7 +99,6 @@ Component.variables = ({ databaseId }, ctx) => {
   };
 };
 
-// Correct usage of gql for the GraphQL query
 Component.query = gql(`
   query GetPostSiglePage(
     $databaseId: ID!
@@ -130,7 +126,7 @@ Component.query = gql(`
     }
     categories(first: 10, where: { orderby: COUNT, order: DESC }) {
       nodes {
-        ...NcmazFcCategoryFullFieldsFragment
+        # Add fields for Category
       }
     }
     generalSettings {

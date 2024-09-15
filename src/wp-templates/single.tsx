@@ -1,4 +1,4 @@
-import { gql } from "@faustwp/core";
+import { gql } from "graphql-tag";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,

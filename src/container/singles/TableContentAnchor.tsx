@@ -17,7 +17,11 @@ interface TableContentProps {
 }
 
 const TableContent: React.FC<TableContentProps> = ({ content, className = '' }) => {
-  function extractHeadings(content: string) {
+  const extractHeadings = (content: string) => {
+    if (typeof window === 'undefined') {
+      return [];
+    }
+
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, 'text/html');
     const headingElements = Array.from(
@@ -55,7 +59,7 @@ const TableContent: React.FC<TableContentProps> = ({ content, className = '' }) 
       idKey: 'id',
       parentKey: 'parentId',
     }) as HeadingNode[] | [];
-  }
+  };
 
   const headingsWrapList = extractHeadings(content);
 

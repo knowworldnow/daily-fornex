@@ -13,6 +13,7 @@ import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { TPostCard } from "@/components/Card2/Card2";
+import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";  // Importing the correct type
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
 
 const DynamicSingleRelatedPosts = dynamic(
@@ -129,7 +130,7 @@ Component.query = gql(`
     }
     categories(first: 10, where: { orderby: COUNT, order: DESC }) {
       nodes {
-        # Add fields for Category
+        ...NcmazFcCategoryFullFieldsFragment
       }
     }
     generalSettings {

@@ -27,102 +27,46 @@ const DynamicSingleRelatedPosts = dynamic(
 );
 
 const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
-  //  LOADING ----------
   if (props.loading) {
     return <>Loading...</>;
   }
 
-  const router = useRouter();
-  const IS_PREVIEW = router.pathname === "/preview";
-
-  const { isReady, isAuthenticated } = useSelector(
-    (state: RootState) => state.viewer.authorizedUser
-  );
-  const { viewer } = useSelector((state: RootState) => state.viewer);
-  const [isUpdateViewCount, setIsUpdateViewCount] = useState(false);
-
-  useEffect(() => {
-    const timeOutUpdateViewCount = setTimeout(() => {
-      setIsUpdateViewCount(true);
-    }, 5000);
-
-    return () => {
-      clearTimeout(timeOutUpdateViewCount);
-    };
-  }, []);
-
   const _post = props.data?.post || {};
-  const _relatedPosts = (props.data?.posts?.nodes as TPostCard[]) || [];
-  const _top10Categories =
-    (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
-
   const {
     title,
     ncPostMetaData,
     featuredImage,
+    content,  // <-- Make sure content is being extracted here
     databaseId,
     excerpt,
   } = getPostDataFromPostFragment(_post);
 
-  const renderHeaderType = () => {
-    return (
-      <SingleType1
-        showRightSidebar={!!ncPostMetaData?.showRightSidebar}
-        post={_post}
-      />
-    );
-  };
-
   return (
-    <>
-      <PageLayout
-        headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
-        footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-        pageFeaturedImageUrl={featuredImage?.sourceUrl}
-        pageTitle={title}
-        pageDescription={excerpt || ""}
-        generalSettings={
-          props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
-        }
-      >
-        {ncPostMetaData?.showRightSidebar ? (
-          <div>
-            <div className={`relative`}>
-              {renderHeaderType()}
-
-              <div className="container flex flex-col my-10 lg:flex-row ">
-                <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
-                  <SingleContent post={_post} />
-                  <SocialsShare link={router.asPath} />
-                </div>
-                <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-                  <Sidebar categories={_top10Categories} />
-                </div>
-              </div>
-
-              <DynamicSingleRelatedPosts
-                posts={_relatedPosts}
-                postDatabaseId={databaseId}
-              />
-            </div>
-          </div>
-        ) : (
-          <div>
-            {renderHeaderType()}
-
-            <div className="container mt-10">
+    <PageLayout
+      headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
+      footerMenuItems={props.data?.footerMenuItems?.nodes || []}
+      pageFeaturedImageUrl={featuredImage?.sourceUrl}
+      pageTitle={title}
+      pageDescription={excerpt || ""}
+      generalSettings={props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment}
+    >
+      {ncPostMetaData?.showRightSidebar ? (
+        <div className="relative">
+          <div className="container flex flex-col my-10 lg:flex-row">
+            <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
               <SingleContent post={_post} />
-              <SocialsShare link={router.asPath} />
             </div>
-
-            <DynamicSingleRelatedPosts
-              posts={_relatedPosts}
-              postDatabaseId={databaseId}
-            />
+            <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
+              <Sidebar content={content || ""} />  {/* Pass the content to the Sidebar */}
+            </div>
           </div>
-        )}
-      </PageLayout>
-    </>
+        </div>
+      ) : (
+        <div>
+          <SingleContent post={_post} />
+        </div>
+      )}
+    </PageLayout>
   );
 };
 

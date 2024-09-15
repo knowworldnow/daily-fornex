@@ -10,10 +10,8 @@ import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment
 import { Sidebar } from "@/container/singles/Sidebar";
 import PageLayout from "@/container/PageLayout";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
-import dynamic from "next/dynamic";  
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/stores/store";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import SocialsShare from "@/components/SocialsShare/SocialsShare";
 
 const DynamicSingleRelatedPosts = dynamic(
@@ -25,6 +23,8 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     return <>Loading...</>;
   }
 
+  const router = useRouter();
+
   const _post = props.data?.post || {};
   const {
     title,
@@ -35,31 +35,52 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
     excerpt,
   } = getPostDataFromPostFragment(_post);
 
+  const renderHeaderType = () => (
+    <SingleType1
+      showRightSidebar={!!ncPostMetaData?.showRightSidebar}
+      post={_post}
+    />
+  );
+
   return (
     <PageLayout
       headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
       footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-      pageFeaturedImageUrl={featuredImage?.node?.sourceUrl || ""}
+      pageFeaturedImageUrl={featuredImage?.sourceUrl || ""}
       pageTitle={title}
       pageDescription={excerpt || ""}
-      generalSettings={props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment}
+      generalSettings={
+        props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
+      }
     >
       {ncPostMetaData?.showRightSidebar ? (
         <div className="relative">
+          {renderHeaderType()}
           <div className="container flex flex-col my-10 lg:flex-row">
             <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
               <SingleContent post={_post} />
+              <SocialsShare link={router.asPath} />
             </div>
             <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
               <Sidebar content={content || ""} />
             </div>
           </div>
-          <DynamicSingleRelatedPosts posts={props.data?.posts?.nodes || []} postDatabaseId={databaseId} />
+          <DynamicSingleRelatedPosts
+            posts={props.data?.posts?.nodes || []}
+            postDatabaseId={databaseId}
+          />
         </div>
       ) : (
         <div>
-          <SingleContent post={_post} />
-          <DynamicSingleRelatedPosts posts={props.data?.posts?.nodes || []} postDatabaseId={databaseId} />
+          {renderHeaderType()}
+          <div className="container mt-10">
+            <SingleContent post={_post} />
+            <SocialsShare link={router.asPath} />
+          </div>
+          <DynamicSingleRelatedPosts
+            posts={props.data?.posts?.nodes || []}
+            postDatabaseId={databaseId}
+          />
         </div>
       )}
     </PageLayout>
@@ -84,9 +105,7 @@ Component.query = gql(`
       databaseId
       excerpt
       featuredImage {
-        node {
-          sourceUrl
-        }
+        sourceUrl
       }
       ncPostMetaData {
         showRightSidebar
@@ -99,9 +118,7 @@ Component.query = gql(`
         date
         excerpt
         featuredImage {
-          node {
-            sourceUrl
-          }
+          sourceUrl
         }
       }
     }

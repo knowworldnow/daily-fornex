@@ -105,12 +105,6 @@ Component.query = gql(`
         }
       }
     }
-    categories(first: 10, where: { orderby: COUNT, order: DESC }) {
-      nodes {
-        name
-        uri
-      }
-    }
     generalSettings {
       title
       description

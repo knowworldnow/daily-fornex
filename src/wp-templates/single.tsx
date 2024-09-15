@@ -105,6 +105,7 @@ Component.variables = ({ databaseId }, ctx) => {
   };
 };
 
+// Correcting the gql usage here:
 Component.query = gql`
   query GetPostSiglePage(
     $databaseId: ID!

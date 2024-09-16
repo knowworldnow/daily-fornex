@@ -16,7 +16,7 @@ import useIntersectionObserver from '@/hooks/useIntersectionObserver'
 import PostCardLikeAction from '@/components/PostCardLikeAction/PostCardLikeAction'
 import PostCardCommentBtn from '@/components/PostCardCommentBtn/PostCardCommentBtn'
 import Sidebar from './Sidebar'
-import TableContent from './TableContent'
+import TableContent from './TableContentAnchor'
 
 const SingleCommentWrap = dynamic(() => import('./SingleCommentWrap'), {
   loading: () => <p>Loading comments...</p>,

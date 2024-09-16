@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import Navigation from '@/components/Navigation/Navigation'
 import MenuBar from '@/components/MenuBar/MenuBar'
-import Logo from './Logo'  // This is our updated Logo component
+import Logo from '@/components/Logo/Logo'
 import { SearchIconBtn } from './HeaderSearch'
 import ThemeToggle from './ThemeToggle'
 

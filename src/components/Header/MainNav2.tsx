@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import AvatarDropdown from './AvatarDropdown';
 import SwitchDarkMode from '../SwitchDarkMode/SwitchDarkMode';
 import Navigation from '../Navigation/Navigation';
 import { MainNav1Props } from './MainNav1';
@@ -37,7 +36,6 @@ const MainNav2: FC<MainNav2Props> = ({ menuItems }) => {
 						<div className="mx-2 hidden h-8 self-center border-l border-neutral-200 md:block dark:border-neutral-700"></div>
 						<SwitchDarkMode className="hidden self-center lg:flex" />
 						<SearchIconBtn className="lg:hidden" />
-						<AvatarDropdown className="self-center" />
 					</div>
 				</div>
 			</div>

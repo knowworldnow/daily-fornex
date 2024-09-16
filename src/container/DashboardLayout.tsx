@@ -21,7 +21,6 @@ import classNames from '@/utils/classNames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useLogout } from '@faustwp/core'
-import CreateBtn from '@/components/Header/CreateBtn'
 import { NC_SITE_SETTINGS } from '@/contains/site-settings'
 import getTrans from '@/utils/getTrans'
 import { SearchIconBtn } from '@/components/Header/HeaderSearch'
@@ -374,7 +373,6 @@ export default function DashboardLayout({ children }: Props) {
 
 									{/* Profile dropdown */}
 									<div className="flex flex-1 items-center justify-end">
-										<CreateBtn />
 										<SwitchDarkMode className="hidden lg:flex" />
 										<SearchIconBtn className="flex lg:hidden" />
 										<AvatarDropdown />

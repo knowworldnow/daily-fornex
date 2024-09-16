@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import Avatar from '@/components/Avatar/Avatar'
-import Link from 'next/link' // Make sure to import Link
+import Link from 'next/link'
 import { NcmazFcUserFullFieldsFragment } from '@/__generated__/graphql'
 import { FragmentType } from '@/__generated__'
 import { NC_USER_FULL_FIELDS_FRAGMENT } from '@/fragments'
@@ -13,6 +13,7 @@ export interface PostCardMetaV2Props {
         author?:
             | FragmentType<typeof NC_USER_FULL_FIELDS_FRAGMENT>
             | NcmazFcUserFullFieldsFragment
+            | null // Add null as a possible type
         title?: string
         uri?: string
     }
@@ -20,7 +21,7 @@ export interface PostCardMetaV2Props {
     className?: string
     titleClassName?: string
     avatarSize?: string
-    disableAuthorLink?: boolean // Add this prop to control link rendering
+    disableAuthorLink?: boolean
 }
 
 const PostCardMetaV2: FC<PostCardMetaV2Props> = ({
@@ -29,17 +30,12 @@ const PostCardMetaV2: FC<PostCardMetaV2Props> = ({
     className = 'leading-none text-xs',
     titleClassName = 'text-base',
     avatarSize = 'h-9 w-9 text-base',
-    disableAuthorLink = false, // Default to false
+    disableAuthorLink = false,
 }) => {
     const { date, title, uri } = meta
-
-    const author = getUserDataFromUserCardFragment(
-        meta.author as FragmentType<typeof NC_USER_FULL_FIELDS_FRAGMENT>,
-    )
-
-    if (!author?.databaseId && !date) {
-        return null
-    }
+    const author = meta.author ? getUserDataFromUserCardFragment(
+        meta.author as FragmentType<typeof NC_USER_FULL_FIELDS_FRAGMENT>
+    ) : null
 
     return (
         <div
@@ -57,32 +53,40 @@ const PostCardMetaV2: FC<PostCardMetaV2Props> = ({
                     </div>
                 )}
                 <div>
-                    <h2 className={`block font-semibold ${titleClassName}`}>
-                        <Link
-                            dangerouslySetInnerHTML={{ __html: title || '' }}
-                            className="line-clamp-2"
-                            href={uri || ''}
-                        ></Link>
-                    </h2>
-
-                    <div className="mt-1.5 flex">
-                        {disableAuthorLink ? (
-                            <span className="block font-medium capitalize text-neutral-700 dark:text-neutral-300">
-                                {author?.name || ''}
-                            </span>
-                        ) : (
-                            <Link href={author?.uri || ''} className="flex">
-                                <span className="block font-medium capitalize text-neutral-700 hover:text-black dark:text-neutral-300 dark:hover:text-white">
-                                    {author?.name || ''}
-                                </span>
+                    {title && uri && (
+                        <h2 className={`block font-semibold ${titleClassName}`}>
+                            <Link
+                                href={uri}
+                                className="line-clamp-2"
+                            >
+                                <span dangerouslySetInnerHTML={{ __html: title }}></span>
                             </Link>
+                        </h2>
+                    )}
+                    <div className="mt-1.5 flex">
+                        {author?.name && (
+                            <>
+                                {disableAuthorLink ? (
+                                    <span className="block font-medium capitalize text-neutral-700 dark:text-neutral-300">
+                                        {author.name}
+                                    </span>
+                                ) : (
+                                    <Link href={author.uri || '#'} className="flex">
+                                        <span className="block font-medium capitalize text-neutral-700 hover:text-black dark:text-neutral-300 dark:hover:text-white">
+                                            {author.name}
+                                        </span>
+                                    </Link>
+                                )}
+                                <span className="mx-[6px] font-medium text-neutral-500 dark:text-neutral-400">
+                                    ·
+                                </span>
+                            </>
                         )}
-                        <span className="mx-[6px] font-medium text-neutral-500 dark:text-neutral-400">
-                            ·
-                        </span>
-                        <span className="font-normal text-neutral-500 dark:text-neutral-400">
-                            {ncFormatDate(date || '')}
-                        </span>
+                        {date && (
+                            <span className="font-normal text-neutral-500 dark:text-neutral-400">
+                                {ncFormatDate(date)}
+                            </span>
+                        )}
                     </div>
                 </div>
             </div>

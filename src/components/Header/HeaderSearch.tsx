@@ -4,23 +4,18 @@ import { SearchIcon } from '../Icons/Icons';
 
 export const HeaderSearchForm = () => {
 	const router = useRouter();
-
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const query = e.currentTarget.search.value.trim();
 		if (query) {
-			router.push('/search/posts/' + encodeURIComponent(query));
+			router.push('/search?q=' + encodeURIComponent(query));
 		}
 	};
-
 	return (
-		<form
-			className="group relative"
-			onSubmit={handleSubmit}
-		>
+		<form className="group relative" onSubmit={handleSubmit}>
 			<Input
 				type="search"
-				placeholder="Type to search..."
+				placeholder="Search posts..."
 				className="!w-40 pr-5 group-hover:border-neutral-300 md:!w-full md:pr-10 dark:placeholder:text-neutral-400 dark:group-hover:border-neutral-400"
 				sizeClass="h-[42px] pl-4 py-3"
 				name="search"

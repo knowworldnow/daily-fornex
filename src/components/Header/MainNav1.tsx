@@ -3,7 +3,7 @@ import Navigation from '@/components/Navigation/Navigation';
 import MenuBar from '@/components/MenuBar/MenuBar';
 import { NC_PRIMARY_MENU_QUERY_FRAGMENT } from '@/fragments/menu';
 import { FragmentType } from '@/__generated__';
-import { SearchIconBtn } from './HeaderSearch';
+import { HeaderSearchForm } from './HeaderSearch';
 
 export interface MainNav1Props {
 	menuItems: FragmentType<typeof NC_PRIMARY_MENU_QUERY_FRAGMENT>[];
@@ -19,17 +19,15 @@ const MainNav1: FC<MainNav1Props> = ({ menuItems }) => {
 					<div className="flex flex-1 items-center lg:hidden">
 						<MenuBar menuItems={menuItems} />
 					</div>
-
 					<div className="flex flex-1 items-center justify-center space-x-4 sm:space-x-10 lg:justify-start 2xl:space-x-14 rtl:space-x-reverse">
 						<Navigation menuItems={menuItems} className="hidden lg:flex" />
 					</div>
-
 					<div className="flex flex-1 items-center justify-end space-x-1 text-neutral-700 rtl:space-x-reverse dark:text-neutral-100">
 						<div className="hidden items-center lg:flex">
-							<SearchIconBtn className="flex" />
+							<HeaderSearchForm />
 						</div>
 						<div className="flex items-center lg:hidden">
-							<SearchIconBtn className="flex" />
+							<HeaderSearchForm />
 						</div>
 					</div>
 				</div>

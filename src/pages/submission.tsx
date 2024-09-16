@@ -6,7 +6,6 @@ import CircleLoading from '@/components/Loading/CircleLoading'
 import SwitchDarkMode from '@/components/SwitchDarkMode/SwitchDarkMode'
 import AvatarDropdown from '@/components/Header/AvatarDropdown'
 import Logo from '@/components/Logo/Logo'
-import CreateBtn from '@/components/Header/CreateBtn'
 import { useEffect } from 'react'
 import { NC_SITE_SETTINGS } from '@/contains/site-settings'
 import Page404Content from '@/container/404Content'
@@ -54,7 +53,6 @@ const Page: FaustPage<{}> = (props) => {
 
 							{/* Profile dropdown */}
 							<div className="flex flex-1 items-center justify-end">
-								<CreateBtn className="block" />
 								<SwitchDarkMode />
 								<AvatarDropdown />
 							</div>

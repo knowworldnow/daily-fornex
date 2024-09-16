@@ -364,7 +364,7 @@ export function MagazineLayoutType({
 			)
 
 		default:
-			return <DynamicSectionMagazine9 posts={posts} />
+			return <DynamicSectionMagazine1 posts={posts} />
 	}
 }
 

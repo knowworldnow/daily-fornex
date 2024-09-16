@@ -3,7 +3,7 @@ import { TCategoryCardFull } from '@/components/CardCategory1/CardCategory1'
 import WidgetAddSubscriberForm from '@/components/WidgetAddSubscriberForm/WidgetAddSubscriberForm'
 import WidgetCategories from '@/components/WidgetCategories/WidgetCategories'
 import WidgetSocialsFollow from '@/components/WidgetSocialsFollow/WidgetSocialsFollow'
-import TableContent from './TableContent'
+import TableContent from './TableContentAnchor'
 
 declare global {
   interface Window {

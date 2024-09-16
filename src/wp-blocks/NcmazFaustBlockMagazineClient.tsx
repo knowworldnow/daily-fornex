@@ -11,7 +11,6 @@ import SectionHero3 from '@/components/Sections/SectionHero3'
 import dynamic from 'next/dynamic'
 import useGetPostsNcmazMetaByIds from '@/hooks/useGetPostsNcmazMetaByIds'
 import SectionMagazine5 from '../components/Sections/SectionMagazine5'
-import SectionMagazine8 from '../components/Sections/SectionMagazine8'
 import SectionMagazine2 from '../components/Sections/SectionMagazine2'
 import SectionMagazine6 from '../components/Sections/SectionMagazine6'
 import errorHandling from '@/utils/errorHandling'
@@ -32,12 +31,6 @@ const DynamicSectionMagazine4 = dynamic(
 )
 const DynamicSectionMagazine7 = dynamic(
 	() => import('../components/Sections/SectionMagazine7'),
-)
-// const DynamicSectionMagazine8 = dynamic(
-// 	() => import('../components/Sections/SectionMagazine8'),
-// )
-const DynamicSectionMagazine9 = dynamic(
-	() => import('../components/Sections/SectionMagazine9'),
 )
 const DynamicSectionMagazine10 = dynamic(
 	() => import('../components/Sections/SectionMagazine10'),

@@ -4,7 +4,9 @@ import { getApolloClient } from '@faustwp/core';
 import PageLayout from '@/container/PageLayout';
 import Link from 'next/link';
 import PostCardMetaV2 from '@/components/PostCardMeta/PostCardMetaV2';
-import MyImage from '@/components/MyImage';
+import Image from 'next/image';
+import { FragmentType } from '@/__generated__';
+import { NC_USER_FULL_FIELDS_FRAGMENT } from '@/fragments';
 
 interface Post {
   id: string;
@@ -13,10 +15,7 @@ interface Post {
   uri: string;
   date: string;
   author: {
-    node: {
-      name: string;
-      uri: string;
-    };
+    node: FragmentType<typeof NC_USER_FULL_FIELDS_FRAGMENT>;
   };
   categories: {
     nodes: Array<{
@@ -48,8 +47,7 @@ const SEARCH_POSTS = gql`
         date
         author {
           node {
-            name
-            uri
+            ...NcUserFullFieldsFragment
           }
         }
         categories {
@@ -67,6 +65,7 @@ const SEARCH_POSTS = gql`
       }
     }
   }
+  ${NC_USER_FULL_FIELDS_FRAGMENT}
 `;
 
 const SearchResults: React.FC<SearchResultsProps> = ({ posts, searchTerm }) => {
@@ -79,26 +78,29 @@ const SearchResults: React.FC<SearchResultsProps> = ({ posts, searchTerm }) => {
             {posts.map((post) => (
               <div key={post.id} className="flex border-b pb-8">
                 {post.featuredImage?.node?.sourceUrl && (
-                  <div className="flex-shrink-0 mr-4">
-                    <MyImage 
+                  <div className="flex-shrink-0 mr-4 relative w-32 h-32">
+                    <Image 
                       src={post.featuredImage.node.sourceUrl} 
                       alt={post.featuredImage.node.altText || post.title} 
-                      className="w-32 h-32 object-cover rounded"
-                      sizes="128px"
-                      fill
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded"
                     />
                   </div>
                 )}
                 <div className="flex-grow">
                   <PostCardMetaV2
                     meta={{
-                      ...post,
+                      date: post.date,
                       author: post.author.node,
+                      title: post.title,
+                      uri: post.uri,
                     }}
                     hiddenAvatar={false}
                     className="mb-2"
                     titleClassName="text-xl"
                     avatarSize="h-10 w-10"
+                    disableAuthorLink={true}
                   />
                   <div 
                     dangerouslySetInnerHTML={{ __html: post.excerpt }} 

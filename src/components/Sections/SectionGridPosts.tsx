@@ -7,7 +7,6 @@ import Card10 from '@/components/Card10/Card10'
 import Card11 from '@/components/Card11/Card11'
 import Card14 from '@/components/Card14/Card14'
 import Card10V2 from '@/components/Card10/Card10V2'
-import Card15Podcast from '@/components/Card15Podcast/Card15Podcast'
 import { SectionMagazine1Props } from './SectionMagazine1'
 import { TPostCard } from '../Card2/Card2'
 
@@ -23,7 +22,6 @@ export interface SectionGridPostsProps extends SectionMagazine1Props {
 		| 'card10V2'
 		| 'card11'
 		| 'card14'
-		| 'card15Podcast'
 }
 
 const SectionGridPosts: FC<SectionGridPostsProps> = ({
@@ -51,8 +49,6 @@ const SectionGridPosts: FC<SectionGridPostsProps> = ({
 				return <Card11 key={postId} post={post} />
 			case 'card14':
 				return <Card14 key={postId} post={post} />
-			case 'card15Podcast':
-				return <Card15Podcast key={postId} post={post} />
 			default:
 				return null
 		}

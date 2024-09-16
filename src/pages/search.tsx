@@ -1,6 +1,6 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { gql } from '@apollo/client';
-import { getClient } from '@faustwp/core';
+import { getApolloClient } from '@faustwp/core';
 import PageLayout from '@/container/PageLayout';
 import Link from 'next/link';
 import PostCardMetaV2 from '@/components/PostCardMeta/PostCardMetaV2';
@@ -131,7 +131,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({ posts, searchTerm }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const searchTerm = context.query.q as string || '';
-  const client = await getClient();
+  const client = getApolloClient();
   
   const { data } = await client.query({
     query: SEARCH_POSTS,

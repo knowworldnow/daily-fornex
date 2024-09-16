@@ -3,6 +3,7 @@ import { FaustTemplate } from "@faustwp/core";
 import React, { ErrorInfo } from 'react';
 import {
   GetPostSiglePageQuery,
+  NcmazFcPostFullFieldsFragment
 } from "../__generated__/graphql";
 import SingleContent from "@/container/singles/SingleContent";
 import PageLayout from "@/container/PageLayout";
@@ -46,7 +47,7 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
 
   console.log("Props received:", props);
 
-  const post = props.data?.post;
+  const post = props.data?.post as NcmazFcPostFullFieldsFragment | undefined;
   const generalSettings = props.data?.generalSettings;
 
   if (!post) {
@@ -61,22 +62,22 @@ const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
       <PageLayout
         headerMenuItems={[]}
         footerMenuItems={[]}
-        pageTitle={post.title || ""}
-        pageDescription={post.excerpt || ""}
+        pageTitle={(post as any).title || ""}
+        pageDescription={(post as any).excerpt || ""}
         generalSettings={generalSettings}
       >
         <div className="container flex flex-col my-10 lg:flex-row">
           <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
-            <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+            <h1 className="text-3xl font-bold mb-4">{(post as any).title}</h1>
             <div className="flex items-center mb-4 text-sm text-gray-600">
-              <span>{new Date(post.date).toLocaleDateString()}</span>
+              <span>{new Date((post as any).date).toLocaleDateString()}</span>
               <span className="mx-2">•</span>
-              <span>By {post.author?.node?.name || "Unknown Author"}</span>
+              <span>By {(post as any).author?.node?.name || "Unknown Author"}</span>
             </div>
             <SingleContent post={post} />
           </div>
           <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-            <Sidebar content={post.content || ""} />
+            <Sidebar content={(post as any).content || ""} />
           </div>
         </div>
       </PageLayout>
@@ -95,13 +96,15 @@ Component.variables = ({ databaseId }, ctx) => {
 Component.query = gql`
   query GetPostSiglePage($databaseId: ID!, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID) {
-      title
-      content
-      date
-      excerpt
-      author {
-        node {
-          name
+      ... on Post {
+        title
+        content
+        date
+        excerpt
+        author {
+          node {
+            name
+          }
         }
       }
     }

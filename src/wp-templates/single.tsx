@@ -1,4 +1,4 @@
-import { gql } from "../__generated__"
+import { gql, DocumentNode } from "../__generated__"
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,
@@ -187,6 +187,6 @@ Component.query = gql(`
       }
     }
   }
-`)
+`) as DocumentNode
 
 export default Component

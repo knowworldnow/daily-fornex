@@ -3,7 +3,6 @@ import Navigation from '@/components/Navigation/Navigation';
 import MenuBar from '@/components/MenuBar/MenuBar';
 import { NC_PRIMARY_MENU_QUERY_FRAGMENT } from '@/fragments/menu';
 import { FragmentType } from '@/__generated__';
-import AvatarDropdown from './AvatarDropdown';
 import { SearchIconBtn } from './HeaderSearch';
 
 export interface MainNav1Props {
@@ -28,11 +27,9 @@ const MainNav1: FC<MainNav1Props> = ({ menuItems }) => {
 					<div className="flex flex-1 items-center justify-end space-x-1 text-neutral-700 rtl:space-x-reverse dark:text-neutral-100">
 						<div className="hidden items-center lg:flex">
 							<SearchIconBtn className="flex" />
-							<AvatarDropdown />
 						</div>
 						<div className="flex items-center lg:hidden">
 							<SearchIconBtn className="flex" />
-							<AvatarDropdown />
 						</div>
 					</div>
 				</div>

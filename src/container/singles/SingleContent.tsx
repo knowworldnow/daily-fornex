@@ -161,7 +161,7 @@ const SingleContent: FC<SingleContentProps> = ({ post }) => {
 
       {/* Sidebar */}
       <div className="lg:w-1/4 lg:pl-10 mt-10 lg:mt-0">
-        <Sidebar categories={[]} content={content} />
+        <Sidebar content={content} />
       </div>
 
       {/* Sticky Action */}

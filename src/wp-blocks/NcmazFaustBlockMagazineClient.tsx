@@ -305,14 +305,6 @@ export function MagazineLayoutType({
 					postCardName="card14"
 				/>
 			)
-		case 'grid-9':
-			return (
-				<DynamicSectionGridPosts
-					gridClass="md:grid-cols-2 xl:grid-cols-3 !gap-6"
-					posts={posts}
-					postCardName="card15Podcast"
-				/>
-			)
 
 		// Slider
 		case 'slider-1':

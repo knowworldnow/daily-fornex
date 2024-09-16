@@ -1,50 +1,45 @@
-import SEO from "@/components/SEO/SEO";
 import React, { FC } from "react";
+import SEO from "@/components/SEO/SEO";
 import SiteHeader from "./SiteHeader";
 import Footer from "@/components/Footer/Footer";
-import { FragmentType } from "@/__generated__";
-import {
-  NC_FOOTER_MENU_QUERY_FRAGMENT,
-  NC_PRIMARY_MENU_QUERY_FRAGMENT,
-} from "@/fragments/menu";
 import { NcgeneralSettingsFieldsFragmentFragment } from "@/__generated__/graphql";
 
 interface Props {
   children: React.ReactNode;
-  pageTitle?: string | null | undefined;
-  headerMenuItems?: FragmentType<typeof NC_PRIMARY_MENU_QUERY_FRAGMENT>[];
-  footerMenuItems?: FragmentType<typeof NC_FOOTER_MENU_QUERY_FRAGMENT>[] | null;
-  pageFeaturedImageUrl?: string | null | undefined;
-  generalSettings?: NcgeneralSettingsFieldsFragmentFragment | null | undefined;
-  pageDescription?: string | null | undefined;
+  pageTitle?: string;
+  headerMenuItems?: any[]; // Consider creating a more specific type if possible
+  footerMenuItems?: any[]; // Consider creating a more specific type if possible
+  pageFeaturedImageUrl?: string;
+  generalSettings?: NcgeneralSettingsFieldsFragmentFragment;
+  pageDescription?: string;
 }
 
 const PageLayout: FC<Props> = ({
   children,
-  footerMenuItems,
-  headerMenuItems,
+  footerMenuItems = [],
+  headerMenuItems = [],
   pageFeaturedImageUrl,
-  pageTitle,
+  pageTitle = "",
   generalSettings,
-  pageDescription,
+  pageDescription = "",
 }) => {
+  const siteTitle = generalSettings?.title || "";
+  const siteDescription = generalSettings?.description || "";
+
   return (
     <>
       <SEO
-        title={(pageTitle || "") + " - " + (generalSettings?.title || "")}
-        description={pageDescription || generalSettings?.description || ""}
+        title={`${pageTitle} - ${siteTitle}`.trim()}
+        description={pageDescription || siteDescription}
         imageUrl={pageFeaturedImageUrl}
       />
-
       <SiteHeader
-        siteTitle={generalSettings?.title}
-        siteDescription={generalSettings?.description}
-        menuItems={headerMenuItems || []}
+        siteTitle={siteTitle}
+        siteDescription={siteDescription}
+        menuItems={headerMenuItems}
       />
-
-      {children}
-
-      <Footer menuItems={footerMenuItems || []} />
+      <main>{children}</main>
+      <Footer menuItems={footerMenuItems} />
     </>
   );
 };

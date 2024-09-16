@@ -1,6 +1,7 @@
 import React from 'react';
 import { gql } from '@/__generated__';
 import { FaustPage, getNextStaticProps } from '@faustwp/core';
+import { DocumentNode } from '@apollo/client';
 import PageLayout from '@/container/PageLayout';
 import {
   GetReadingListPageQuery,
@@ -109,7 +110,7 @@ Page.query = gql(`
       }
     }
   }
-`);
+`) as DocumentNode;
 
 export function getStaticProps(ctx: GetStaticPropsContext) {
   return getNextStaticProps(ctx, {

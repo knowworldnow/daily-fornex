@@ -32,7 +32,7 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props) => {
       <PageLayout
         headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
         footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-        pageFeaturedImageUrl={null}
+        pageFeaturedImageUrl={props.data.nodeByUri?.featuredImage?.node?.sourceUrl ?? undefined}
         pageTitle={props.data.nodeByUri.__typename}
         generalSettings={
           props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
@@ -64,7 +64,7 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props) => {
       <PageLayout
         headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
         footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-        pageFeaturedImageUrl={null}
+        pageFeaturedImageUrl={props.data.nodeByUri?.featuredImage?.node?.sourceUrl ?? undefined}
         pageTitle={"Archive " + name}
         pageDescription={description || ""}
         generalSettings={

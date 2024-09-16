@@ -1,20 +1,18 @@
-import { FC } from 'react'
-import AvatarDropdown from './AvatarDropdown'
-import SwitchDarkMode from '../SwitchDarkMode/SwitchDarkMode'
-import Navigation from '../Navigation/Navigation'
-import { MainNav1Props } from './MainNav1'
-import Brand from './Brand'
-import CreateBtn from './CreateBtn'
-import dynamic from 'next/dynamic'
-import { HeaderSearchForm, SearchIconBtn } from './HeaderSearch'
+import { FC } from 'react';
+import AvatarDropdown from './AvatarDropdown';
+import SwitchDarkMode from '../SwitchDarkMode/SwitchDarkMode';
+import Navigation from '../Navigation/Navigation';
+import { MainNav1Props } from './MainNav1';
+import dynamic from 'next/dynamic';
+import { HeaderSearchForm, SearchIconBtn } from './HeaderSearch';
 
 const DynamicMenuBar = dynamic(() => import('@/components/MenuBar/MenuBar'), {
 	ssr: false,
-})
+});
 
-export interface MainNav2Props extends MainNav1Props {}
+export interface MainNav3Props extends MainNav1Props {}
 
-const MainNav2: FC<MainNav2Props> = ({ menuItems, description, title }) => {
+const MainNav3: FC<MainNav3Props> = ({ menuItems }) => {
 	return (
 		<div className="nc-MainNav3 relative z-10 border-b border-neutral-200/70 bg-white dark:border-transparent dark:bg-neutral-900">
 			<div className="px-4 xl:container">
@@ -24,15 +22,10 @@ const MainNav2: FC<MainNav2Props> = ({ menuItems, description, title }) => {
 					</div>
 
 					<div className="hidden items-center gap-x-3 sm:gap-x-8 lg:flex">
-						<Brand title={title} description={description} />
 						<div className="hidden h-8 border-s border-neutral-200 md:block dark:border-neutral-700"></div>
 						<div className="hidden w-64 max-w-xs sm:block xl:w-80">
 							<HeaderSearchForm />
 						</div>
-					</div>
-
-					<div className="flex flex-1 items-center justify-center lg:hidden">
-						<Brand title={title} description={description} />
 					</div>
 
 					<div className="flex flex-1 justify-end">
@@ -43,7 +36,6 @@ const MainNav2: FC<MainNav2Props> = ({ menuItems, description, title }) => {
 							className="hidden lg:flex"
 						/>
 						<div className="mx-2 hidden h-8 self-center border-l border-neutral-200 md:block dark:border-neutral-700"></div>
-						<CreateBtn className="hidden self-center md:flex" />
 						<SwitchDarkMode className="hidden self-center md:flex" />
 						<SearchIconBtn className="lg:hidden" />
 						<AvatarDropdown className="self-center" />
@@ -51,7 +43,7 @@ const MainNav2: FC<MainNav2Props> = ({ menuItems, description, title }) => {
 				</div>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default MainNav3
+export default MainNav3;

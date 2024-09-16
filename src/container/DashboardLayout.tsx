@@ -16,7 +16,6 @@ import {
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import Logo from '@/components/Logo/Logo'
 import SwitchDarkMode from '@/components/SwitchDarkMode/SwitchDarkMode'
-import AvatarDropdown from '@/components/Header/AvatarDropdown'
 import classNames from '@/utils/classNames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -375,7 +374,6 @@ export default function DashboardLayout({ children }: Props) {
 									<div className="flex flex-1 items-center justify-end">
 										<SwitchDarkMode className="hidden lg:flex" />
 										<SearchIconBtn className="flex lg:hidden" />
-										<AvatarDropdown />
 									</div>
 								</div>
 							</div>

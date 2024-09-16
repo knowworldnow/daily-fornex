@@ -1,4 +1,5 @@
-import { gql, FaustTemplate } from "@faustwp/core";
+import { gql } from "@apollo/client";
+import { FaustTemplate } from "@faustwp/core";
 import {
   GetPostSiglePageQuery,
   NcgeneralSettingsFieldsFragmentFragment,

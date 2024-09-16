@@ -2,15 +2,44 @@ import { GetServerSideProps } from 'next';
 import { gql } from '@apollo/client';
 import { getApolloClient } from '@faustwp/core';
 import PageLayout from '@/container/PageLayout';
-import { NcgeneralSettingsFieldsFragmentFragment } from "@/__generated__/graphql";
 import Link from 'next/link';
 import PostCardMetaV2 from '@/components/PostCardMeta/PostCardMetaV2';
-import Avatar from '@/components/Avatar/Avatar';
 import MyImage from '@/components/MyImage';
+
+interface Post {
+  id: string;
+  title: string;
+  excerpt: string;
+  uri: string;
+  date: string;
+  author: {
+    node: {
+      name: string;
+      uri: string;
+    };
+  };
+  categories: {
+    nodes: Array<{
+      name: string;
+      uri: string;
+    }>;
+  };
+  featuredImage: {
+    node: {
+      sourceUrl: string;
+      altText: string;
+    };
+  };
+}
+
+interface SearchResultsProps {
+  posts: Post[];
+  searchTerm: string;
+}
 
 const SEARCH_POSTS = gql`
   query SearchPosts($search: String!) {
-    posts(first: 10, where: { search: $search }) {
+    posts(where: { search: $search }, first: 10) {
       nodes {
         id
         title
@@ -21,11 +50,6 @@ const SEARCH_POSTS = gql`
           node {
             name
             uri
-            ncUserMeta {
-              featuredImage {
-                sourceUrl
-              }
-            }
           }
         }
         categories {
@@ -42,35 +66,12 @@ const SEARCH_POSTS = gql`
         }
       }
     }
-    generalSettings {
-      title
-      description
-    }
-    headerMenuItems: menuItems(where: { location: PRIMARY }, first: 20) {
-      nodes {
-        id
-        title
-        url
-      }
-    }
-    footerMenuItems: menuItems(where: { location: FOOTER }, first: 20) {
-      nodes {
-        id
-        title
-        url
-      }
-    }
   }
 `;
 
-const SearchResults = ({ posts, searchTerm, generalSettings, headerMenuItems, footerMenuItems }) => {
+const SearchResults: React.FC<SearchResultsProps> = ({ posts, searchTerm }) => {
   return (
-    <PageLayout
-      pageTitle={`Search Results for "${searchTerm}"`}
-      generalSettings={generalSettings}
-      headerMenuItems={headerMenuItems}
-      footerMenuItems={footerMenuItems}
-    >
+    <PageLayout>
       <div className="container mx-auto px-4 py-8">
         <h1 className="mb-8 text-3xl font-bold">Search Results for "{searchTerm}"</h1>
         {posts.length > 0 ? (
@@ -139,9 +140,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       posts: data.posts.nodes,
       searchTerm,
-      generalSettings: data.generalSettings,
-      headerMenuItems: data.headerMenuItems.nodes,
-      footerMenuItems: data.footerMenuItems.nodes,
     },
   };
 };

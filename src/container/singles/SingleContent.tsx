@@ -1,4 +1,6 @@
-import { FC, useRef } from 'react'
+'use client'
+
+import React, { FC, useRef } from 'react'
 import Tag from '@/components/Tag/Tag'
 import SingleAuthor from './SingleAuthor'
 import PostCardLikeAction from '@/components/PostCardLikeAction/PostCardLikeAction'

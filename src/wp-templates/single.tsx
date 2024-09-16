@@ -20,6 +20,106 @@ const DynamicSingleRelatedPosts = dynamic(
   () => import("@/container/singles/SingleRelatedPosts")
 );
 
+const NcmazFcImageHasDetailFields = gql`
+  fragment NcmazFcImageHasDetailFields on NcmazFcImageHasDetailFieldsFragment {
+    sourceUrl
+    altText
+    caption
+  }
+`;
+
+const NcmazFcUserFullFields = gql`
+  fragment NcmazFcUserFullFields on NcmazFcUserFullFieldsFragment {
+    name
+    username
+    uri
+    featuredImageMeta {
+      sourceUrl
+      altText
+    }
+    bgImageMeta {
+      sourceUrl
+      altText
+    }
+  }
+`;
+
+const NcmazFcPostFullFields = gql`
+  fragment NcmazFcPostFullFields on Post {
+    databaseId
+    title
+    uri
+    date
+    modified
+    status
+    featuredImage {
+      ...NcmazFcImageHasDetailFields
+    }
+    author {
+      ...NcmazFcUserFullFields
+    }
+    categories {
+      nodes {
+        databaseId
+        name
+        uri
+      }
+    }
+    excerpt
+    commentCount
+    commentStatus
+    postFormats {
+      nodes {
+        name
+        slug
+      }
+    }
+    ncmazVideoUrl {
+      videoUrl
+    }
+    ncmazAudioUrl {
+      audioUrl
+    }
+    ncPostMetaData {
+      fieldGroupName
+      favoriteButtonShortcode
+      frontendDate
+      likesCount
+      marchConfirm
+      newLikesCount
+      showRightSidebar
+      timeUpdate
+      viewsCount
+    }
+    ncmazGalleryImgs {
+      image0 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image1 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image2 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image3 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image4 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image5 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image6 {
+        ...NcmazFcImageHasDetailFields
+      }
+      image7 {
+        ...NcmazFcImageHasDetailFields
+      }
+    }
+  }
+`;
+
 const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   if (props.loading) {
     return <>Loading...</>;
@@ -128,6 +228,9 @@ Component.variables = ({ databaseId }, ctx) => {
 };
 
 Component.query = gql`
+  ${NcmazFcImageHasDetailFields}
+  ${NcmazFcUserFullFields}
+  ${NcmazFcPostFullFields}
   query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int, $asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
       title
@@ -183,10 +286,6 @@ Component.query = gql`
       }
     }
   }
-  
-  ${NcmazFcImageHasDetailFields}
-  ${NcmazFcUserFullFields}
-  ${NcmazFcPostFullFields}
 `;
 
 export default Component;

@@ -4,7 +4,6 @@ import CreateNewPostEditor from '@/components/PostSubmissionEditor/CreateNewPost
 import { useRouter } from 'next/router'
 import CircleLoading from '@/components/Loading/CircleLoading'
 import SwitchDarkMode from '@/components/SwitchDarkMode/SwitchDarkMode'
-import AvatarDropdown from '@/components/Header/AvatarDropdown'
 import Logo from '@/components/Logo/Logo'
 import { useEffect } from 'react'
 import { NC_SITE_SETTINGS } from '@/contains/site-settings'
@@ -54,7 +53,6 @@ const Page: FaustPage<{}> = (props) => {
 							{/* Profile dropdown */}
 							<div className="flex flex-1 items-center justify-end">
 								<SwitchDarkMode />
-								<AvatarDropdown />
 							</div>
 						</div>
 					</div>

@@ -261,10 +261,6 @@ export function MagazineLayoutType({
 			return <SectionMagazine6 posts={posts} />
 		case 'magazine-7':
 			return <DynamicSectionMagazine7 posts={posts} />
-		case 'magazine-8':
-			return <SectionMagazine8 posts={posts} />
-		case 'magazine-9':
-			return <DynamicSectionMagazine9 posts={posts} />
 		case 'magazine-10':
 			return <DynamicSectionMagazine10 posts={posts} />
 		case 'magazine-11':

@@ -1,289 +1,105 @@
 import { gql } from "@apollo/client";
 import { FaustTemplate } from "@faustwp/core";
+import React, { ErrorInfo } from 'react';
 import {
   GetPostSiglePageQuery,
-  NcgeneralSettingsFieldsFragmentFragment,
-  NcmazFcImageHasDetailFieldsFragment,
-  NcmazFcUserFullFieldsFragment,
-  NcmazFcPostFullFieldsFragment,
 } from "../__generated__/graphql";
 import SingleContent from "@/container/singles/SingleContent";
-import SingleType1 from "@/container/singles/single/single";
-import { getPostDataFromPostFragment } from "@/utils/getPostDataFromPostFragment";
-import { Sidebar } from "@/container/singles/Sidebar";
 import PageLayout from "@/container/PageLayout";
-import dynamic from "next/dynamic";
-import SocialsShare from "@/components/SocialsShare/SocialsShare";
-import { useRouter } from "next/router";
+import { Sidebar } from "@/container/singles/Sidebar";
 
-const DynamicSingleRelatedPosts = dynamic(
-  () => import("@/container/singles/SingleRelatedPosts")
-);
-
-const NcmazFcImageHasDetailFields = gql`
-  fragment NcmazFcImageHasDetailFields on NcmazFcImageHasDetailFieldsFragment {
-    sourceUrl
-    altText
-    caption
+class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean}> {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
   }
-`;
 
-const NcmazFcUserFullFields = gql`
-  fragment NcmazFcUserFullFields on NcmazFcUserFullFieldsFragment {
-    name
-    username
-    uri
-    featuredImageMeta {
-      sourceUrl
-      altText
-    }
-    bgImageMeta {
-      sourceUrl
-      altText
-    }
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
   }
-`;
 
-const NcmazFcPostFullFields = gql`
-  fragment NcmazFcPostFullFields on Post {
-    databaseId
-    title
-    uri
-    date
-    modified
-    status
-    featuredImage {
-      ...NcmazFcImageHasDetailFields
-    }
-    author {
-      ...NcmazFcUserFullFields
-    }
-    categories {
-      nodes {
-        databaseId
-        name
-        uri
-      }
-    }
-    excerpt
-    commentCount
-    commentStatus
-    postFormats {
-      nodes {
-        name
-        slug
-      }
-    }
-    ncmazVideoUrl {
-      videoUrl
-    }
-    ncmazAudioUrl {
-      audioUrl
-    }
-    ncPostMetaData {
-      fieldGroupName
-      favoriteButtonShortcode
-      frontendDate
-      likesCount
-      marchConfirm
-      newLikesCount
-      showRightSidebar
-      timeUpdate
-      viewsCount
-    }
-    ncmazGalleryImgs {
-      image0 {
-        ...NcmazFcImageHasDetailFields
-      }
-      image1 {
-        ...NcmazFcImageHasDetailFields
-      }
-      image2 {
-        ...NcmazFcImageHasDetailFields
-      }
-      image3 {
-        ...NcmazFcImageHasDetailFields
-      }
-      image4 {
-        ...NcmazFcImageHasDetailFields
-      }
-      image5 {
-        ...NcmazFcImageHasDetailFields
-      }
-      image6 {
-        ...NcmazFcImageHasDetailFields
-      }
-      image7 {
-        ...NcmazFcImageHasDetailFields
-      }
-    }
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("Caught an error:", error, errorInfo);
   }
-`;
+
+  render() {
+    if (this.state.hasError) {
+      return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children;
+  }
+}
 
 const Component: FaustTemplate<GetPostSiglePageQuery> = (props) => {
   if (props.loading) {
     return <>Loading...</>;
   }
 
-  const router = useRouter();
+  console.log("Props received:", props);
 
-  const _post = props.data?.post;
+  const post = props.data?.post;
+  const generalSettings = props.data?.generalSettings;
 
-  if (!_post) {
+  if (!post) {
+    console.error("No post data received");
     return <div>Error: Post not found</div>;
   }
 
-  const {
-    title,
-    ncPostMetaData,
-    featuredImage,
-    databaseId,
-    excerpt,
-    content,
-    date,
-    author,
-    categories,
-    tags,
-  } = getPostDataFromPostFragment(_post);
-
-  const getFeaturedImageUrl = (image: NcmazFcImageHasDetailFieldsFragment | null | undefined): string => {
-    return image?.sourceUrl || "";
-  };
+  console.log("Post data:", post);
 
   return (
-    <PageLayout
-      headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
-      footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-      pageFeaturedImageUrl={getFeaturedImageUrl(featuredImage)}
-      pageTitle={title}
-      pageDescription={excerpt || ""}
-      generalSettings={
-        props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
-      }
-    >
-      <SingleType1
-        showRightSidebar={!!ncPostMetaData?.showRightSidebar}
-        post={_post}
-      />
-      <div className="container flex flex-col my-10 lg:flex-row">
-        <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
-          <h1 className="text-3xl font-bold mb-4">{title}</h1>
-          {featuredImage && featuredImage.sourceUrl && (
-            <img
-              src={featuredImage.sourceUrl}
-              alt={featuredImage.altText || title}
-              className="w-full h-auto mb-6 rounded-lg"
-            />
-          )}
-          <div className="flex items-center mb-4 text-sm text-gray-600">
-            <span>{new Date(date).toLocaleDateString()}</span>
-            <span className="mx-2">•</span>
-            <span>By {(author as NcmazFcUserFullFieldsFragment)?.name || "Unknown Author"}</span>
+    <ErrorBoundary>
+      <PageLayout
+        headerMenuItems={[]}
+        footerMenuItems={[]}
+        pageTitle={post.title || ""}
+        pageDescription={post.excerpt || ""}
+        generalSettings={generalSettings}
+      >
+        <div className="container flex flex-col my-10 lg:flex-row">
+          <div className="w-full lg:w-3/5 xl:w-2/3 xl:pe-20">
+            <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+            <div className="flex items-center mb-4 text-sm text-gray-600">
+              <span>{new Date(post.date).toLocaleDateString()}</span>
+              <span className="mx-2">•</span>
+              <span>By {post.author?.node?.name || "Unknown Author"}</span>
+            </div>
+            <SingleContent post={post} />
           </div>
-          {categories?.nodes && categories.nodes.length > 0 && (
-            <div className="mb-4">
-              {categories.nodes.map((category) => (
-                <span key={category.databaseId} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                  {category.name}
-                </span>
-              ))}
-            </div>
-          )}
-          <div className="prose max-w-none mb-6" dangerouslySetInnerHTML={{ __html: excerpt || "" }} />
-          <SingleContent post={_post} />
-          {tags?.nodes && tags.nodes.length > 0 && (
-            <div className="mt-6">
-              <h3 className="text-xl font-semibold mb-2">Tags:</h3>
-              {tags.nodes.map((tag) => (
-                <span key={tag.databaseId} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                  {tag.name}
-                </span>
-              ))}
-            </div>
-          )}
-          <SocialsShare link={router.asPath} />
-        </div>
-        {ncPostMetaData?.showRightSidebar && (
           <div className="w-full mt-12 lg:mt-0 lg:w-2/5 lg:ps-10 xl:ps-0 xl:w-1/3">
-            <Sidebar content={content || ""} />
+            <Sidebar content={post.content || ""} />
           </div>
-        )}
-      </div>
-      <DynamicSingleRelatedPosts
-        posts={props.data?.posts?.nodes as NcmazFcPostFullFieldsFragment[] || []}
-        postDatabaseId={databaseId}
-      />
-    </PageLayout>
+        </div>
+      </PageLayout>
+    </ErrorBoundary>
   );
 };
 
 Component.variables = ({ databaseId }, ctx) => {
   return {
     databaseId,
-    post_databaseId: Number(databaseId || 0),
-    asPreview: ctx?.asPreview,
     headerLocation: "PRIMARY",
     footerLocation: "FOOTER",
   };
 };
 
 Component.query = gql`
-  ${NcmazFcImageHasDetailFields}
-  ${NcmazFcUserFullFields}
-  ${NcmazFcPostFullFields}
-  query GetPostSiglePage($databaseId: ID!, $post_databaseId: Int, $asPreview: Boolean = false, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
-    post(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
+  query GetPostSiglePage($databaseId: ID!, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
+    post(id: $databaseId, idType: DATABASE_ID) {
       title
       content
-      databaseId
-      excerpt
-      featuredImage {
-        ...NcmazFcImageHasDetailFields
-      }
       date
+      excerpt
       author {
-        ...NcmazFcUserFullFields
-      }
-      categories {
-        nodes {
-          databaseId
+        node {
           name
         }
-      }
-      tags {
-        nodes {
-          databaseId
-          name
-        }
-      }
-      ncPostMetaData {
-        showRightSidebar
-      }
-    }
-    posts(where: { isRelatedOfPostId: $post_databaseId }) {
-      nodes {
-        ...NcmazFcPostFullFields
       }
     }
     generalSettings {
       title
       description
-    }
-    primaryMenuItems: menuItems(where: { location: $headerLocation }, first: 80) {
-      nodes {
-        label
-        url
-        uri
-        order
-      }
-    }
-    footerMenuItems: menuItems(where: { location: $footerLocation }, first: 40) {
-      nodes {
-        label
-        url
-        uri
-        order
-      }
     }
   }
 `;

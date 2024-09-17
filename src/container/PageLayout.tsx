@@ -4,11 +4,19 @@ import SiteHeader from "./SiteHeader";
 import Footer from "@/components/Footer/Footer";
 import { NcgeneralSettingsFieldsFragmentFragment } from "@/__generated__/graphql";
 
+interface MenuItem {
+  // Add properties based on your menu item structure
+  id: string;
+  title: string;
+  url: string;
+  // Add other relevant properties
+}
+
 interface Props {
   children: React.ReactNode;
   pageTitle?: string;
-  headerMenuItems?: any[]; // Consider creating a more specific type if possible
-  footerMenuItems?: any[]; // Consider creating a more specific type if possible
+  headerMenuItems?: MenuItem[];
+  footerMenuItems?: MenuItem[];
   pageFeaturedImageUrl?: string;
   generalSettings?: NcgeneralSettingsFieldsFragmentFragment;
   pageDescription?: string;
@@ -29,7 +37,7 @@ const PageLayout: FC<Props> = ({
   return (
     <>
       <SEO
-        title={`${pageTitle} - ${siteTitle}`.trim()}
+        title={`${pageTitle} ${siteTitle ? `- ${siteTitle}` : ""}`.trim()}
         description={pageDescription || siteDescription}
         imageUrl={pageFeaturedImageUrl}
       />

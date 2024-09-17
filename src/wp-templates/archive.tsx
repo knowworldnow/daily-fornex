@@ -4,7 +4,7 @@ import {
   PageArchiveGetArchiveQuery,
   NcmazFcPostFullFieldsFragment,
   NcmazFcPostCardFieldsFragment,
-  NcmazFcCategoryFullFieldsFragment,
+  NcmazFcCategoryFullFieldsFragmentFragment,
   NcPrimaryMenuFieldsFragment,
   NcFooterMenuFieldsFragment
 } from "@/__generated__/graphql";
@@ -69,7 +69,7 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps)
   const initPostsPageInfo = postFormat.posts?.pageInfo;
   const posts = postFormat.posts?.nodes as NcmazFcPostCardFieldsFragment[] | undefined;
 
-  const _top10Categories = props.data?.categories?.nodes as TCategoryCardFull[] | undefined;
+  const _top10Categories = props.data?.categories?.nodes as NcmazFcCategoryFullFieldsFragmentFragment[] | undefined;
 
   return (
     <PageLayout
@@ -160,7 +160,7 @@ Archive.query = gql`
     }
     categories(first: 10, where: { orderby: COUNT, order: DESC }) {
       nodes {
-        ...NcmazFcCategoryFullFieldsFragment
+        ...NcmazFcCategoryFullFieldsFragmentFragment
       }
     }
     generalSettings {

@@ -6,7 +6,7 @@ import {
   NcmazFcPostCardFieldsFragment,
   NcmazFcCategoryFullFieldsFragmentFragment,
   NcPrimaryMenuFieldsFragmentFragment,
-  NcFooterMenuFieldsFragment
+  NcFooterMenuFieldsFragmentFragment
 } from "@/__generated__/graphql";
 import Alert from "@/components/Alert";
 import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
@@ -44,7 +44,7 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps)
     return (
       <PageLayout
         headerMenuItems={props.data?.primaryMenuItems?.nodes as NcPrimaryMenuFieldsFragmentFragment[] || []}
-        footerMenuItems={props.data?.footerMenuItems?.nodes || []}
+        footerMenuItems={props.data?.footerMenuItems?.nodes as NcFooterMenuFieldsFragmentFragment[] || []}
         pageFeaturedImageUrl={getFeaturedImageUrl(props.data.nodeByUri)}
         pageTitle={props.data.nodeByUri.__typename}
         generalSettings={
@@ -74,7 +74,7 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps)
   return (
     <PageLayout
       headerMenuItems={props.data?.primaryMenuItems?.nodes as NcPrimaryMenuFieldsFragmentFragment[] || []}
-      footerMenuItems={props.data?.footerMenuItems?.nodes || []}
+      footerMenuItems={props.data?.footerMenuItems?.nodes as NcFooterMenuFieldsFragmentFragment[] || []}
       pageFeaturedImageUrl={getFeaturedImageUrl(props.data.nodeByUri)}
       pageTitle={`Archive ${name}`}
       pageDescription={description || ""}
@@ -173,7 +173,7 @@ Archive.query = gql`
     }
     footerMenuItems: menuItems(where: { location: $footerLocation }, first: 50) {
       nodes {
-        ...NcFooterMenuFieldsFragment
+        ...NcFooterMenuFieldsFragmentFragment
       }
     }
   }

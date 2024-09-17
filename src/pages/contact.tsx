@@ -1,18 +1,9 @@
 import React from 'react';
-import { gql } from '@/__generated__';
-import { FaustPage, getNextStaticProps } from '@faustwp/core';
-import { DocumentNode } from '@apollo/client';
 import PageLayout from '@/container/PageLayout';
-import {
-  GetReadingListPageQuery,
-  NcgeneralSettingsFieldsFragmentFragment,
-} from '@/__generated__/graphql';
 import Heading from '@/components/Heading/Heading';
-import { FOOTER_LOCATION, PRIMARY_LOCATION } from '@/contains/menu';
-import { GetStaticPropsContext } from 'next';
-import { NC_SITE_SETTINGS } from '@/contains/site-settings';
 import MyImage from '@/components/MyImage';
 import SEO from '@/components/SEO/SEO';
+import { NC_SITE_SETTINGS } from '@/contains/site-settings';
 
 const PageContact = () => {
   const info = NC_SITE_SETTINGS.contact_page?.my_contact_info;
@@ -60,17 +51,9 @@ const PageContact = () => {
   );
 };
 
-const Page: FaustPage<GetReadingListPageQuery> = (props) => {
+const ContactPage: React.FC = () => {
   return (
-    <PageLayout
-      headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
-      footerMenuItems={props.data?.footerMenuItems?.nodes || []}
-      pageFeaturedImageUrl={undefined}
-      pageTitle={NC_SITE_SETTINGS.contact_page?.title}
-      generalSettings={
-        props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
-      }
-    >
+    <PageLayout>
       <SEO
         title={NC_SITE_SETTINGS.contact_page?.title}
         description={NC_SITE_SETTINGS.contact_page?.sub_title}
@@ -89,34 +72,4 @@ const Page: FaustPage<GetReadingListPageQuery> = (props) => {
   );
 };
 
-Page.variables = () => ({
-  headerLocation: PRIMARY_LOCATION,
-  footerLocation: FOOTER_LOCATION,
-});
-
-Page.query = gql(`
-  query GetReadingListPage($headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
-    generalSettings {
-      ...NcgeneralSettingsFieldsFragment
-    }
-    primaryMenuItems: menuItems(where: { location: $headerLocation }, first: 80) {
-      nodes {
-        ...NcPrimaryMenuFieldsFragment
-      }
-    }
-    footerMenuItems: menuItems(where: { location: $footerLocation }, first: 50) {
-      nodes {
-        ...NcFooterMenuFieldsFragment
-      }
-    }
-  }
-`) as DocumentNode;
-
-export function getStaticProps(ctx: GetStaticPropsContext) {
-  return getNextStaticProps(ctx, {
-    Page,
-    revalidate: 900,
-  });
-}
-
-export default Page;
+export default ContactPage;

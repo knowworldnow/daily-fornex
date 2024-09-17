@@ -2,7 +2,7 @@ import { gql } from "@/__generated__";
 import {
   NcgeneralSettingsFieldsFragmentFragment,
   PageArchiveGetArchiveQuery,
-  NcmazFcPostFormatFullFieldsFragment,
+  NcmazFcPostFullFieldsFragment,
   NcmazFcPostCardFieldsFragment,
   NcmazFcCategoryFullFieldsFragment,
   NcPrimaryMenuFieldsFragment,
@@ -16,7 +16,6 @@ import ArchiveLayout from "@/container/archives/ArchiveLayout";
 import { GET_POSTS_FIRST_COMMON } from "@/contains/contants";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import { PostDataFragmentType } from "@/data/types";
-import { getPostFormatDataFromFragment } from "@/utils/getPostFormatDataFromFragment";
 import { FaustTemplate } from "@faustwp/core";
 import { FireIcon } from "@heroicons/react/24/outline";
 
@@ -65,7 +64,7 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps)
     );
   }
 
-  const postFormat = props.data.nodeByUri as NcmazFcPostFormatFullFieldsFragment;
+  const postFormat = props.data.nodeByUri as unknown as NcmazFcPostFullFieldsFragment;
   const { databaseId, count, description, name } = postFormat;
   const initPostsPageInfo = postFormat.posts?.pageInfo;
   const posts = postFormat.posts?.nodes as NcmazFcPostCardFieldsFragment[] | undefined;
@@ -140,7 +139,7 @@ Archive.query = gql`
       uri
       id
       ... on PostFormat {
-        ...NcmazFcPostFormatFullFieldsFragment
+        ...NcmazFcPostFullFieldsFragment
         posts(first: $first, where: {orderby: {field: DATE, order: DESC}}) {
           nodes {
             ...NcmazFcPostCardFields

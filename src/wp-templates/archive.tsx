@@ -62,11 +62,13 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps)
   }
 
   const postFormat = props.data.nodeByUri as unknown as NcmazFcPostFullFieldsFragment;
-  const { databaseId, count, description, name } = postFormat;
+  const { databaseId, description, name } = postFormat;
   const initPostsPageInfo = postFormat.posts?.pageInfo;
   const posts = postFormat.posts?.nodes as NcmazFcPostCardFieldsFragment[] | undefined;
 
   const _top10Categories = props.data?.categories?.nodes as NcmazFcCategoryFullFieldsFragmentFragment[] | undefined;
+
+  const articlesCount = posts?.length ?? 0;
 
   return (
     <PageLayout
@@ -105,7 +107,7 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps)
                 <div className="flex items-center text-sm font-medium space-x-2 rtl:space-x-reverse cursor-pointer text-neutral-500 dark:text-neutral-400">
                   <FireIcon className="w-5 h-5" />
                   <span className="text-neutral-700 dark:text-neutral-300">
-                    {count || 0} Articles
+                    {articlesCount} Articles
                   </span>
                 </div>
                 <span className="block text-sm sm:text-base text-neutral-500 dark:text-neutral-400">
@@ -166,7 +168,6 @@ Archive.query = gql`
     primaryMenuItems: menuItems(where: { location: $headerLocation }, first: 80) {
       nodes {
         ...NcPrimaryMenuFieldsFragmentFragment
-      }
     }
     footerMenuItems: menuItems(where: { location: $footerLocation }, first: 50) {
       nodes {

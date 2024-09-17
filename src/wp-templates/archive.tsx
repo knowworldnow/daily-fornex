@@ -2,6 +2,11 @@ import { gql } from "@/__generated__";
 import {
   NcgeneralSettingsFieldsFragmentFragment,
   PageArchiveGetArchiveQuery,
+  NcmazFcPostFormatFullFieldsFragment,
+  NcmazFcPostCardFieldsFragment,
+  NcmazFcCategoryFullFieldsFragment,
+  NcPrimaryMenuFieldsFragment,
+  NcFooterMenuFieldsFragment
 } from "@/__generated__/graphql";
 import Alert from "@/components/Alert";
 import { TCategoryCardFull } from "@/components/CardCategory1/CardCategory1";
@@ -15,9 +20,14 @@ import { getPostFormatDataFromFragment } from "@/utils/getPostFormatDataFromFrag
 import { FaustTemplate } from "@faustwp/core";
 import { FireIcon } from "@heroicons/react/24/outline";
 
-const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props) => {
+interface ArchiveProps {
+  data?: PageArchiveGetArchiveQuery;
+  loading: boolean;
+}
+
+const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps) => {
   if (props.loading) {
-    return <>Loading...</>;
+    return <div>Loading...</div>;
   }
 
   if (!props?.data || !props.data.nodeByUri) {
@@ -55,33 +65,32 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props) => {
     );
   }
 
-  const { databaseId, count, description, name, uri } =
-    getPostFormatDataFromFragment(props.data.nodeByUri);
-  const initPostsPageInfo = props.data?.nodeByUri?.posts?.pageInfo;
-  const posts = props.data?.nodeByUri?.posts;
+  const postFormat = props.data.nodeByUri as NcmazFcPostFormatFullFieldsFragment;
+  const { databaseId, count, description, name } = postFormat;
+  const initPostsPageInfo = postFormat.posts?.pageInfo;
+  const posts = postFormat.posts?.nodes as NcmazFcPostCardFieldsFragment[] | undefined;
 
-  const _top10Categories =
-    (props.data?.categories?.nodes as TCategoryCardFull[]) || [];
+  const _top10Categories = props.data?.categories?.nodes as TCategoryCardFull[] | undefined;
 
   return (
     <PageLayout
       headerMenuItems={props.data?.primaryMenuItems?.nodes || []}
       footerMenuItems={props.data?.footerMenuItems?.nodes || []}
       pageFeaturedImageUrl={getFeaturedImageUrl(props.data.nodeByUri)}
-      pageTitle={"Archive " + name}
+      pageTitle={`Archive ${name}`}
       pageDescription={description || ""}
       generalSettings={
         props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
       }
     >
       <ArchiveLayout
-        name={name}
-        initPosts={posts?.nodes as PostDataFragmentType[] | null}
+        name={name || ""}
+        initPosts={posts as PostDataFragmentType[] | null}
         initPostsPageInfo={initPostsPageInfo || null}
         tagDatabaseId={null}
         categoryDatabaseId={null}
         taxonomyType="postFormat"
-        top10Categories={_top10Categories}
+        top10Categories={_top10Categories || []}
       >
         <div className="container mt-4 md:mt-10">
           <div className="relative border border-neutral-200/70 dark:border-neutral-700 p-5 lg:p-7 rounded-3xl md:rounded-[2rem] flex flex-col md:flex-row gap-4 md:gap-6 xl:gap-12">
@@ -92,13 +101,12 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props) => {
                 </div>
               </div>
             </div>
-
             <div className="flex-grow">
-              <div className="max-w-screen-md space-y-3.5 ">
+              <div className="max-w-screen-md space-y-3.5">
                 <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold">
                   <span>{name}</span>
                 </h2>
-                <div className="flex items-center text-sm font-medium space-x-2 rtl:space-x-reverse cursor-pointer text-neutral-500 dark:text-neutral-400 ">
+                <div className="flex items-center text-sm font-medium space-x-2 rtl:space-x-reverse cursor-pointer text-neutral-500 dark:text-neutral-400">
                   <FireIcon className="w-5 h-5" />
                   <span className="text-neutral-700 dark:text-neutral-300">
                     {count || 0} Articles
@@ -109,7 +117,6 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props) => {
                 </span>
               </div>
             </div>
-
             <div className="absolute top-5 end-5">
               <SocialsShareDropdown />
             </div>
@@ -127,9 +134,9 @@ Archive.variables = ({ uri }) => ({
   footerLocation: FOOTER_LOCATION,
 });
 
-Archive.query = gql(`
- query PageArchiveGetArchive($uri: String! = "", $first: Int, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
-  nodeByUri(uri: $uri) {
+Archive.query = gql`
+  query PageArchiveGetArchive($uri: String! = "", $first: Int, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
+    nodeByUri(uri: $uri) {
       uri
       id
       ... on PostFormat {
@@ -152,26 +159,25 @@ Archive.query = gql(`
         }
       }
     }
-    categories(first:10, where: { orderby: COUNT, order: DESC }) {
+    categories(first: 10, where: { orderby: COUNT, order: DESC }) {
       nodes {
         ...NcmazFcCategoryFullFieldsFragment
       }
     }
-     # common query for all page 
-   generalSettings {
+    generalSettings {
       ...NcgeneralSettingsFieldsFragment
     }
-    primaryMenuItems: menuItems(where: { location:  $headerLocation  }, first: 80) {
+    primaryMenuItems: menuItems(where: { location: $headerLocation }, first: 80) {
       nodes {
         ...NcPrimaryMenuFieldsFragment
       }
     }
-    footerMenuItems: menuItems(where: { location:  $footerLocation  }, first: 50) {
+    footerMenuItems: menuItems(where: { location: $footerLocation }, first: 50) {
       nodes {
         ...NcFooterMenuFieldsFragment
       }
     }
-    # end common query for all page
-  }`);
+  }
+`;
 
 export default Archive;

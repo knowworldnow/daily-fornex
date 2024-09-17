@@ -62,7 +62,7 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps)
   }
 
   const postFormat = props.data.nodeByUri as unknown as NcmazFcPostFullFieldsFragment;
-  const { databaseId, description, name } = postFormat;
+  const { name } = postFormat;
   const initPostsPageInfo = postFormat.posts?.pageInfo;
   const posts = postFormat.posts?.nodes as NcmazFcPostCardFieldsFragment[] | undefined;
 
@@ -76,7 +76,7 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps)
       footerMenuItems={props.data?.footerMenuItems?.nodes as NcFooterMenuFieldsFragmentFragment[] || []}
       pageFeaturedImageUrl={getFeaturedImageUrl(props.data.nodeByUri)}
       pageTitle={`Archive ${name}`}
-      pageDescription={description || ""}
+      pageDescription=""
       generalSettings={
         props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
       }
@@ -110,9 +110,6 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps)
                     {articlesCount} Articles
                   </span>
                 </div>
-                <span className="block text-sm sm:text-base text-neutral-500 dark:text-neutral-400">
-                  {description}
-                </span>
               </div>
             </div>
             <div className="absolute top-5 end-5">

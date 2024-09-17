@@ -16,13 +16,10 @@ import ArchiveLayout from "@/container/archives/ArchiveLayout";
 import { GET_POSTS_FIRST_COMMON } from "@/contains/contants";
 import { FOOTER_LOCATION, PRIMARY_LOCATION } from "@/contains/menu";
 import { PostDataFragmentType } from "@/data/types";
-import { FaustTemplate } from "@faustwp/core";
+import { FaustTemplate, FaustTemplateProps } from "@faustwp/core";
 import { FireIcon } from "@heroicons/react/24/outline";
 
-interface ArchiveProps {
-  data?: PageArchiveGetArchiveQuery;
-  loading: boolean;
-}
+type ArchiveProps = FaustTemplateProps<PageArchiveGetArchiveQuery>;
 
 const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps) => {
   if (props.loading) {

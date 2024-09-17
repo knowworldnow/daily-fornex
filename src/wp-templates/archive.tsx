@@ -2,7 +2,6 @@ import { gql } from "@/__generated__";
 import {
   NcgeneralSettingsFieldsFragmentFragment,
   PageArchiveGetArchiveQuery,
-  NcmazFcPostFullFieldsFragment,
   NcmazFcPostCardFieldsFragment,
   NcmazFcCategoryFullFieldsFragmentFragment,
   NcPrimaryMenuFieldsFragmentFragment,
@@ -61,11 +60,8 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps)
     );
   }
 
-  const postFormat = props.data.nodeByUri as unknown as NcmazFcPostFullFieldsFragment;
-  const { name } = postFormat;
-  const initPostsPageInfo = postFormat.posts?.pageInfo;
-  const posts = postFormat.posts?.nodes as NcmazFcPostCardFieldsFragment[] | undefined;
-
+  const posts = props.data.nodeByUri.posts?.nodes as NcmazFcPostCardFieldsFragment[] | undefined;
+  const initPostsPageInfo = props.data.nodeByUri.posts?.pageInfo;
   const _top10Categories = props.data?.categories?.nodes as NcmazFcCategoryFullFieldsFragmentFragment[] | undefined;
 
   const articlesCount = posts?.length ?? 0;
@@ -75,14 +71,14 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps)
       headerMenuItems={props.data?.primaryMenuItems?.nodes as NcPrimaryMenuFieldsFragmentFragment[] || []}
       footerMenuItems={props.data?.footerMenuItems?.nodes as NcFooterMenuFieldsFragmentFragment[] || []}
       pageFeaturedImageUrl={getFeaturedImageUrl(props.data.nodeByUri)}
-      pageTitle={`Archive ${name}`}
+      pageTitle={`Archive ${props.data.nodeByUri.name || ''}`}
       pageDescription=""
       generalSettings={
         props.data?.generalSettings as NcgeneralSettingsFieldsFragmentFragment
       }
     >
       <ArchiveLayout
-        name={name || ""}
+        name={props.data.nodeByUri.name || ""}
         initPosts={posts as PostDataFragmentType[] | null}
         initPostsPageInfo={initPostsPageInfo || null}
         tagDatabaseId={null}
@@ -102,7 +98,7 @@ const Archive: FaustTemplate<PageArchiveGetArchiveQuery> = (props: ArchiveProps)
             <div className="flex-grow">
               <div className="max-w-screen-md space-y-3.5">
                 <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold">
-                  <span>{name}</span>
+                  <span>{props.data.nodeByUri.name}</span>
                 </h2>
                 <div className="flex items-center text-sm font-medium space-x-2 rtl:space-x-reverse cursor-pointer text-neutral-500 dark:text-neutral-400">
                   <FireIcon className="w-5 h-5" />
@@ -132,10 +128,9 @@ Archive.variables = ({ uri }) => ({
 Archive.query = gql`
   query PageArchiveGetArchive($uri: String! = "", $first: Int, $headerLocation: MenuLocationEnum!, $footerLocation: MenuLocationEnum!) {
     nodeByUri(uri: $uri) {
-      uri
-      id
+      __typename
       ... on PostFormat {
-        ...NcmazFcPostFullFieldsFragment
+        name
         posts(first: $first, where: {orderby: {field: DATE, order: DESC}}) {
           nodes {
             ...NcmazFcPostCardFields

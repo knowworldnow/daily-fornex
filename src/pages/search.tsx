@@ -1,5 +1,5 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { getApolloClient } from '@faustwp/core';
 import PageLayout from '@/container/PageLayout';
 import Link from 'next/link';
@@ -36,7 +36,7 @@ interface SearchResultsProps {
   searchTerm: string;
 }
 
-const SEARCH_POSTS = gql`
+const SEARCH_POSTS_QUERY = `
   query SearchPosts($search: String!) {
     posts(where: { search: $search }, first: 10) {
       nodes {
@@ -136,17 +136,27 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
   const searchTerm = context.query.q as string || '';
   const client = getApolloClient();
   
-  const { data } = await client.query({
-    query: SEARCH_POSTS,
-    variables: { search: searchTerm },
-  });
+  try {
+    const { data } = await client.query({
+      query: gql(SEARCH_POSTS_QUERY),
+      variables: { search: searchTerm },
+    });
 
-  return {
-    props: {
-      posts: data.posts.nodes,
-      searchTerm,
-    },
-  };
+    return {
+      props: {
+        posts: data.posts.nodes,
+        searchTerm,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching search results:', error);
+    return {
+      props: {
+        posts: [],
+        searchTerm,
+      },
+    };
+  }
 };
 
 export default SearchResults;

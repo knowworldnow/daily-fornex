@@ -1,53 +1,50 @@
-import React, { FC } from "react";
 import SEO from "@/components/SEO/SEO";
+import React, { FC } from "react";
 import SiteHeader from "./SiteHeader";
 import Footer from "@/components/Footer/Footer";
+import { FragmentType } from "@/__generated__";
+import {
+  NC_FOOTER_MENU_QUERY_FRAGMENT,
+  NC_PRIMARY_MENU_QUERY_FRAGMENT,
+} from "@/fragments/menu";
 import { NcgeneralSettingsFieldsFragmentFragment } from "@/__generated__/graphql";
-
-interface MenuItem {
-  // Add properties based on your menu item structure
-  id: string;
-  title: string;
-  url: string;
-  // Add other relevant properties
-}
 
 interface Props {
   children: React.ReactNode;
-  pageTitle?: string;
-  headerMenuItems?: MenuItem[];
-  footerMenuItems?: MenuItem[];
-  pageFeaturedImageUrl?: string;
-  generalSettings?: NcgeneralSettingsFieldsFragmentFragment;
-  pageDescription?: string;
+  pageTitle?: string | null | undefined;
+  headerMenuItems?: FragmentType<typeof NC_PRIMARY_MENU_QUERY_FRAGMENT>[];
+  footerMenuItems?: FragmentType<typeof NC_FOOTER_MENU_QUERY_FRAGMENT>[] | null;
+  pageFeaturedImageUrl?: string | null | undefined;
+  generalSettings?: NcgeneralSettingsFieldsFragmentFragment | null | undefined;
+  pageDescription?: string | null | undefined;
 }
 
 const PageLayout: FC<Props> = ({
   children,
-  footerMenuItems = [],
-  headerMenuItems = [],
+  footerMenuItems,
+  headerMenuItems,
   pageFeaturedImageUrl,
-  pageTitle = "",
+  pageTitle,
   generalSettings,
-  pageDescription = "",
+  pageDescription,
 }) => {
-  const siteTitle = generalSettings?.title || "";
-  const siteDescription = generalSettings?.description || "";
-
   return (
     <>
       <SEO
-        title={`${pageTitle} ${siteTitle ? `- ${siteTitle}` : ""}`.trim()}
-        description={pageDescription || siteDescription}
+        title={(pageTitle || "") + " - " + (generalSettings?.title || "")}
+        description={pageDescription || generalSettings?.description || ""}
         imageUrl={pageFeaturedImageUrl}
       />
+
       <SiteHeader
-        siteTitle={siteTitle}
-        siteDescription={siteDescription}
-        menuItems={headerMenuItems}
+        siteTitle={generalSettings?.title}
+        siteDescription={generalSettings?.description}
+        menuItems={headerMenuItems || []}
       />
-      <main>{children}</main>
-      <Footer menuItems={footerMenuItems} />
+
+      {children}
+
+      <Footer menuItems={footerMenuItems || []} />
     </>
   );
 };

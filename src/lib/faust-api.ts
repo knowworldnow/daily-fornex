@@ -2,11 +2,11 @@ import { gql } from '@apollo/client';
 import { client } from './apollo-client';
 import { Post, Category, Page, GetAllPostsResult, GetPageBySlugResult, GetPostBySlugResult, GetCategoriesResult, GetPostsByCategoryResult, GetCategoryBySlugResult, GetAllCategoriesResult, SearchPostsResult } from '../types';
 
-export async function getLatestPosts({ first = 20, after = 0 }: { first?: number; after?: number } = {}): Promise<Post[]> {
+export async function getLatestPosts({ first = 20, after = null }: { first?: number; after?: string | null } = {}): Promise<Post[]> {
   const { data } = await client.query<{ posts: { nodes: Post[] } }>({
     query: gql`
-      query GetLatestPosts($first: Int!, $after: Int!) {
-        posts(first: $first, where: { offsetPagination: { offset: $after, size: $first } }) {
+      query GetLatestPosts($first: Int!, $after: String) {
+        posts(first: $first, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
           nodes {
             id
             title
@@ -115,11 +115,11 @@ export async function getCategories(): Promise<Category[]> {
   return data.categories.nodes;
 }
 
-export async function getPostsByCategory(categorySlug: string, limit: number = 20, offset: number = 0): Promise<Post[]> {
+export async function getPostsByCategory(categorySlug: string, first: number = 20, after: string | null = null): Promise<Post[]> {
   const { data } = await client.query<GetPostsByCategoryResult>({
     query: gql`
-      query GetPostsByCategory($categorySlug: String!, $limit: Int!, $offset: Int!) {
-        posts(where: { categoryName: $categorySlug }, first: $limit, offset: $offset) {
+      query GetPostsByCategory($categorySlug: String!, $first: Int!, $after: String) {
+        posts(where: { categoryName: $categorySlug }, first: $first, after: $after) {
           nodes {
             id
             title
@@ -149,7 +149,7 @@ export async function getPostsByCategory(categorySlug: string, limit: number = 2
         }
       }
     `,
-    variables: { categorySlug, limit, offset },
+    variables: { categorySlug, first, after },
   });
 
   return data.posts.nodes;

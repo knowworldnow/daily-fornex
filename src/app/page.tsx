@@ -41,5 +41,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Home() {
   const result: GetAllPostsResult = await getLatestPosts({ first: 20 });
   const initialPosts: Post[] = result.posts.nodes;
-  return <HomePage initialPosts={initialPosts} />;
+  const initialPageInfo = result.posts.pageInfo;
+  return <HomePage initialPosts={initialPosts} initialPageInfo={initialPageInfo} />;
 }

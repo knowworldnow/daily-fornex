@@ -2,11 +2,15 @@ import { gql } from '@apollo/client';
 import { client } from './apollo-client';
 import { Post, Category, Page, GetAllPostsResult, GetPageBySlugResult, GetPostBySlugResult, GetCategoriesResult, GetPostsByCategoryResult, GetCategoryBySlugResult, GetAllCategoriesResult, SearchPostsResult } from '../types';
 
-export async function getLatestPosts({ first = 20, after = null }: { first?: number; after?: string | null } = {}): Promise<Post[]> {
-  const { data } = await client.query<{ posts: { nodes: Post[] } }>({
+export async function getLatestPosts({ first = 20, after = null }: { first?: number; after?: string | null } = {}): Promise<GetAllPostsResult> {
+  const { data } = await client.query<GetAllPostsResult>({
     query: gql`
       query GetLatestPosts($first: Int!, $after: String) {
         posts(first: $first, after: $after, where: { orderby: { field: DATE, order: DESC } }) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
           nodes {
             id
             title
@@ -22,6 +26,9 @@ export async function getLatestPosts({ first = 20, after = null }: { first?: num
             author {
               node {
                 name
+                avatar {
+                  url
+                }
               }
             }
             categories {
@@ -37,7 +44,7 @@ export async function getLatestPosts({ first = 20, after = null }: { first?: num
     variables: { first, after },
   });
 
-  return data.posts.nodes;
+  return data;
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {

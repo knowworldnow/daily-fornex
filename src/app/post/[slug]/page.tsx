@@ -7,7 +7,7 @@ import CommentList from '../../../components/CommentList';
 import PostHeader from '../../../components/PostHeader';
 import TableOfContents from '../../../components/TableOfContents';
 import SocialSharePanel from '../../../components/SocialSharePanel';
-import { Post as PostType, Category, Comment, CommentAuthor, GetAllPostsResult } from '../../../types';
+import { Post as PostType, GetAllPostsResult } from '../../../types';
 
 export const revalidate = 60; // revalidate this page every 60 seconds
 

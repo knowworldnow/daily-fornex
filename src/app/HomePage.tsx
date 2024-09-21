@@ -77,6 +77,7 @@ export default function HomePage({ initialPosts }: HomePageProps) {
   const [page, setPage] = useState(2);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [lastCursor, setLastCursor] = useState<string | null>(null);
 
   const loadMorePosts = async () => {
     if (loading || !hasMore) return;
@@ -84,11 +85,16 @@ export default function HomePage({ initialPosts }: HomePageProps) {
     try {
       const newPosts = await getLatestPosts({
         first: POSTS_PER_PAGE,
-        after: (page - 1) * POSTS_PER_PAGE
+        after: lastCursor
       });
-      setPosts((prevPosts) => [...prevPosts, ...newPosts]);
-      setPage((prevPage) => prevPage + 1);
-      setHasMore(newPosts.length === POSTS_PER_PAGE);
+      if (newPosts.length > 0) {
+        setPosts((prevPosts) => [...prevPosts, ...newPosts]);
+        setPage((prevPage) => prevPage + 1);
+        setLastCursor(newPosts[newPosts.length - 1].cursor);
+        setHasMore(newPosts.length === POSTS_PER_PAGE);
+      } else {
+        setHasMore(false);
+      }
     } catch (error) {
       console.error('Error loading posts:', error);
     } finally {

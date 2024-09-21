@@ -122,11 +122,15 @@ export async function getCategories(): Promise<Category[]> {
   return data.categories.nodes;
 }
 
-export async function getPostsByCategory(categorySlug: string, first: number = 20, after: string | null = null): Promise<Post[]> {
+export async function getPostsByCategory(categorySlug: string, first: number, after: string | null = null) {
   const { data } = await client.query<GetPostsByCategoryResult>({
     query: gql`
       query GetPostsByCategory($categorySlug: String!, $first: Int!, $after: String) {
         posts(where: { categoryName: $categorySlug }, first: $first, after: $after) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
           nodes {
             id
             title
@@ -159,7 +163,7 @@ export async function getPostsByCategory(categorySlug: string, first: number = 2
     variables: { categorySlug, first, after },
   });
 
-  return data.posts.nodes;
+  return data;
 }
 
 export async function getCategoryBySlug(slug: string): Promise<Category | null> {

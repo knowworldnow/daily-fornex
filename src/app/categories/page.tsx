@@ -1,14 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getLatestPosts } from '../../lib/faust-api';
-import { getAllCategories } from '../../lib/faust-api';
-import { Category } from '../../types';
+import { getLatestPosts, getAllCategories } from '../../lib/faust-api';
+import { Category, GetAllPostsResult } from '../../types';
 
 export const revalidate = 300;
 
 export async function generateStaticParams() {
-  const posts = await getLatestPosts({ first: 20 });
-  return posts.map((post) => ({
+  const result = await getLatestPosts({ first: 20 }) as GetAllPostsResult;
+  return result.posts.nodes.map((post) => ({
     slug: post.slug,
   }));
 }
@@ -25,6 +24,7 @@ interface CategoryWithImage extends Category {
 export default async function CategoriesPage() {
   const categories: CategoryWithImage[] = await getAllCategories();
   
+  // Sort categories by post count in descending order
   categories.sort((a, b) => b.count - a.count);
 
   return (

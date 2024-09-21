@@ -1,12 +1,13 @@
 import { Metadata } from 'next';
 import HomePage from './HomePage';
 import { getLatestPosts } from '../lib/faust-api';
-import { Post } from '../types';
+import { Post, GetAllPostsResult } from '../types';
 
 export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const latestPosts: Post[] = await getLatestPosts({ first: 5 });
+  const result: GetAllPostsResult = await getLatestPosts({ first: 5 });
+  const latestPosts = result.posts.nodes;
   const postTitles = latestPosts.map(post => post.title).join(', ');
 
   return {
@@ -38,6 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const initialPosts: Post[] = await getLatestPosts({ first: 20 });
+  const result: GetAllPostsResult = await getLatestPosts({ first: 20 });
+  const initialPosts: Post[] = result.posts.nodes;
   return <HomePage initialPosts={initialPosts} />;
 }

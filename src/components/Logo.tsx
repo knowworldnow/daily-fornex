@@ -10,7 +10,7 @@ const Logo = () => {
   return (
     <Link href="/" className="flex items-center">
       <Image
-        src={theme === 'dark' ? '/logo-light.webp' : '/logo.webp'}
+        src={theme === 'dark' ? '/logo-light.png' : '/logo.png'}
         alt="Daily Fornex Logo"
         width={150}
         height={50}

@@ -1,0 +1,41 @@
+import { getLatestPosts } from '../../lib/faust-api';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { Post } from '../../types'; // Import the Post type from your types file
+
+const BASE_URL = 'https://dailyfornex.com'; // Replace with your actual domain
+
+function generateRSSFeed(posts: Post[]): string {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+    <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+      <channel>
+        <title>Daily Fornex</title>
+        <link>${BASE_URL}</link>
+        <description>Your daily dose of informative updates</description>
+        <language>en</language>
+        <atom:link href="${BASE_URL}/api/feed.xml" rel="self" type="application/rss+xml"/>
+        ${posts
+          .map(
+            (post) => `
+          <item>
+            <title>${post.title}</title>
+            <link>${BASE_URL}/post/${post.slug}</link>
+            <guid>${BASE_URL}/post/${post.slug}</guid>
+            <pubDate>${new Date(post.date).toUTCString()}</pubDate>
+            <description><![CDATA[${post.excerpt || ''}]]></description>
+          </item>
+        `
+          )
+          .join('')}
+      </channel>
+    </rss>
+  `;
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const posts = await getLatestPosts({ first: 20 });
+  const feed = generateRSSFeed(posts);
+
+  res.setHeader('Content-Type', 'text/xml');
+  res.write(feed);
+  res.end();
+}

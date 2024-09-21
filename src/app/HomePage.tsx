@@ -65,10 +65,15 @@ export default function HomePage({ initialPosts, pageInfo: initialPageInfo }: Ho
       const result = await getLatestPosts({
         first: POSTS_PER_PAGE,
         after: pageInfo.endCursor
-      }) as GetAllPostsResult;
+      });
       
-      setPosts((prevPosts) => [...prevPosts, ...result.posts.nodes]);
-      setPageInfo(result.posts.pageInfo);
+      if ('posts' in result) {
+        const typedResult = result as GetAllPostsResult;
+        setPosts((prevPosts) => [...prevPosts, ...typedResult.posts.nodes]);
+        setPageInfo(typedResult.posts.pageInfo);
+      } else {
+        console.error('Unexpected result structure from getLatestPosts');
+      }
     } catch (error) {
       console.error('Error loading posts:', error);
     } finally {

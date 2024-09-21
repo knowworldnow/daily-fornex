@@ -26,9 +26,6 @@ export async function getLatestPosts({ first = 20, after = null }: { first?: num
             author {
               node {
                 name
-                avatar {
-                  url
-                }
               }
             }
             categories {

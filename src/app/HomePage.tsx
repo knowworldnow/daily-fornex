@@ -4,33 +4,9 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getLatestPosts } from '../lib/faust-api';
+import { Post, GetAllPostsResult } from '../types';
 
 const POSTS_PER_PAGE = 20;
-
-interface Post {
-  id: string;
-  title: string;
-  slug: string;
-  date: string;
-  featuredImage?: {
-    node: {
-      sourceUrl: string;
-      altText?: string;
-    };
-  };
-  author?: {
-    node: {
-      name: string;
-      avatar?: {
-        url: string;
-      };
-    };
-  };
-  categories: {
-    nodes: { name: string; slug: string }[];
-  };
-  cursor: string;
-}
 
 const PostCard = ({ post }: { post: Post }) => (
   <article className="mb-8">
@@ -71,31 +47,28 @@ const PostCard = ({ post }: { post: Post }) => (
 
 interface HomePageProps {
   initialPosts: Post[];
+  pageInfo: {
+    hasNextPage: boolean;
+    endCursor: string | null;
+  };
 }
 
-export default function HomePage({ initialPosts }: HomePageProps) {
+export default function HomePage({ initialPosts, pageInfo: initialPageInfo }: HomePageProps) {
   const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [pageInfo, setPageInfo] = useState(initialPageInfo);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [lastCursor, setLastCursor] = useState<string | null>(
-    initialPosts.length > 0 ? initialPosts[initialPosts.length - 1].cursor : null
-  );
 
   const loadMorePosts = async () => {
-    if (loading || !hasMore) return;
+    if (loading || !pageInfo.hasNextPage) return;
     setLoading(true);
     try {
-      const newPosts = await getLatestPosts({
+      const result = await getLatestPosts({
         first: POSTS_PER_PAGE,
-        after: lastCursor
-      });
-      if (newPosts.length > 0) {
-        setPosts((prevPosts) => [...prevPosts, ...newPosts]);
-        setLastCursor(newPosts[newPosts.length - 1].cursor);
-        setHasMore(newPosts.length === POSTS_PER_PAGE);
-      } else {
-        setHasMore(false);
-      }
+        after: pageInfo.endCursor
+      }) as GetAllPostsResult;
+      
+      setPosts((prevPosts) => [...prevPosts, ...result.posts.nodes]);
+      setPageInfo(result.posts.pageInfo);
     } catch (error) {
       console.error('Error loading posts:', error);
     } finally {
@@ -111,7 +84,7 @@ export default function HomePage({ initialPosts }: HomePageProps) {
           <PostCard key={post.id} post={post} />
         ))}
       </div>
-      {hasMore && (
+      {pageInfo.hasNextPage && (
         <div className="text-center mt-8">
           <button
             onClick={loadMorePosts}

@@ -9,10 +9,10 @@ import TableOfContents from '../../../components/TableOfContents';
 import SocialSharePanel from '../../../components/SocialSharePanel';
 import { Post as PostType } from '../../../types';
 
-export const revalidate = 60;
+export const revalidate = 60; // revalidate this page every 60 seconds
 
 export async function generateStaticParams() {
-  const posts = await getLatestPosts({ first: 20 });
+  const posts = await getLatestPosts({ first: 20 }); // Adjust the number as needed
   return posts.map((post) => ({
     slug: post.slug,
   }));

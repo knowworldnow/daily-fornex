@@ -7,13 +7,13 @@ import CommentList from '../../../components/CommentList';
 import PostHeader from '../../../components/PostHeader';
 import TableOfContents from '../../../components/TableOfContents';
 import SocialSharePanel from '../../../components/SocialSharePanel';
-import { Post as PostType } from '../../../types';
+import { Post as PostType, Category, Comment, CommentAuthor, GetAllPostsResult } from '../../../types';
 
 export const revalidate = 60; // revalidate this page every 60 seconds
 
 export async function generateStaticParams() {
-  const posts = await getLatestPosts({ first: 20 }); // Adjust the number as needed
-  return posts.map((post) => ({
+  const result: GetAllPostsResult = await getLatestPosts({ first: 20 }); // Adjust the number as needed
+  return result.posts.nodes.map((post) => ({
     slug: post.slug,
   }));
 }
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     openGraph: {
       title: post.title,
       description: post.excerpt || '',
-      url: `https://dailyfornex.com/post/${post.slug}`,
+      url: `https://dailyfornex.com/${post.slug}`,
       type: 'article',
       publishedTime: post.date,
       authors: [post.author.node.name],
@@ -65,7 +65,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
     notFound();
   }
 
-  const postUrl = `https://dailyfornex.com/post/${post.slug}`;
+  const postUrl = `https://dailyfornex.com/${post.slug}`;
   const imageUrl = post.featuredImage?.node.sourceUrl || 'https://dailyfornex.com/default-og-image.jpg';
 
   return (

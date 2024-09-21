@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPostsByCategory, getCategoryBySlug } from '../../../lib/faust-api';
-import { Post, Category } from '../../types';
+import { Post, Category } from '../../../types';
 
 const POSTS_PER_PAGE = 20;
 

@@ -28,6 +28,14 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/:slug',
+        destination: '/post/:slug',
+      },
+    ];
+  },
 };
 
 module.exports = withFaust(nextConfig);

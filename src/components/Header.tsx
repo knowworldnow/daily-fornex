@@ -5,12 +5,10 @@ import Link from 'next/link';
 import ToggleTheme from './ToggleTheme';
 import SearchBar from './SearchBar';
 import Logo from './Logo';
-import { useTheme } from 'next-themes';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { theme } = useTheme();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);

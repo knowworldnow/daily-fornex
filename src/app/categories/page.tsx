@@ -15,14 +15,14 @@ export async function generateStaticParams() {
 export default async function CategoriesPage() {
   const categories: Category[] = await getAllCategories();
   
-  // Sort categories by post count in descending order
-  categories.sort((a, b) => b.count - a.count);
+  // Create a mutable copy of the categories array and sort it
+  const sortedCategories = [...categories].sort((a, b) => b.count - a.count);
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-8">Categories</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {categories.map((category) => (
+        {sortedCategories.map((category) => (
           <Link href={`/category/${category.slug}`} key={category.id} className="block">
             <div className="rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
               <Image

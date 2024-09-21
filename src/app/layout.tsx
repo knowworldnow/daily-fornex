@@ -6,12 +6,13 @@ import Footer from "../components/Footer";
 import "./globals.css";
 
 const geistSans = localFont({
-  src: "./fonts/Geist-VF.woff",
+  src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
-  src: "./fonts/GeistMono-VF.woff",
+  src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
 });
@@ -27,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" dir={process.env.NEXT_PUBLIC_SITE_DIRECTION} suppressHydrationWarning>
+    <html lang="en" dir={process.env.NEXT_PUBLIC_SITE_DIRECTION || 'ltr'} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >

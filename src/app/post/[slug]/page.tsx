@@ -7,12 +7,12 @@ import CommentList from '../../../components/CommentList';
 import PostHeader from '../../../components/PostHeader';
 import TableOfContents from '../../../components/TableOfContents';
 import SocialSharePanel from '../../../components/SocialSharePanel';
-import { Post as PostType, Category, Comment, CommentAuthor } from '../../../types';
+import { Post as PostType } from '../../../types';
 
-export const revalidate = 60; // revalidate this page every 60 seconds
+export const revalidate = 60;
 
 export async function generateStaticParams() {
-  const posts = await getLatestPosts({ first: 20 }); // Adjust the number as needed
+  const posts = await getLatestPosts({ first: 20 });
   return posts.map((post) => ({
     slug: post.slug,
   }));

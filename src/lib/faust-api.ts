@@ -110,6 +110,8 @@ export async function getCategories(): Promise<Category[]> {
             id
             name
             slug
+            count
+            description
           }
         }
       }
@@ -172,6 +174,7 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
           name
           slug
           count
+          description
         }
       }
     `,
@@ -191,12 +194,7 @@ export async function getAllCategories(): Promise<Category[]> {
             name
             slug
             count
-            featuredImage {
-              node {
-                sourceUrl
-              }
-            }
-            color
+            description
           }
         }
       }

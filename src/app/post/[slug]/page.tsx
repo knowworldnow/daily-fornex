@@ -1,26 +1,26 @@
-import Image from 'next/image';
 import { Metadata } from 'next';
-import { getPostBySlug, getLatestPosts } from '../../../lib/faust-api';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import { getPostBySlug, getAllPosts } from '../../../lib/faust-api';
+import { Post } from '../../../types';
 import CommentForm from '../../../components/CommentForm';
 import CommentList from '../../../components/CommentList';
 import PostHeader from '../../../components/PostHeader';
 import TableOfContents from '../../../components/TableOfContents';
 import SocialSharePanel from '../../../components/SocialSharePanel';
-import { Post as PostType, GetAllPostsResult } from '../../../types';
 
-export const revalidate = 60; // revalidate this page every 60 seconds
+export const revalidate = 3600; // Revalidate this page every hour
 
 export async function generateStaticParams() {
-  const result: GetAllPostsResult = await getLatestPosts({ first: 20 }); // Adjust the number as needed
-  return result.posts.nodes.map((post) => ({
+  const posts = await getAllPosts();
+  return posts.map((post) => ({
     slug: post.slug,
   }));
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post: PostType | null = await getPostBySlug(params.slug);
-  
+  const post = await getPostBySlug(params.slug);
+
   if (!post) {
     return {
       title: 'Post Not Found',
@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
-  const post: PostType | null = await getPostBySlug(params.slug);
+  const post: Post | null = await getPostBySlug(params.slug);
 
   if (!post) {
     notFound();
@@ -69,7 +69,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
   const imageUrl = post.featuredImage?.node.sourceUrl || 'https://dailyfornex.com/default-og-image.jpg';
 
   return (
-    <div className="container mx-auto px-4 py-8 font-[family-name:var(--font-geist-sans)]">
+    <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col lg:flex-row">
         <article className="lg:w-3/4 lg:pr-8">
           {post.featuredImage && (
@@ -77,7 +77,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
               src={post.featuredImage.node.sourceUrl}
               alt={post.featuredImage.node.altText || post.title}
               width={1200}
-              height={800}
+              height={630}
               className="w-full h-auto object-cover rounded-lg mb-8"
               priority
             />

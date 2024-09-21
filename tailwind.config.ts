@@ -11,9 +11,22 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "link-color": "var(--link-color)",
+        "link-hover-color": "var(--link-hover-color)",
+        "soft-bg": "var(--soft-bg)",
+        "soft-text-color": "var(--soft-text-color)",
+      },
+      textColor: {
+        "link-color": "var(--link-color)",
+        "link-hover-color": "var(--link-hover-color)",
+      },
+      backgroundColor: {
+        "soft-bg": "var(--soft-bg)",
       },
     },
   },
   plugins: [],
+  darkMode: "class",
 };
+
 export default config;

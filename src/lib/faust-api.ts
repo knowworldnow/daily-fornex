@@ -75,7 +75,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
               slug
             }
           }
-          comments(where: {status: APPROVE}) {
+          comments(where: { status: "APPROVE" }) {
             nodes {
               id
               content

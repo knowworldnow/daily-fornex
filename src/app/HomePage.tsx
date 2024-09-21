@@ -10,9 +10,9 @@ const POSTS_PER_PAGE = 20;
 
 const PostCard = ({ post }: { post: Post }) => (
   <article className="mb-8">
-    <Link href={`/post/${post.slug}`}>
+    <Link href={`/${post.slug}`}>
       <Image
-        src={post.featuredImage?.node.sourceUrl || '/placeholder.jpg'}
+        src={post.featuredImage?.node.sourceUrl || '/placeholder.svg'}
         alt={post.featuredImage?.node.altText || post.title}
         width={600}
         height={400}
@@ -37,7 +37,7 @@ const PostCard = ({ post }: { post: Post }) => (
       <span className="text-sm text-gray-600">{post.author?.node.name}</span>
     </div>
     <h2 className="text-xl font-bold mb-2">
-      <Link href={`/post/${post.slug}`} className="hover:underline">
+      <Link href={`/${post.slug}`} className="hover:underline">
         {post.title}
       </Link>
     </h2>
@@ -47,13 +47,13 @@ const PostCard = ({ post }: { post: Post }) => (
 
 interface HomePageProps {
   initialPosts: Post[];
-  pageInfo: {
+  initialPageInfo: {
     hasNextPage: boolean;
     endCursor: string | null;
   };
 }
 
-export default function HomePage({ initialPosts, pageInfo: initialPageInfo }: HomePageProps) {
+export default function HomePage({ initialPosts, initialPageInfo }: HomePageProps) {
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [pageInfo, setPageInfo] = useState(initialPageInfo);
   const [loading, setLoading] = useState(false);
@@ -65,15 +65,10 @@ export default function HomePage({ initialPosts, pageInfo: initialPageInfo }: Ho
       const result = await getLatestPosts({
         first: POSTS_PER_PAGE,
         after: pageInfo.endCursor
-      });
+      }) as GetAllPostsResult;
       
-      if ('posts' in result) {
-        const typedResult = result as GetAllPostsResult;
-        setPosts((prevPosts) => [...prevPosts, ...typedResult.posts.nodes]);
-        setPageInfo(typedResult.posts.pageInfo);
-      } else {
-        console.error('Unexpected result structure from getLatestPosts');
-      }
+      setPosts((prevPosts) => [...prevPosts, ...result.posts.nodes]);
+      setPageInfo(result.posts.pageInfo);
     } catch (error) {
       console.error('Error loading posts:', error);
     } finally {
@@ -82,7 +77,7 @@ export default function HomePage({ initialPosts, pageInfo: initialPageInfo }: Ho
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 font-[family-name:var(--font-geist-sans)]">
+    <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold text-center mb-8">Latest and Hottest</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {posts.map((post) => (
@@ -94,7 +89,7 @@ export default function HomePage({ initialPosts, pageInfo: initialPageInfo }: Ho
           <button
             onClick={loadMorePosts}
             disabled={loading}
-            className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+            className="bg-primary text-primary-foreground px-6 py-2 rounded hover:bg-primary/90 disabled:opacity-50"
           >
             {loading ? 'Loading...' : 'Load More'}
           </button>

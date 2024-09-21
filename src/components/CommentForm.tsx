@@ -26,6 +26,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ postId }) => {
       setEmail('');
       setContent('');
     } catch (error) {
+      console.error('Error submitting comment:', error);
       setMessage('Failed to submit comment. Please try again.');
     } finally {
       setIsSubmitting(false);

@@ -8,7 +8,7 @@ import { Post } from '../../types';
 
 export default function SearchResults() {
   const searchParams = useSearchParams();
-  const query = searchParams.get('q');
+  const query = searchParams ? searchParams.get('q') : null;
   const [results, setResults] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,11 +26,14 @@ export default function SearchResults() {
           setError(err.message);
           setIsLoading(false);
         });
+    } else {
+      setIsLoading(false);
     }
   }, [query]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (isLoading) return <div className="container mx-auto px-4 py-8">Loading...</div>;
+  if (error) return <div className="container mx-auto px-4 py-8">Error: {error}</div>;
+  if (!query) return <div className="container mx-auto px-4 py-8">No search query provided.</div>;
 
   return (
     <div className="container mx-auto px-4 py-8">

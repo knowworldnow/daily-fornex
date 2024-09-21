@@ -29,6 +29,7 @@ interface Post {
   categories: {
     nodes: { name: string; slug: string }[];
   };
+  cursor: string;
 }
 
 const PostCard = ({ post }: { post: Post }) => (
@@ -74,10 +75,11 @@ interface HomePageProps {
 
 export default function HomePage({ initialPosts }: HomePageProps) {
   const [posts, setPosts] = useState<Post[]>(initialPosts);
-  const [page, setPage] = useState(2);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [lastCursor, setLastCursor] = useState<string | null>(null);
+  const [lastCursor, setLastCursor] = useState<string | null>(
+    initialPosts.length > 0 ? initialPosts[initialPosts.length - 1].cursor : null
+  );
 
   const loadMorePosts = async () => {
     if (loading || !hasMore) return;
@@ -89,7 +91,6 @@ export default function HomePage({ initialPosts }: HomePageProps) {
       });
       if (newPosts.length > 0) {
         setPosts((prevPosts) => [...prevPosts, ...newPosts]);
-        setPage((prevPage) => prevPage + 1);
         setLastCursor(newPosts[newPosts.length - 1].cursor);
         setHasMore(newPosts.length === POSTS_PER_PAGE);
       } else {

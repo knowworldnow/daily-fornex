@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Post } from '../../types';
 
 export default function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q');
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (query) {
@@ -33,12 +34,12 @@ export default function SearchResults() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Search Results for "{query}"</h1>
+      <h1 className="text-3xl font-bold mb-6">Search Results for &quot;{query}&quot;</h1>
       {results.length === 0 ? (
         <p>No results found.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {results.map((post: any) => (
+          {results.map((post: Post) => (
             <article key={post.id} className="border rounded-lg overflow-hidden shadow-lg">
               {post.featuredImage && (
                 <Image

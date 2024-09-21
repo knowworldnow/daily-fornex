@@ -44,7 +44,7 @@ export default function SearchResults() {
   }
 
   if (results.length === 0 && query) {
-    return <div className="text-center py-4">No results found for "{query}"</div>;
+    return <div className="text-center py-4">No results found for &quot;{query}&quot;</div>;
   }
 
   return (

@@ -15,8 +15,8 @@ interface PostHeaderProps {
 export default function PostHeader({ title, author, date, category }: PostHeaderProps) {
   // Determine the avatar URL based on the author's name
   const getAvatarUrl = (authorName: string) => {
-    const formattedName = authorName.toLowerCase().replace(/\s+/g, '-');
-    return `/avatars/${formattedName}.webp`;
+    const firstName = authorName.split(' ')[0].toLowerCase();
+    return `/avatars/${firstName}.webp`;
   };
 
   return (
@@ -24,6 +24,7 @@ export default function PostHeader({ title, author, date, category }: PostHeader
       <h1 className="text-4xl font-bold mb-4">{title}</h1>
       <AuthorInfo 
         author={author.name}
+        avatarUrl={getAvatarUrl(author.name)}
         date={date}
         category={category?.name || ''}
         categorySlug={category?.slug}

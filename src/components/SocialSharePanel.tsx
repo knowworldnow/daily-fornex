@@ -60,7 +60,7 @@ const SocialSharePanel: React.FC<SocialSharePanelProps> = ({ url, title, descrip
   }
 
   return (
-    <div className="fixed left-0 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 p-2 rounded-r-lg shadow-lg">
+    <div className="fixed left-0 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 p-2 rounded-r-lg shadow-lg hidden md:block">
       {shareLinks.map((link) => (
         <a
           key={link.name}

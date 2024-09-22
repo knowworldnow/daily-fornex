@@ -30,27 +30,27 @@ const SocialSharePanel: React.FC<SocialSharePanelProps> = ({ url, title, descrip
   const shareLinks = [
     {
       name: 'Facebook',
-      icon: '/facebook-color.svg',
+      icon: '/facebook.svg',
       url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
     },
     {
       name: 'Twitter',
-      icon: '/twitter-color.svg',
+      icon: '/twitter.svg',
       url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`
     },
     {
       name: 'LinkedIn',
-      icon: '/linkedin-color.svg',
+      icon: '/linkedin.svg',
       url: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(description)}`
     },
     {
       name: 'WhatsApp',
-      icon: '/whatsapp-color.svg',
+      icon: '/whatsapp.svg',
       url: `https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`
     },
     {
       name: 'Pinterest',
-      icon: '/pinterest-color.svg',
+      icon: '/pinterest.svg',
       url: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(title)}`
     },
   ];

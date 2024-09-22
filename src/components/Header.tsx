@@ -14,8 +14,8 @@ export default function Header() {
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-md">
-      <div className="container mx-auto px-4 py-2 flex items-center justify-between">
+    <header className="site-header bg-white dark:bg-gray-800 shadow-md">
+      <div className="container mx-auto px-4 flex items-center justify-between">
         <button 
           className="md:hidden text-gray-700 dark:text-white" 
           onClick={toggleMenu} 

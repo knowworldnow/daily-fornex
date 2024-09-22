@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import Logo from './Logo';
 
 const socialLinks = [
   { name: 'Facebook', icon: '/facebook.svg', url: 'https://fb.com/dailyfornex' },
@@ -13,17 +14,19 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+    <footer className="w-full bg-white dark:bg-black text-gray-600 dark:text-gray-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Left Column */}
-          <div>
-            <Image src="/logo.webp" alt="Daily Fornex Logo" width={150} height={50} className="mb-4" />
-            <p className="mb-2">Your every feedback is important.</p>
+        <div className="flex flex-col md:flex-row justify-between items-start">
+          {/* Left Column - Logo and Contact Info */}
+          <div className="mb-6 md:mb-0">
+            <Link href="/" className="inline-block">
+              <Logo />
+            </Link>
+            <p className="mt-4 mb-2">Your every feedback is important.</p>
             <p>Kindly email us at: <a href="mailto:admin@dailyfornex.com" className="text-blue-500 hover:underline">admin@dailyfornex.com</a></p>
           </div>
 
-          {/* Right Column */}
+          {/* Right Column - Quick Links */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">

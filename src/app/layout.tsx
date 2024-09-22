@@ -20,6 +20,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Daily Fornex",
   description: "Your source for forex news and analysis",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({

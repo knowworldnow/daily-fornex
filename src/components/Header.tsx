@@ -12,7 +12,7 @@ export default function Header() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <header className="w-full bg-gray-800 text-white">
+    <header className="w-full bg-background text-foreground">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left section: Search (hidden on mobile) */}
@@ -28,14 +28,14 @@ export default function Header() {
           {/* Right section: Navigation and Theme Toggle */}
           <div className="flex items-center">
             <nav className="hidden md:flex space-x-4 mr-4">
-              <Link href="/" className="hover:text-gray-300">Home</Link>
-              <Link href="/about" className="hover:text-gray-300">About</Link>
-              <Link href="/contact" className="hover:text-gray-300">Contact</Link>
-              <Link href="/categories" className="hover:text-gray-300">Categories</Link>
+              <Link href="/" className="font-bold hover:text-gray-600 dark:hover:text-gray-300">Home</Link>
+              <Link href="/about" className="font-bold hover:text-gray-600 dark:hover:text-gray-300">About</Link>
+              <Link href="/contact" className="font-bold hover:text-gray-600 dark:hover:text-gray-300">Contact</Link>
+              <Link href="/categories" className="font-bold hover:text-gray-600 dark:hover:text-gray-300">Categories</Link>
             </nav>
             <ToggleTheme />
             <button 
-              className="md:hidden ml-2 text-white"
+              className="md:hidden ml-2 text-foreground"
               onClick={toggleMenu} 
               aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
@@ -50,11 +50,11 @@ export default function Header() {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <nav className="md:hidden bg-gray-700 py-2">
-          <Link href="/" className="block px-4 py-2 hover:bg-gray-600">Home</Link>
-          <Link href="/about" className="block px-4 py-2 hover:bg-gray-600">About</Link>
-          <Link href="/contact" className="block px-4 py-2 hover:bg-gray-600">Contact</Link>
-          <Link href="/categories" className="block px-4 py-2 hover:bg-gray-600">Categories</Link>
+        <nav className="md:hidden bg-background py-2">
+          <Link href="/" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Home</Link>
+          <Link href="/about" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">About</Link>
+          <Link href="/contact" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Contact</Link>
+          <Link href="/categories" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Categories</Link>
         </nav>
       )}
 

@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" dir={process.env.NEXT_PUBLIC_SITE_DIRECTION || 'ltr'} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen no-vertical-space`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />

@@ -22,13 +22,15 @@ export default function PostHeader({ title, author, date, category }: PostHeader
   return (
     <header className="mb-8">
       <h1 className="text-4xl font-bold mb-4">{title}</h1>
-      <AuthorInfo 
-        author={author.name}
-        avatarUrl={getAvatarUrl(author.name)}
-        date={date}
-        category={category?.name || ''}
-        categorySlug={category?.slug}
-      />
+      <div className="flex justify-start">
+        <AuthorInfo 
+          author={author.name}
+          avatarUrl={getAvatarUrl(author.name)}
+          date={date}
+          category={category?.name || ''}
+          categorySlug={category?.slug}
+        />
+      </div>
     </header>
   );
 }

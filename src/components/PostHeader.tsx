@@ -15,8 +15,15 @@ interface PostHeaderProps {
 export default function PostHeader({ title, author, date, category }: PostHeaderProps) {
   // Determine the avatar URL based on the author's name
   const getAvatarUrl = (authorName: string) => {
-    const firstName = authorName.split(' ')[0].toLowerCase();
-    return `/avatars/${firstName}.webp`;
+    const lowerCaseName = authorName.toLowerCase();
+    if (lowerCaseName === 'anmita das') {
+      return '/avatars/anmita.webp';
+    } else if (lowerCaseName === 'shoumya chowdhury') {
+      return '/avatars/shoumya.webp';
+    } else {
+      // Default avatar or fallback logic
+      return '/avatars/default.webp';
+    }
   };
 
   return (

@@ -30,27 +30,27 @@ const SocialSharePanel: React.FC<SocialSharePanelProps> = ({ url, title, descrip
   const shareLinks = [
     {
       name: 'Facebook',
-      icon: '/facebook.svg',
+      icon: '/facebook-color.svg',
       url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
     },
     {
       name: 'Twitter',
-      icon: '/twitter.svg',
+      icon: '/twitter-color.svg',
       url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`
     },
     {
       name: 'LinkedIn',
-      icon: '/linkedin.svg',
+      icon: '/linkedin-color.svg',
       url: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(description)}`
     },
     {
       name: 'WhatsApp',
-      icon: '/whatsapp.svg',
+      icon: '/whatsapp-color.svg',
       url: `https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`
     },
     {
       name: 'Pinterest',
-      icon: '/pinterest.svg',
+      icon: '/pinterest-color.svg',
       url: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(title)}`
     },
   ];
@@ -73,9 +73,9 @@ const SocialSharePanel: React.FC<SocialSharePanelProps> = ({ url, title, descrip
           <Image 
             src={link.icon} 
             alt={`${link.name} icon`} 
-            width={32} 
-            height={32} 
-            className="w-8 h-8" 
+            width={48} 
+            height={48} 
+            className="w-12 h-12" 
           />
         </a>
       ))}

@@ -27,7 +27,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
   }, [content]);
 
   return (
-    <nav className="sticky top-8">
+    <nav className="sticky top-8 hidden md:block max-h-[calc(100vh-4rem)] overflow-auto">
       <h2 className="text-xl font-bold mb-4">Table of Contents</h2>
       <ul className="space-y-2">
         {toc.map((item) => (

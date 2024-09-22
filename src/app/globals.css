@@ -22,7 +22,7 @@
 
 @layer base {
   body {
-    @apply text-base text-foreground bg-background font-sans;
+    @apply text-base text-foreground bg-background font-sans m-0 p-0;
   }
 
   h1 {
@@ -94,11 +94,22 @@
   .prose img {
     @apply mx-auto rounded-lg shadow-md;
   }
+
+  .site-header {
+    @apply py-2;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .no-vertical-space {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 

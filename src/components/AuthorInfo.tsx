@@ -12,13 +12,15 @@ interface AuthorInfoProps {
 export default function AuthorInfo({ author, avatarUrl, date, category, categorySlug }: AuthorInfoProps) {
   return (
     <div className="flex items-center">
-      <Image
-        src={avatarUrl}
-        alt={author}
-        width={60}
-        height={60}
-        className="rounded-full mr-4"
-      />
+      <div className="mr-4 w-12 h-12 relative">
+        <Image
+          src={avatarUrl}
+          alt={`Avatar of ${author}`}
+          layout="fill"
+          objectFit="cover"
+          className="rounded-full"
+        />
+      </div>
       <div>
         <p className="font-semibold text-lg">{author}</p>
         <div className="text-sm text-gray-600 dark:text-gray-400">

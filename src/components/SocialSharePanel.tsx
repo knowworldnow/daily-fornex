@@ -57,11 +57,6 @@ const SocialSharePanel: React.FC<SocialSharePanelProps> = ({ url, title, descrip
       name: 'Instagram',
       icon: '/instagram.svg',
       url: `https://www.instagram.com/` // Note: Instagram doesn't have a direct share URL, this will just open Instagram
-    },
-    {
-      name: 'Email',
-      icon: '/email.svg',
-      url: `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(description + '\n\n' + url)}`
     }
   ];
 

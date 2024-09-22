@@ -48,8 +48,8 @@ export default function Footer() {
                 <Image 
                   src={social.icon} 
                   alt={`${social.name} icon`} 
-                  width={60} 
-                  height={60} 
+                  width={48} 
+                  height={48} 
                   className="w-15 h-15" 
                 />
               </a>

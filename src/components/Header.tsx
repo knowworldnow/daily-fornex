@@ -8,18 +8,34 @@ import Logo from './Logo';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   return (
-    <header className="w-full bg-white dark:bg-gray-800 shadow-md">
+    <header className="w-full bg-gray-800 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+          {/* Left section: Search (hidden on mobile) */}
+          <div className="hidden md:block w-1/3">
+            <SearchBar className="max-w-xs" />
+          </div>
+
+          {/* Center section: Logo */}
+          <div className="flex-1 flex justify-center md:flex-initial md:justify-start">
+            <Logo />
+          </div>
+
+          {/* Right section: Navigation and Theme Toggle */}
           <div className="flex items-center">
+            <nav className="hidden md:flex space-x-4 mr-4">
+              <Link href="/" className="hover:text-gray-300">Home</Link>
+              <Link href="/about" className="hover:text-gray-300">About</Link>
+              <Link href="/contact" className="hover:text-gray-300">Contact</Link>
+              <Link href="/categories" className="hover:text-gray-300">Categories</Link>
+            </nav>
+            <ToggleTheme />
             <button 
-              className="md:hidden mr-2 text-gray-700 dark:text-white" 
+              className="md:hidden ml-2 text-white"
               onClick={toggleMenu} 
               aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
@@ -28,50 +44,24 @@ export default function Header() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <Logo />
-          </div>
-
-          <nav className="hidden md:flex items-center space-x-4">
-            <Link href="/" className="text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300">Home</Link>
-            <Link href="/about" className="text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300">About</Link>
-            <Link href="/contact" className="text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300">Contact</Link>
-            <Link href="/categories" className="text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300">Categories</Link>
-          </nav>
-
-          <div className="hidden md:block flex-grow mx-4">
-            <SearchBar />
-          </div>
-
-          <div className="flex items-center">
-            <ToggleTheme />
-            <button 
-              className="md:hidden ml-2 text-gray-700 dark:text-white" 
-              onClick={toggleSearch} 
-              aria-label="Toggle search"
-              aria-expanded={isSearchOpen}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </button>
           </div>
         </div>
       </div>
 
+      {/* Mobile menu */}
       {isMenuOpen && (
-        <nav className="md:hidden bg-white dark:bg-gray-800 py-2">
-          <Link href="/" className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Home</Link>
-          <Link href="/about" className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">About</Link>
-          <Link href="/contact" className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Contact</Link>
-          <Link href="/categories" className="block px-4 py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Categories</Link>
+        <nav className="md:hidden bg-gray-700 py-2">
+          <Link href="/" className="block px-4 py-2 hover:bg-gray-600">Home</Link>
+          <Link href="/about" className="block px-4 py-2 hover:bg-gray-600">About</Link>
+          <Link href="/contact" className="block px-4 py-2 hover:bg-gray-600">Contact</Link>
+          <Link href="/categories" className="block px-4 py-2 hover:bg-gray-600">Categories</Link>
         </nav>
       )}
 
-      {isSearchOpen && (
-        <div className="md:hidden bg-white dark:bg-gray-800 py-2 px-4">
-          <SearchBar />
-        </div>
-      )}
+      {/* Mobile search bar */}
+      <div className="md:hidden px-4 pb-4">
+        <SearchBar />
+      </div>
     </header>
   );
 }

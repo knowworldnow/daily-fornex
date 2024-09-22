@@ -14,44 +14,48 @@ export default function Header() {
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   return (
-    <header className="site-header bg-white dark:bg-gray-800 shadow-md">
-      <div className="container mx-auto px-4 flex items-center justify-between">
-        <button 
-          className="md:hidden text-gray-700 dark:text-white" 
-          onClick={toggleMenu} 
-          aria-label="Toggle menu"
-          aria-expanded={isMenuOpen}
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+    <header className="w-full bg-white dark:bg-gray-800 shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center">
+            <button 
+              className="md:hidden mr-2 text-gray-700 dark:text-white" 
+              onClick={toggleMenu} 
+              aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <Logo />
+          </div>
 
-        <Logo />
+          <nav className="hidden md:flex items-center space-x-4">
+            <Link href="/" className="text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300">Home</Link>
+            <Link href="/about" className="text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300">About</Link>
+            <Link href="/contact" className="text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300">Contact</Link>
+            <Link href="/categories" className="text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300">Categories</Link>
+          </nav>
 
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link href="/" className="text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300">Home</Link>
-          <Link href="/about" className="text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300">About</Link>
-          <Link href="/contact" className="text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300">Contact</Link>
-          <Link href="/categories" className="text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300">Categories</Link>
-        </nav>
+          <div className="hidden md:block flex-grow mx-4">
+            <SearchBar />
+          </div>
 
-        <div className="hidden md:block flex-grow mx-6">
-          <SearchBar />
+          <div className="flex items-center">
+            <ToggleTheme />
+            <button 
+              className="md:hidden ml-2 text-gray-700 dark:text-white" 
+              onClick={toggleSearch} 
+              aria-label="Toggle search"
+              aria-expanded={isSearchOpen}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+          </div>
         </div>
-
-        <ToggleTheme />
-
-        <button 
-          className="md:hidden text-gray-700 dark:text-white" 
-          onClick={toggleSearch} 
-          aria-label="Toggle search"
-          aria-expanded={isSearchOpen}
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </button>
       </div>
 
       {isMenuOpen && (

@@ -60,15 +60,15 @@ const SocialSharePanel: React.FC<SocialSharePanelProps> = ({ url, title, descrip
   }
 
   return (
-    <div className="fixed md:left-0 md:top-1/2 bottom-0 left-0 right-0 md:transform md:-translate-y-1/2 md:p-2 p-1 flex md:flex-col justify-center items-center md:items-start z-50">
-      <div className="md:w-12 w-full flex md:flex-col justify-around items-center">
+    <div className="fixed md:left-0 md:top-1/2 bottom-0 left-0 right-0 md:transform md:-translate-y-1/2 flex md:flex-col justify-center items-center md:items-start z-50">
+      <div className="md:w-12 w-full flex md:flex-col justify-around items-center md:space-y-1">
         {shareLinks.map((link) => (
           <a
             key={link.name}
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="md:mb-2 last:mb-0 hover:opacity-80 transition-opacity"
+            className="hover:opacity-80 transition-opacity"
             aria-label={`Share on ${link.name}`}
           >
             <Image 

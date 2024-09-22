@@ -22,10 +22,14 @@ export default function AuthorInfo({ author, date, category }: AuthorInfoProps) 
       <div>
         <p className="font-semibold text-lg">{author}</p>
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          {new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} · 
-          <Link href={`/category/${category.toLowerCase()}`} className="ml-1 text-blue-600 hover:underline">
-            {category}
-          </Link>
+          {new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} 
+          {category && (
+            <>
+              · <Link href={`/category/${category.toLowerCase()}`} className="ml-1 text-blue-600 hover:underline">
+                {category}
+              </Link>
+            </>
+          )}
         </p>
       </div>
     </div>

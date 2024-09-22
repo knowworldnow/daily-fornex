@@ -32,7 +32,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
       <ul className="space-y-2">
         {toc.map((item) => (
           <li key={item.id} style={{ marginLeft: `${(item.level - 2) * 16}px` }}>
-            <a href={`#${item.id}`} className="text-blue-600 hover:underline">
+            <a href={`#${item.id}`} className="text-foreground hover:underline">
               {item.text}
             </a>
           </li>

@@ -61,7 +61,7 @@ const SocialSharePanel: React.FC<SocialSharePanelProps> = ({ url, title, descrip
 
   return (
     <div className="fixed md:left-0 md:top-1/2 bottom-0 left-0 right-0 md:transform md:-translate-y-1/2 flex md:flex-col justify-center items-center md:items-start z-50">
-      <div className="w-full md:w-auto flex md:flex-col justify-around items-center bg-blue-600 py-2 px-4 md:rounded-r-lg md:py-2 md:px-2">
+      <div className="w-full md:w-auto flex md:flex-col justify-around items-center bg-gradient-to-r from-indigo-500/80 to-purple-500/80 backdrop-blur-sm py-2 px-4 md:rounded-r-lg md:py-2 md:px-2 shadow-lg">
         {shareLinks.map((link) => (
           <a
             key={link.name}

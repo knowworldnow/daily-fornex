@@ -2,11 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const socialLinks = [
-  { name: 'Facebook', icon: '/facebook.png', url: 'https://fb.com/dailyfornex' },
-  { name: 'Twitter', icon: '/twitter.png', url: 'https://twitter.com/dailyfornex' },
-  { name: 'Instagram', icon: '/instagram.png', url: 'https://instagram.com/dailyfornex' },
-  { name: 'Pinterest', icon: '/pinterest.png', url: 'https://pinterest.com/dailyfornex' },
-  { name: 'YouTube', icon: '/youtube.png', url: 'https://youtube.com/dailyfornex' },
+  { name: 'Facebook', icon: '/facebook.svg', url: 'https://fb.com/dailyfornex' },
+  { name: 'Twitter', icon: '/twitter.svg', url: 'https://twitter.com/dailyfornex' },
+  { name: 'Instagram', icon: '/instagram.svg', url: 'https://instagram.com/dailyfornex' },
+  { name: 'Pinterest', icon: '/pinterest.svg', url: 'https://pinterest.com/dailyfornex' },
+  { name: 'YouTube', icon: '/youtube.svg', url: 'https://youtube.com/dailyfornex' },
 ];
 
 export default function Footer() {

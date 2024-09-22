@@ -18,7 +18,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* Left Column */}
           <div>
-            <Image src="/logo.webp" alt="Daily Fornex Logo" width={150} height={50} className="mb-4" />
+            <Image src="/logo.webp" alt="Daily Fornex Logo" width={240} height={80} className="mb-4" />
             <p className="mb-2">Your every feedback is important.</p>
             <p>Kindly email us at: <a href="mailto:admin@dailyfornex.com" className="text-blue-500 hover:underline">admin@dailyfornex.com</a></p>
           </div>
@@ -45,8 +45,8 @@ export default function Footer() {
                 <Image 
                   src={social.icon} 
                   alt={`${social.name} icon`} 
-                  width={24} 
-                  height={24} 
+                  width={48} 
+                  height={48} 
                   className="w-6 h-6 dark:invert" 
                 />
               </a>

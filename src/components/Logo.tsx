@@ -24,9 +24,9 @@ const Logo = () => {
       <Image
         src={logoSrc}
         alt="Daily Fornex Logo"
-        width={150}
-        height={50}
-        className="w-auto h-8 md:h-10"
+        width={240}
+        height={80}
+        className="w-auto h-12 md:h-16" // Adjusted for larger size
         priority
       />
     </Link>

@@ -16,8 +16,8 @@ export default function AuthorInfo({ author, avatarUrl, date, category, category
         <Image
           src={avatarUrl}
           alt={`Avatar of ${author}`}
-          layout="fill"
-          objectFit="cover"
+          width={48}
+          height={48}
           className="rounded-full"
         />
       </div>

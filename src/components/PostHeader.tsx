@@ -23,7 +23,7 @@ export default function PostHeader({ title, author, date, category }: PostHeader
         author={author.name}
         avatarUrl={author.avatar?.url}
         date={date}
-        category={category?.name}
+        category={category?.name || ''}
         categorySlug={category?.slug}
       />
     </header>

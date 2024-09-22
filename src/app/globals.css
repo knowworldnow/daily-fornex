@@ -24,6 +24,7 @@
   body {
     @apply text-base text-foreground bg-background font-sans m-0 p-0;
   }
+}
 
   h1 {
     @apply text-4xl md:text-5xl font-bold mb-6;
@@ -64,8 +65,9 @@
 
 @layer components {
   .container {
-    @apply min-h-screen bg-background text-foreground;
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
+}
 
   .wrapper {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
@@ -103,6 +105,10 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .content-wrapper {
+    @apply min-h-screen bg-background text-foreground;
   }
 
   .no-vertical-space {

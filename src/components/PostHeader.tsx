@@ -17,12 +17,14 @@ interface PostHeaderProps {
 
 export default function PostHeader({ title, author, date, category }: PostHeaderProps) {
   return (
-    <header>
+    <header className="mb-8">
       <h1 className="text-4xl font-bold mb-4">{title}</h1>
       <AuthorInfo 
         author={author.name}
+        avatarUrl={author.avatar?.url}
         date={date}
-        category={category ? category.name : ''}
+        category={category?.name}
+        categorySlug={category?.slug}
       />
     </header>
   );

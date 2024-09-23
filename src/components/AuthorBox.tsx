@@ -26,7 +26,7 @@ export default function AuthorBox({ authorName }: AuthorBoxProps) {
 
   return (
     <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 mt-8">
-      <div className="flex flex-col sm:flex-row items-start">
+      <div className="flex flex-col sm:flex-row">
         <div className="flex items-center mb-4 sm:mb-0 sm:mr-6">
           <Image
             src={author.image}
@@ -40,7 +40,9 @@ export default function AuthorBox({ authorName }: AuthorBoxProps) {
             <p className="text-gray-600 dark:text-gray-400">{author.role}</p>
           </div>
         </div>
-        <p className="text-gray-700 dark:text-gray-300">{author.description}</p>
+        <div className="flex-1">
+          <p className="text-gray-700 dark:text-gray-300">{author.description}</p>
+        </div>
       </div>
     </div>
   );

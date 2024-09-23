@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "codegen": "graphql-codegen",
-    "postbuild": "next-sitemap"  // Generates the sitemap after build
+    "postbuild": "next-sitemap"  
   },
   "dependencies": {
     "@faustwp/core": "^3.1.0",

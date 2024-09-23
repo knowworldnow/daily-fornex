@@ -4,7 +4,6 @@ const { createSecureHeaders } = require('next-secure-headers');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  trailingSlash: true,
   images: {
     domains: ['forestgreen-pig-914075.hostingersite.com'],
   },
@@ -33,15 +32,22 @@ const nextConfig = {
     return [
       {
         source: '/:slug',
-        destination: '/post/:slug/',
+        destination: '/post/:slug',
       },
     ];
   },
   async redirects() {
     return [
+      // Redirect posts without trailing slash to posts with trailing slash
       {
-        source: '/:slug((?!.*/$).*)',
-        destination: '/:slug/',
+        source: '/post/:slug((?!.*/$).*)',
+        destination: '/post/:slug/',
+        permanent: true,
+      },
+      // Redirect pages without trailing slash to pages with trailing slash
+      {
+        source: '/page/:slug((?!.*/$).*)',
+        destination: '/page/:slug/',
         permanent: true,
       },
     ];

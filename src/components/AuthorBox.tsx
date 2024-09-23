@@ -26,13 +26,13 @@ export default function AuthorBox({ authorName }: AuthorBoxProps) {
 
   return (
     <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 mt-8">
-      <div className="flex items-center mb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4">
         <Image
           src={author.image}
           alt={`${authorName}'s profile picture`}
           width={80}
           height={80}
-          className="rounded-full mr-4"
+          className="rounded-full mb-4 sm:mb-0 sm:mr-4"
         />
         <div>
           <h3 className="text-xl font-semibold">{authorName}</h3>

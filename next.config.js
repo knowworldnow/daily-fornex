@@ -28,14 +28,16 @@ const nextConfig = {
       },
     ];
   },
-  async rewrites() {
+  async redirects() {
     return [
       {
-        source: '/:slug',
-        destination: '/post/:slug',
+        source: '/:path((?!.*/$).*)',
+        destination: '/:path/',
+        permanent: true,
       },
     ];
   },
+  trailingSlash: true,
 };
 
 module.exports = withFaust(nextConfig);

@@ -134,6 +134,27 @@
   .site-header {
     @apply py-2;
   }
+
+  /* Add styles for the Table of Contents */
+  .table-of-contents {
+    @apply bg-gray-100 dark:bg-gray-800 rounded-lg p-6 shadow-md;
+  }
+
+  .table-of-contents h2 {
+    @apply text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200;
+  }
+
+  .table-of-contents ul {
+    @apply space-y-2;
+  }
+
+  .table-of-contents li {
+    @apply py-1;
+  }
+
+  .table-of-contents a {
+    @apply text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200;
+  }
 }
 
 @layer utilities {

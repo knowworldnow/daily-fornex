@@ -8,6 +8,7 @@ import CommentList from '../../../components/CommentList';
 import PostHeader from '../../../components/PostHeader';
 import TableOfContents from '../../../components/TableOfContents';
 import SocialSharePanel from '../../../components/SocialSharePanel';
+import AuthorBox from '../../../components/AuthorBox';
 
 export const revalidate = 3600; // Revalidate this page every hour
 
@@ -92,6 +93,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
             className="prose max-w-none mt-8"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
+          <AuthorBox authorName={post.author.node.name} />
           {post.comments && <CommentList comments={post.comments.nodes} />}
           <CommentForm postId={post.id} />
         </article>

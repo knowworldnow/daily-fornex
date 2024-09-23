@@ -26,7 +26,35 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-foreground;
+    @apply text-foreground font-bold mb-4;
+  }
+
+  h1 {
+    @apply text-4xl;
+  }
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+
+  h4 {
+    @apply text-xl;
+  }
+
+  h5 {
+    @apply text-lg;
+  }
+
+  h6 {
+    @apply text-base;
+  }
+
+  p {
+    @apply mb-4;
   }
 
   a {
@@ -43,6 +71,26 @@
 
   img {
     @apply mx-auto my-4 rounded-lg shadow-md;
+  }
+
+  ul, ol {
+    @apply mb-4 pl-6;
+  }
+
+  li {
+    @apply mb-2;
+  }
+
+  blockquote {
+    @apply border-l-4 border-gray-300 dark:border-gray-700 pl-4 italic my-4;
+  }
+
+  pre {
+    @apply bg-soft-bg text-soft-text-color p-4 rounded-lg overflow-x-auto mb-4;
+  }
+
+  code {
+    @apply bg-soft-bg text-soft-text-color px-1 py-0.5 rounded;
   }
 }
 

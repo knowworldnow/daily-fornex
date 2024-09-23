@@ -4,6 +4,7 @@ const { createSecureHeaders } = require('next-secure-headers');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  trailingSlash: true,
   images: {
     domains: ['forestgreen-pig-914075.hostingersite.com'],
   },
@@ -28,16 +29,23 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/:slug',
+        destination: '/post/:slug/',
+      },
+    ];
+  },
   async redirects() {
     return [
       {
-        source: '/:path((?!.*/$).*)',
-        destination: '/:path/',
+        source: '/:slug((?!.*/$).*)',
+        destination: '/:slug/',
         permanent: true,
       },
     ];
   },
-  trailingSlash: true,
 };
 
 module.exports = withFaust(nextConfig);

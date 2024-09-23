@@ -71,8 +71,8 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col lg:flex-row">
-        <article className="lg:w-3/4 lg:pr-8">
+      <div className="flex flex-col lg:flex-row lg:space-x-8">
+        <article className="lg:w-2/3">
           {post.featuredImage && (
             <Image
               src={post.featuredImage.node.sourceUrl}
@@ -97,7 +97,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
           {post.comments && <CommentList comments={post.comments.nodes} />}
           <CommentForm postId={post.id} />
         </article>
-        <aside className="lg:w-1/4 mt-8 lg:mt-0">
+        <aside className="lg:w-1/3 mt-8 lg:mt-0">
           <TableOfContents content={post.content} />
         </aside>
       </div>

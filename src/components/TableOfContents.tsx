@@ -27,7 +27,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
   }, [content]);
 
   return (
-    <nav className="sticky top-8 hidden md:block max-h-[calc(100vh-4rem)] overflow-auto pt-8 pl-8">
+    <nav className="sticky top-8 hidden md:block max-h-[calc(100vh-4rem)] overflow-auto">
       <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 shadow-md">
         <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">Table of Contents</h2>
         <ul className="space-y-2">

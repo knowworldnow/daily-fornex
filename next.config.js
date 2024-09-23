@@ -30,32 +30,9 @@ const nextConfig = {
   },
   async rewrites() {
     return [
-      // Rewrite URLs with trailing slash to the actual pages
-      {
-        source: '/:slug/',
-        destination: '/post/:slug',
-      },
-      // Keep the original rewrite for compatibility
       {
         source: '/:slug',
         destination: '/post/:slug',
-      },
-    ];
-  },
-  async redirects() {
-    return [
-      // Redirect posts without trailing slash to posts with trailing slash
-      {
-        source: '/:slug((?!.*/$).*)',
-        has: [
-          {
-            type: 'header',
-            key: 'x-matched-path',
-            value: '/:slug',
-          },
-        ],
-        destination: '/:slug/',
-        permanent: true,
       },
     ];
   },

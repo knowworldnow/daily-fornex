@@ -22,31 +22,17 @@ export const metadata = {
   },
 };
 
-interface SocialIconProps {
-  href: string;
-  src: string;
-  alt: string;
-}
-
-const SocialIcon: React.FC<SocialIconProps> = ({ href, src, alt }) => (
-  <Link href={href} target="_blank" rel="noopener noreferrer" className="transition-transform duration-200 hover:scale-110">
-    <Image src={src} alt={alt} width={24} height={24} />
-  </Link>
-);
-
 interface TeamMemberProps {
   name: string;
   role: string;
   image: string;
   description: string;
   email: string;
-  linkedin?: string;
-  twitter?: string;
 }
 
-const TeamMember: React.FC<TeamMemberProps> = ({ name, role, image, description, email, linkedin, twitter }) => (
+const TeamMember: React.FC<TeamMemberProps> = ({ name, role, image, description, email }) => (
   <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-transform duration-300 ease-in-out hover:scale-105">
-    <div className="relative h-64 sm:h-72 md:h-80">
+    <div className="relative w-full h-64 sm:h-72 md:h-80">
       <Image
         src={image}
         alt={name}
@@ -58,11 +44,9 @@ const TeamMember: React.FC<TeamMemberProps> = ({ name, role, image, description,
       <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">{name}</h2>
       <p className="text-sm text-primary mb-4">{role}</p>
       <p className="text-gray-600 dark:text-gray-300 mb-4">{description}</p>
-      <div className="flex space-x-4">
-        <SocialIcon href={`mailto:${email}`} src="/email.svg" alt="Email" />
-        {linkedin && <SocialIcon href={linkedin} src="/linkedin.svg" alt="LinkedIn" />}
-        {twitter && <SocialIcon href={twitter} src="/twitter.svg" alt="Twitter" />}
-      </div>
+      <a href={`mailto:${email}`} className="text-primary hover:underline">
+        {email}
+      </a>
     </div>
   </div>
 );
@@ -79,8 +63,6 @@ export default function AboutPage() {
           image="/anmita.webp"
           description="Anmita Das, an EEE graduate from CUET, is a dedicated web developer with a passion for blogging. She writes on diverse topics, committed to spreading reliable information and insights to her readers."
           email="anmitabristi0182@gmail.com"
-          linkedin="https://www.linkedin.com/in/anmita-das"
-          twitter="https://twitter.com/anmita_das"
         />
 
         <TeamMember
@@ -89,8 +71,6 @@ export default function AboutPage() {
           image="/shoumya.webp"
           description="Shoumya Chowdhury, an EEE graduate from CUET, is a web developer and enthusiastic blogger. He shares well-researched content on various topics, focusing on providing authentic information to engage readers."
           email="samchy25@gmail.com"
-          linkedin="https://www.linkedin.com/in/shoumya-chowdhury"
-          twitter="https://twitter.com/shoumya_chowdhury"
         />
       </div>
 

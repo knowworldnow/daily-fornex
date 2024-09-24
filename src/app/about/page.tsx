@@ -104,7 +104,7 @@ export default function AboutPage() {
       <div className="text-center">
         <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Join Our Journey</h2>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-          We're always looking for passionate individuals to join our team. If you're excited about creating impactful content and sharing knowledge with the world, we'd love to hear from you!
+          We&apos;re always looking for passionate individuals to join our team. If you&apos;re excited about creating impactful content and sharing knowledge with the world, we&apos;d love to hear from you!
         </p>
         <Link href="/contact" className="bg-primary text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-primary-dark transition-colors duration-200">
           Get in Touch

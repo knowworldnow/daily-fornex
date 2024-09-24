@@ -350,6 +350,11 @@ export async function getAllPages(): Promise<Page[]> {
 }
 
 export async function getRelatedPosts(categoryId: string, currentPostId: string, first: number = 4): Promise<Post[]> {
+  if (!categoryId) {
+    console.error('categoryId is undefined or null');
+    return [];
+  }
+
   const { data } = await client.query<{ posts: { nodes: Post[] } }>({
     query: gql`
       query GetRelatedPosts($categoryId: ID!, $currentPostId: ID!, $first: Int!) {

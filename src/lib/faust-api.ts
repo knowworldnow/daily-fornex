@@ -105,6 +105,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
   return data.post;
 }
+
 export async function getRelatedPosts(categoryId: string, currentPostId: string, first: number = 4): Promise<Post[]> {
   if (!categoryId) {
     console.error('categoryId is undefined or null');

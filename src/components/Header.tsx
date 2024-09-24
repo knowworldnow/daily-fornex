@@ -32,6 +32,7 @@ export default function Header() {
               <Link href="/about" className="font-bold hover:text-gray-600 dark:hover:text-gray-300">About</Link>
               <Link href="/contact" className="font-bold hover:text-gray-600 dark:hover:text-gray-300">Contact</Link>
               <Link href="/categories" className="font-bold hover:text-gray-600 dark:hover:text-gray-300">Categories</Link>
+              <Link href="/rss.xml" className="font-bold hover:text-gray-600 dark:hover:text-gray-300">RSS Feed</Link>
             </nav>
             <ToggleTheme />
             <button 
@@ -55,6 +56,7 @@ export default function Header() {
           <Link href="/about" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">About</Link>
           <Link href="/contact" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Contact</Link>
           <Link href="/categories" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Categories</Link>
+          <Link href="/rss.xml" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">RSS Feed</Link>
         </nav>
       )}
 

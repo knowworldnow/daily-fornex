@@ -1,25 +1,12 @@
 import { NextResponse } from 'next/server'
-import { getClient } from '@faustwp/experimental-app-router'
-import { gql } from '@apollo/client'
 
 const WORDPRESS_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL
 const SITE_URL = process.env.NEXT_PUBLIC_URL
 
-const GET_ALL_POSTS = gql`
-  query GetAllPosts {
-    posts(first: 1000) {
-      nodes {
-        slug
-        modified
-      }
-    }
-  }
-`
-
 async function fetchAllPosts() {
-  const client = await getClient()
-  const { data } = await client.query({ query: GET_ALL_POSTS })
-  return data.posts.nodes
+  const response = await fetch(`${WORDPRESS_URL}/wp-json/wp/v2/posts?_fields=slug,modified&per_page=100`)
+  const posts = await response.json()
+  return posts
 }
 
 function generateSitemapXml(posts) {

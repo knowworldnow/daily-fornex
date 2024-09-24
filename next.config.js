@@ -38,6 +38,10 @@ const nextConfig = {
         source: '/sitemap.xml',
         destination: '/api/sitemap',
       },
+      {
+        source: '/rss.xml',
+        destination: '/api/rss',
+      },
     ];
   },
 };

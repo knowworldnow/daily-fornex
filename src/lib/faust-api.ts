@@ -355,7 +355,7 @@ export async function getRelatedPosts(categoryId: string, currentPostId: string,
       query GetRelatedPosts($categoryId: ID!, $currentPostId: ID!, $first: Int!) {
         posts(
           first: $first,
-          where: { categoryId: $categoryId, notIn: [$currentPostId] }
+          where: { categoryIn: [$categoryId], notIn: [$currentPostId] }
         ) {
           nodes {
             id

@@ -27,12 +27,11 @@ interface TeamMemberProps {
   role: string;
   image: string;
   description: string;
-  email: string;
 }
 
-const TeamMember: React.FC<TeamMemberProps> = ({ name, role, image, description, email }) => (
+const TeamMember: React.FC<TeamMemberProps> = ({ name, role, image, description }) => (
   <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-transform duration-300 ease-in-out hover:scale-105">
-    <div className="relative w-full h-64 sm:h-72 md:h-80">
+    <div className="relative w-full aspect-square">
       <Image
         src={image}
         alt={name}
@@ -43,10 +42,7 @@ const TeamMember: React.FC<TeamMemberProps> = ({ name, role, image, description,
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">{name}</h2>
       <p className="text-sm text-primary mb-4">{role}</p>
-      <p className="text-gray-600 dark:text-gray-300 mb-4">{description}</p>
-      <a href={`mailto:${email}`} className="text-primary hover:underline">
-        {email}
-      </a>
+      <p className="text-gray-600 dark:text-gray-300">{description}</p>
     </div>
   </div>
 );
@@ -62,7 +58,6 @@ export default function AboutPage() {
           role="Web Developer & Content Creator"
           image="/anmita.webp"
           description="Anmita Das, an EEE graduate from CUET, is a dedicated web developer with a passion for blogging. She writes on diverse topics, committed to spreading reliable information and insights to her readers."
-          email="anmitabristi0182@gmail.com"
         />
 
         <TeamMember
@@ -70,7 +65,6 @@ export default function AboutPage() {
           role="Web Developer & Content Strategist"
           image="/shoumya.webp"
           description="Shoumya Chowdhury, an EEE graduate from CUET, is a web developer and enthusiastic blogger. He shares well-researched content on various topics, focusing on providing authentic information to engage readers."
-          email="samchy25@gmail.com"
         />
       </div>
 

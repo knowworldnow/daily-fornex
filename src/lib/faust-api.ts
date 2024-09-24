@@ -355,6 +355,8 @@ export async function getRelatedPosts(categoryId: string, currentPostId: string,
     return [];
   }
 
+  console.log('Fetching related posts with:', { categoryId, currentPostId, first });
+
   const { data } = await client.query<{ posts: { nodes: Post[] } }>({
     query: gql`
       query GetRelatedPosts($categoryId: ID!, $currentPostId: ID!, $first: Int!) {
@@ -383,6 +385,8 @@ export async function getRelatedPosts(categoryId: string, currentPostId: string,
     `,
     variables: { categoryId, currentPostId, first },
   });
+
+  console.log('Related posts fetched:', data.posts.nodes);
 
   return data.posts.nodes;
 }

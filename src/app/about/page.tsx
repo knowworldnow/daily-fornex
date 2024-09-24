@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaEnvelope, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
 export const metadata = {
   title: 'About Us - Daily Fornex',
@@ -22,6 +21,18 @@ export const metadata = {
     type: 'website',
   },
 };
+
+interface SocialIconProps {
+  href: string;
+  src: string;
+  alt: string;
+}
+
+const SocialIcon: React.FC<SocialIconProps> = ({ href, src, alt }) => (
+  <Link href={href} target="_blank" rel="noopener noreferrer" className="transition-transform duration-200 hover:scale-110">
+    <Image src={src} alt={alt} width={24} height={24} />
+  </Link>
+);
 
 interface TeamMemberProps {
   name: string;
@@ -48,19 +59,9 @@ const TeamMember: React.FC<TeamMemberProps> = ({ name, role, image, description,
       <p className="text-sm text-primary mb-4">{role}</p>
       <p className="text-gray-600 dark:text-gray-300 mb-4">{description}</p>
       <div className="flex space-x-4">
-        <Link href={`mailto:${email}`} className="text-primary hover:text-primary-dark transition-colors duration-200">
-          <FaEnvelope size={24} />
-        </Link>
-        {linkedin && (
-          <Link href={linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors duration-200">
-            <FaLinkedin size={24} />
-          </Link>
-        )}
-        {twitter && (
-          <Link href={twitter} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 transition-colors duration-200">
-            <FaTwitter size={24} />
-          </Link>
-        )}
+        <SocialIcon href={`mailto:${email}`} src="/email.svg" alt="Email" />
+        {linkedin && <SocialIcon href={linkedin} src="/linkedin.svg" alt="LinkedIn" />}
+        {twitter && <SocialIcon href={twitter} src="/twitter.svg" alt="Twitter" />}
       </div>
     </div>
   </div>

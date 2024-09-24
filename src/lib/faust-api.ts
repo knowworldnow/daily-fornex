@@ -71,6 +71,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
           }
           categories {
             nodes {
+              id
               name
               slug
             }
@@ -99,6 +100,52 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   });
 
   return data.post;
+}
+
+export async function getRelatedPosts(categoryId: string, currentPostId: string, first: number = 4): Promise<Post[]> {
+  if (!categoryId) {
+    console.error('categoryId is undefined or null');
+    return [];
+  }
+
+  console.log('Fetching related posts with:', { categoryId, currentPostId, first });
+
+  try {
+    const { data } = await client.query<{ posts: { nodes: Post[] } }>({
+      query: gql`
+        query GetRelatedPosts($categoryId: ID!, $currentPostId: ID!, $first: Int!) {
+          posts(
+            first: $first,
+            where: { categoryIn: [$categoryId], notIn: [$currentPostId] }
+          ) {
+            nodes {
+              id
+              title
+              slug
+              featuredImage {
+                node {
+                  sourceUrl
+                  altText
+                }
+              }
+              author {
+                node {
+                  name
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: { categoryId, currentPostId, first },
+    });
+
+    console.log('Related posts fetched:', data.posts.nodes);
+    return data.posts.nodes;
+  } catch (error) {
+    console.error('Error fetching related posts:', error);
+    return [];
+  }
 }
 
 export async function getCategories(): Promise<Category[]> {
@@ -347,46 +394,4 @@ export async function getAllPages(): Promise<Page[]> {
   });
 
   return data.pages.nodes;
-}
-
-export async function getRelatedPosts(categoryId: string, currentPostId: string, first: number = 4): Promise<Post[]> {
-  if (!categoryId) {
-    console.error('categoryId is undefined or null');
-    return [];
-  }
-
-  console.log('Fetching related posts with:', { categoryId, currentPostId, first });
-
-  const { data } = await client.query<{ posts: { nodes: Post[] } }>({
-    query: gql`
-      query GetRelatedPosts($categoryId: ID!, $currentPostId: ID!, $first: Int!) {
-        posts(
-          first: $first,
-          where: { categoryIn: [$categoryId], notIn: [$currentPostId] }
-        ) {
-          nodes {
-            id
-            title
-            slug
-            featuredImage {
-              node {
-                sourceUrl
-                altText
-              }
-            }
-            author {
-              node {
-                name
-              }
-            }
-          }
-        }
-      }
-    `,
-    variables: { categoryId, currentPostId, first },
-  });
-
-  console.log('Related posts fetched:', data.posts.nodes);
-
-  return data.posts.nodes;
 }

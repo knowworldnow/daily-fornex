@@ -10,6 +10,9 @@ import TableOfContents from '../../../components/TableOfContents';
 import SocialSharePanel from '../../../components/SocialSharePanel';
 import AuthorBox from '../../../components/AuthorBox';
 import RelatedPosts from '../../../components/RelatedPosts';
+import FAQ from '../../../components/FAQ';
+import FAQSchema from '../../../components/FAQSchema';
+import SEO from '../../../components/Seo';
 
 export const revalidate = 3600; // Revalidate this page every hour
 
@@ -85,44 +88,64 @@ export default async function PostPage({ params }: { params: { slug: string } })
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col lg:flex-row lg:space-x-8">
-        <article className="lg:w-2/3">
-          {post.featuredImage && (
-            <Image
-              src={post.featuredImage.node.sourceUrl}
-              alt={post.featuredImage.node.altText || post.title}
-              width={1200}
-              height={630}
-              className="w-full h-auto object-cover rounded-lg mb-8"
-              priority
-            />
-          )}
-          <PostHeader
-            title={post.title}
-            author={post.author.node}
-            date={post.date}
-            category={post.categories.nodes[0]}
-          />
-          <div 
-            className="prose max-w-none mt-8"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
-          <AuthorBox authorName={post.author.node.name} />
-          {post.comments && <CommentList comments={post.comments.nodes} />}
-          <CommentForm postId={post.id} />
-        </article>
-        <aside className="lg:w-1/3 mt-8 lg:mt-0">
-          <TableOfContents content={post.content} />
-        </aside>
-      </div>
-      <SocialSharePanel 
-        url={postUrl}
-        title={post.title}
+    <>
+      <SEO
+        title={`${post.title} | Daily Fornex`}
         description={post.excerpt || ''}
-        imageUrl={imageUrl}
+        canonicalUrl={postUrl}
+        ogType="article"
+        ogImage={imageUrl}
+        ogImageAlt={post.title}
+        publishedTime={post.date}
+        modifiedTime={post.date}
+        author={post.author.node.name}
+        siteName="Daily Fornex"
       />
-      {relatedPosts.length > 0 && <RelatedPosts posts={relatedPosts} />}
-    </div>
+      {post.faqItems && post.faqItems.length > 0 && (
+        <FAQSchema faqItems={post.faqItems} />
+      )}
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col lg:flex-row lg:space-x-8">
+          <article className="lg:w-2/3">
+            {post.featuredImage && (
+              <Image
+                src={post.featuredImage.node.sourceUrl}
+                alt={post.featuredImage.node.altText || post.title}
+                width={1200}
+                height={630}
+                className="w-full h-auto object-cover rounded-lg mb-8"
+                priority
+              />
+            )}
+            <PostHeader
+              title={post.title}
+              author={post.author.node}
+              date={post.date}
+              category={post.categories.nodes[0]}
+            />
+            <div 
+              className="prose max-w-none mt-8"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+            {post.faqItems && post.faqItems.length > 0 && (
+              <FAQ faqItems={post.faqItems} />
+            )}
+            <AuthorBox authorName={post.author.node.name} />
+            {post.comments && <CommentList comments={post.comments.nodes} />}
+            <CommentForm postId={post.id} />
+          </article>
+          <aside className="lg:w-1/3 mt-8 lg:mt-0">
+            <TableOfContents content={post.content} />
+          </aside>
+        </div>
+        <SocialSharePanel 
+          url={postUrl}
+          title={post.title}
+          description={post.excerpt || ''}
+          imageUrl={imageUrl}
+        />
+        {relatedPosts.length > 0 && <RelatedPosts posts={relatedPosts} />}
+      </div>
+    </>
   );
 }

@@ -70,7 +70,11 @@ export default async function PostPage({ params }: { params: { slug: string } })
   const postUrl = `https://dailyfornex.com/${post.slug}`;
   const imageUrl = post.featuredImage?.node.sourceUrl || 'https://dailyfornex.com/default-og-image.jpg';
 
-  const relatedPosts = await getRelatedPosts(post.categories.nodes[0].id, post.id);
+  let relatedPosts: Post[] = [];
+  if (post.categories.nodes.length > 0) {
+    const categoryId = post.categories.nodes[0].id;
+    relatedPosts = await getRelatedPosts(categoryId, post.id);
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -110,7 +114,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
         description={post.excerpt || ''}
         imageUrl={imageUrl}
       />
-      <RelatedPosts posts={relatedPosts} />
+      {relatedPosts.length > 0 && <RelatedPosts posts={relatedPosts} />}
     </div>
   );
 }

@@ -37,6 +37,7 @@ const TeamMember: React.FC<TeamMemberProps> = ({ name, role, image, description 
         alt={name}
         fill
         className="object-cover"
+        style={{ border: 'none', outline: 'none' }}
       />
     </div>
     <div className="p-6">

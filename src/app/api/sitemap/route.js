@@ -22,7 +22,7 @@ async function fetchAllPosts() {
   return data.posts.nodes
 }
 
-function generateSitemapXml(posts: any[]) {
+function generateSitemapXml(posts) {
   const urlSet = posts.map(post => `
     <url>
       <loc>${SITE_URL}/${post.slug}</loc>

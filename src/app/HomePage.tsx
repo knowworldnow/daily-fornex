@@ -21,7 +21,7 @@ const PostCard = ({ post }: { post: Post }) => (
     </Link>
     <div className="flex items-center mb-2">
       {post.categories?.nodes[0] && (
-        <Link href={`/${post.categories.nodes[0].slug}`} className="text-blue-600 text-sm font-semibold mr-4">
+        <Link href={`/category/${post.categories.nodes[0].slug}`} className="text-blue-600 text-sm font-semibold mr-4">
           {post.categories.nodes[0].name}
         </Link>
       )}

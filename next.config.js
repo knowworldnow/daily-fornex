@@ -34,6 +34,10 @@ const nextConfig = {
         source: '/:slug',
         destination: '/post/:slug',
       },
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap',
+      },
     ];
   },
 };

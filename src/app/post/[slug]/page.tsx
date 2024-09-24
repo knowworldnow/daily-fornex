@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getPostBySlug, getAllPosts } from '../../../lib/faust-api';
+import { getPostBySlug, getAllPosts, getRelatedPosts } from '../../../lib/faust-api';
 import { Post } from '../../../types';
 import CommentForm from '../../../components/CommentForm';
 import CommentList from '../../../components/CommentList';
@@ -9,6 +9,7 @@ import PostHeader from '../../../components/PostHeader';
 import TableOfContents from '../../../components/TableOfContents';
 import SocialSharePanel from '../../../components/SocialSharePanel';
 import AuthorBox from '../../../components/AuthorBox';
+import RelatedPosts from '../../../components/RelatedPosts';
 
 export const revalidate = 3600; // Revalidate this page every hour
 
@@ -69,6 +70,8 @@ export default async function PostPage({ params }: { params: { slug: string } })
   const postUrl = `https://dailyfornex.com/${post.slug}`;
   const imageUrl = post.featuredImage?.node.sourceUrl || 'https://dailyfornex.com/default-og-image.jpg';
 
+  const relatedPosts = await getRelatedPosts(post.categories.nodes[0].id, post.id);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col lg:flex-row lg:space-x-8">
@@ -107,6 +110,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
         description={post.excerpt || ''}
         imageUrl={imageUrl}
       />
+      <RelatedPosts posts={relatedPosts} />
     </div>
   );
 }

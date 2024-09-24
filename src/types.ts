@@ -1,3 +1,8 @@
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 export interface Post {
   id: string;
   title: string;
@@ -25,6 +30,7 @@ export interface Post {
   comments?: {
     nodes: Comment[];
   };
+  faqItems?: FAQItem[];
 }
 
 export interface Category {

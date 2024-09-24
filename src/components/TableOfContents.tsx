@@ -46,6 +46,15 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
+  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setActiveId(id);
+    }
+  }, []);
+
   return (
     <nav className="sticky top-8 hidden lg:block max-h-[calc(100vh-4rem)] overflow-auto">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
@@ -62,13 +71,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                 className={`block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 ${
                   activeId === item.id ? 'text-blue-600 dark:text-blue-400' : ''
                 }`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const element = document.getElementById(item.id);
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
+                onClick={(e) => handleClick(e, item.id)}
               >
                 {item.text}
               </a>

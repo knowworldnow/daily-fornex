@@ -7,6 +7,12 @@ interface RelatedPostsProps {
 }
 
 export default function RelatedPosts({ posts }: RelatedPostsProps) {
+  console.log('Rendering RelatedPosts component with:', posts);
+
+  if (posts.length === 0) {
+    return null;
+  }
+
   return (
     <section className="mt-12">
       <h2 className="text-2xl font-bold mb-6">Related Posts</h2>

@@ -9,36 +9,25 @@ const POSTS_PER_PAGE = 20;
 function PostCard({ post }: { post: Post }) {
   return (
     <article className="mb-8">
-      <Link href={`/post/${post.slug}`}>
+      <Link href={`/${post.slug}`}>
         <Image
-          src={post.featuredImage?.node.sourceUrl || '/placeholder.jpg'}
+          src={post.featuredImage?.node.sourceUrl || '/placeholder.svg'}
           alt={post.featuredImage?.node.altText || post.title}
           width={600}
           height={400}
           className="w-full h-auto object-cover rounded-lg mb-4"
-          placeholder="blur"
-          blurDataURL="/placeholder-blur.jpg"
         />
       </Link>
       <div className="flex items-center mb-2">
-        {post.categories.nodes[0] && (
-          <Link href={`/${post.categories.nodes[0].slug}`} className="text-blue-600 text-sm font-semibold mr-4">
+        {post.categories?.nodes[0] && (
+          <Link href={`/category/${post.categories.nodes[0].slug}`} className="text-blue-600 text-sm font-semibold mr-4">
             {post.categories.nodes[0].name}
           </Link>
-        )}
-        {post.author?.node.avatar && (
-          <Image
-            src={post.author.node.avatar.url}
-            alt={post.author.node.name}
-            width={24}
-            height={24}
-            className="rounded-full mr-2"
-          />
         )}
         <span className="text-sm text-gray-600">{post.author?.node.name}</span>
       </div>
       <h2 className="text-xl font-bold mb-2">
-        <Link href={`/post/${post.slug}`} className="hover:underline">
+        <Link href={`/${post.slug}`} className="hover:underline">
           {post.title}
         </Link>
       </h2>
@@ -55,7 +44,7 @@ function Pagination({ currentPage, totalPages, baseUrl }: { currentPage: number;
           key={pageNum}
           href={`${baseUrl}?page=${pageNum}`}
           className={`mx-1 px-3 py-2 rounded ${
-            pageNum === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'
+            pageNum === currentPage ? 'bg-primary text-primary-foreground' : 'bg-gray-200 hover:bg-gray-300'
           }`}
         >
           {pageNum}
@@ -98,7 +87,7 @@ export default async function CategoryPage({ params, searchParams }: { params: {
         ))}
       </div>
       {totalPages > 1 && (
-        <Pagination currentPage={page} totalPages={totalPages} baseUrl={`/${categorySlug}`} />
+        <Pagination currentPage={page} totalPages={totalPages} baseUrl={`/category/${categorySlug}`} />
       )}
     </div>
   );

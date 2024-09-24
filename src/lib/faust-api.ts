@@ -348,3 +348,36 @@ export async function getAllPages(): Promise<Page[]> {
 
   return data.pages.nodes;
 }
+
+export async function getRelatedPosts(categoryId: string, currentPostId: string, first: number = 4): Promise<Post[]> {
+  const { data } = await client.query<{ posts: { nodes: Post[] } }>({
+    query: gql`
+      query GetRelatedPosts($categoryId: ID!, $currentPostId: ID!, $first: Int!) {
+        posts(
+          first: $first,
+          where: { categoryId: $categoryId, notIn: [$currentPostId] }
+        ) {
+          nodes {
+            id
+            title
+            slug
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+              }
+            }
+            author {
+              node {
+                name
+              }
+            }
+          }
+        }
+      }
+    `,
+    variables: { categoryId, currentPostId, first },
+  });
+
+  return data.posts.nodes;
+}

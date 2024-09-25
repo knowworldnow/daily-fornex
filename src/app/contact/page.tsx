@@ -42,7 +42,7 @@ export default function ContactPage() {
     <div className="container mx-auto px-4 py-12">
       <h1 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white">Contact Us</h1>
       
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+      <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
         <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
           We&apos;d love to hear from you! If you have any questions about forex news, financial updates, or market analysis, please don&apos;t hesitate to reach out to us.
         </p>
@@ -62,7 +62,7 @@ export default function ContactPage() {
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             Follow us and reach out on our social media platforms for the latest forex news and financial insights:
           </p>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap justify-between gap-2">
             {socialLinks.map((link) => (
               <Link
                 key={link.name}

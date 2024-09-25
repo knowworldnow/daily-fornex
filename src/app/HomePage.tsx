@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { getLatestPosts } from '../lib/faust-api';
 import { Post, GetAllPostsResult } from '../types';
 
-const POSTS_PER_PAGE = 21; // Changed to 21 to have a multiple of 3
+const POSTS_PER_PAGE = 24; 
 
 const PostCard = ({ post }: { post: Post }) => (
   <article className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -97,7 +97,7 @@ export default function HomePage({ initialPosts, initialPageInfo }: HomePageProp
           <button
             onClick={loadMorePosts}
             disabled={loading}
-            className="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary-dark transition-colors duration-200 disabled:opacity-50"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Loading...' : 'Load More'}
           </button>

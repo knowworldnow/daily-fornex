@@ -28,7 +28,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
     setToc(tocItems);
   }, [content]);
 
-  const handleScroll = useCallback(debounce(() => {
+  const handleScroll = useCallback(() => {
     const headings = document.querySelectorAll('h2, h3, h4, h5, h6');
     const scrollPosition = window.scrollY;
 
@@ -39,21 +39,13 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
         break;
       }
     }
-  }, 100), []);
+  }, []);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const debouncedHandleScroll = debounce(handleScroll, 100);
+    window.addEventListener('scroll', debouncedHandleScroll);
+    return () => window.removeEventListener('scroll', debouncedHandleScroll);
   }, [handleScroll]);
-
-  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setActiveId(id);
-    }
-  }, []);
 
   return (
     <nav className="sticky top-8 hidden lg:block max-h-[calc(100vh-4rem)] overflow-auto">
@@ -71,7 +63,13 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                 className={`block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 ${
                   activeId === item.id ? 'text-blue-600 dark:text-blue-400' : ''
                 }`}
-                onClick={(e) => handleClick(e, item.id)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const element = document.getElementById(item.id);
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
               >
                 {item.text}
               </a>

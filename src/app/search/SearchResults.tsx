@@ -57,12 +57,12 @@ export default function SearchResults() {
           {results.map((post) => (
             <article key={post.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <Link href={`/${post.slug}`} className="block">
-                <div className="relative h-48 w-full">
+                <div className="relative aspect-[3/2] w-full overflow-hidden">
                   <Image
                     src={post.featuredImage?.node.sourceUrl || '/placeholder.jpg'}
                     alt={post.featuredImage?.node.altText || post.title}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-transform duration-300 hover:scale-105"
                   />
                 </div>
                 <div className="p-6">

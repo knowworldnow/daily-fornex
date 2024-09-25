@@ -4,48 +4,56 @@ import { notFound } from 'next/navigation';
 import { getPostsByCategory, getCategoryBySlug } from '../../../lib/faust-api';
 import { Post, Category } from '../../../types';
 
-const POSTS_PER_PAGE = 20;
+const POSTS_PER_PAGE = 24; // Updated to 24 posts per page
 
 function PostCard({ post }: { post: Post }) {
   return (
-    <article className="mb-8">
-      <Link href={`/${post.slug}`}>
-        <Image
-          src={post.featuredImage?.node.sourceUrl || '/placeholder.svg'}
-          alt={post.featuredImage?.node.altText || post.title}
-          width={600}
-          height={400}
-          className="w-full h-auto object-cover rounded-lg mb-4"
-        />
+    <article className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      <Link href={`/${post.slug}`} className="block">
+        <div className="relative aspect-[3/2] w-full overflow-hidden">
+          <Image
+            src={post.featuredImage?.node.sourceUrl || '/placeholder.svg'}
+            alt={post.featuredImage?.node.altText || post.title}
+            fill
+            className="object-cover transition-transform duration-300 hover:scale-105"
+          />
+        </div>
+        <div className="p-6">
+          <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white hover:text-primary transition-colors duration-200">
+            {post.title}
+          </h2>
+          {post.excerpt && (
+            <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3" dangerouslySetInnerHTML={{ __html: post.excerpt }} />
+          )}
+          <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+            <span>{post.author?.node.name}</span>
+            <div className="flex items-center">
+              <span className="mr-4">{new Date(post.date).toLocaleDateString()}</span>
+              {post.categories?.nodes[0] && (
+                <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs">
+                  {post.categories.nodes[0].name}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
       </Link>
-      <div className="flex items-center mb-2">
-        {post.categories?.nodes[0] && (
-          <Link href={`/category/${post.categories.nodes[0].slug}`} className="text-blue-600 text-sm font-semibold mr-4">
-            {post.categories.nodes[0].name}
-          </Link>
-        )}
-        <span className="text-sm text-gray-600">{post.author?.node.name}</span>
-      </div>
-      <h2 className="text-xl font-bold mb-2">
-        <Link href={`/${post.slug}`} className="hover:underline">
-          {post.title}
-        </Link>
-      </h2>
-      <time className="text-sm text-gray-600">{new Date(post.date).toLocaleDateString()}</time>
     </article>
   );
 }
 
 function Pagination({ currentPage, totalPages, baseUrl }: { currentPage: number; totalPages: number; baseUrl: string }) {
   return (
-    <div className="flex justify-center mt-8">
+    <div className="flex justify-center mt-8 space-x-2">
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
         <Link
           key={pageNum}
           href={`${baseUrl}?page=${pageNum}`}
-          className={`mx-1 px-3 py-2 rounded ${
-            pageNum === currentPage ? 'bg-primary text-primary-foreground' : 'bg-gray-200 hover:bg-gray-300'
-          }`}
+          className={`px-4 py-2 rounded-full ${
+            pageNum === currentPage 
+              ? 'bg-primary text-white' 
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
+          } transition-colors duration-200`}
         >
           {pageNum}
         </Link>
@@ -71,17 +79,17 @@ export default async function CategoryPage({ params, searchParams }: { params: {
 
   if (posts.length === 0 && page === 1) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <h2 className="text-3xl font-bold text-center mb-8 capitalize">{category.name}</h2>
-        <p className="text-center">No posts found in this category.</p>
+      <div className="container mx-auto px-4 py-12">
+        <h1 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white capitalize">{category.name}</h1>
+        <p className="text-center text-gray-600 dark:text-gray-300">No posts found in this category.</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold text-center mb-8 capitalize">{category.name}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="container mx-auto px-4 py-12">
+      <h1 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white capitalize">{category.name}</h1>
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {posts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
@@ -105,6 +113,18 @@ export async function generateMetadata({ params }: { params: { category: string 
 
   return {
     title: `${category.name} - Daily Fornex`,
-    description: `Latest posts in the ${category.name} category on Daily Fornex`,
+    description: `Explore the latest posts in the ${category.name} category on Daily Fornex. Stay informed with our curated content on forex news, financial updates, and market analysis.`,
+    openGraph: {
+      title: `${category.name} - Daily Fornex`,
+      description: `Discover articles in the ${category.name} category on Daily Fornex. Get insights on forex news, financial trends, and market analysis.`,
+      url: `https://dailyfornex.com/category/${categorySlug}`,
+      siteName: 'Daily Fornex',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${category.name} - Daily Fornex`,
+      description: `Explore ${category.name} articles on Daily Fornex for the latest in forex news and financial insights.`,
+    },
   };
 }

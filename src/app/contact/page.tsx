@@ -44,7 +44,7 @@ export default function ContactPage() {
       
       <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
         <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-          We'd love to hear from you! If you have any questions about forex news, financial updates, or market analysis, please don't hesitate to reach out to us.
+          We&apos;d love to hear from you! If you have any questions about forex news, financial updates, or market analysis, please don&apos;t hesitate to reach out to us.
         </p>
         
         <div className="mb-8">

@@ -72,11 +72,13 @@ export default function SearchResults() {
                   {post.excerpt && (
                     <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3" dangerouslySetInnerHTML={{ __html: post.excerpt }} />
                   )}
-                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                    <span className="mr-4">{new Date(post.date).toLocaleDateString()}</span>
-                    <span className="mr-4">{post.author.node.name}</span>
+                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                    <div>
+                      <span className="mr-4">{new Date(post.date).toLocaleDateString()}</span>
+                      <span>{post.author.node.name}</span>
+                    </div>
                     {post.categories?.nodes[0] && (
-                      <span className="bg-primary text-white dark:text-gray-800 px-2 py-1 rounded-full text-xs">
+                      <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs">
                         {post.categories.nodes[0].name}
                       </span>
                     )}

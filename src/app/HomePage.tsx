@@ -6,42 +6,50 @@ import Link from 'next/link';
 import { getLatestPosts } from '../lib/faust-api';
 import { Post, GetAllPostsResult } from '../types';
 
-const POSTS_PER_PAGE = 20;
+const POSTS_PER_PAGE = 21; // Changed to 21 to have a multiple of 3
 
 const PostCard = ({ post }: { post: Post }) => (
-  <article className="mb-8">
-    <Link href={`/${post.slug}`}>
-      <Image
-        src={post.featuredImage?.node.sourceUrl || '/placeholder.svg'}
-        alt={post.featuredImage?.node.altText || post.title}
-        width={600}
-        height={400}
-        className="w-full h-auto object-cover rounded-lg mb-4"
-      />
-    </Link>
-    <div className="flex items-center mb-2">
-      {post.categories?.nodes[0] && (
-        <Link href={`/category/${post.categories.nodes[0].slug}`} className="text-blue-600 text-sm font-semibold mr-4">
-          {post.categories.nodes[0].name}
-        </Link>
-      )}
-      {post.author?.node.avatar && (
+  <article className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    <Link href={`/${post.slug}`} className="block">
+      <div className="relative aspect-[3/2] w-full overflow-hidden">
         <Image
-          src={post.author.node.avatar.url}
-          alt={post.author.node.name}
-          width={24}
-          height={24}
-          className="rounded-full mr-2"
+          src={post.featuredImage?.node.sourceUrl || '/placeholder.svg'}
+          alt={post.featuredImage?.node.altText || post.title}
+          fill
+          className="object-cover transition-transform duration-300 hover:scale-105"
         />
-      )}
-      <span className="text-sm text-gray-600">{post.author?.node.name}</span>
-    </div>
-    <h2 className="text-xl font-bold mb-2">
-      <Link href={`/${post.slug}`} className="hover:underline">
-        {post.title}
-      </Link>
-    </h2>
-    <time className="text-sm text-gray-600">{new Date(post.date).toLocaleDateString()}</time>
+      </div>
+      <div className="p-6">
+        <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white hover:text-primary transition-colors duration-200">
+          {post.title}
+        </h2>
+        {post.excerpt && (
+          <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3" dangerouslySetInnerHTML={{ __html: post.excerpt }} />
+        )}
+        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center">
+            {post.author?.node.avatar && (
+              <Image
+                src={post.author.node.avatar.url}
+                alt={post.author.node.name}
+                width={24}
+                height={24}
+                className="rounded-full mr-2"
+              />
+            )}
+            <span>{post.author?.node.name}</span>
+          </div>
+          <div className="flex items-center">
+            <span className="mr-4">{new Date(post.date).toLocaleDateString()}</span>
+            {post.categories?.nodes[0] && (
+              <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs">
+                {post.categories.nodes[0].name}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
   </article>
 );
 
@@ -78,8 +86,8 @@ export default function HomePage({ initialPosts, initialPageInfo }: HomePageProp
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Latest and Hottest</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <h1 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white">Latest and Hottest</h1>
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
@@ -89,7 +97,7 @@ export default function HomePage({ initialPosts, initialPageInfo }: HomePageProp
           <button
             onClick={loadMorePosts}
             disabled={loading}
-            className="bg-primary text-primary-foreground px-6 py-2 rounded hover:bg-primary/90 disabled:opacity-50"
+            className="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary-dark transition-colors duration-200 disabled:opacity-50"
           >
             {loading ? 'Loading...' : 'Load More'}
           </button>

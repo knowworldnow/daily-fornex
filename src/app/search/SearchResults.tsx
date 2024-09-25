@@ -76,7 +76,7 @@ export default function SearchResults() {
                     <span className="mr-4">{new Date(post.date).toLocaleDateString()}</span>
                     <span className="mr-4">{post.author.node.name}</span>
                     {post.categories?.nodes[0] && (
-                      <span className="bg-primary text-white px-2 py-1 rounded-full text-xs">
+                      <span className="bg-primary text-white dark:text-gray-800 px-2 py-1 rounded-full text-xs">
                         {post.categories.nodes[0].name}
                       </span>
                     )}

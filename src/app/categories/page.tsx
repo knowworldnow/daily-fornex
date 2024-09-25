@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { getLatestPosts, getAllCategories } from '../../lib/faust-api';
 import { Category, GetAllPostsResult } from '../../types';
@@ -19,27 +18,39 @@ export default async function CategoriesPage() {
   const sortedCategories = [...categories].sort((a, b) => b.count - a.count);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8">Categories</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {sortedCategories.map((category) => (
-          <Link href={`/category/${category.slug}`} key={category.id} className="block">
-            <div className="rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
-              <div className="relative w-full h-48">
-                <Image
-                  src={category.image?.sourceUrl || '/placeholder-category.webp'}
-                  alt={category.name}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                />
-              </div>
-              <div className="p-4 bg-primary">
-                <h2 className="text-xl font-semibold text-primary-foreground">{category.name}</h2>
-                <p className="text-primary-foreground">{category.count} Articles</p>
-                {category.description && (
-                  <p className="text-sm text-primary-foreground mt-2">{category.description}</p>
-                )}
+    <div className="container mx-auto px-4 py-12">
+      <h1 className="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-white">Explore Our Categories</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {sortedCategories.map((category, index) => (
+          <Link href={`/category/${category.slug}`} key={category.id} className="block group">
+            <div className={`p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl 
+              ${index % 3 === 0 ? 'bg-blue-100 dark:bg-blue-900' : 
+                index % 3 === 1 ? 'bg-green-100 dark:bg-green-900' : 
+                'bg-purple-100 dark:bg-purple-900'}`}>
+              <h2 className="text-2xl font-semibold mb-3 text-gray-800 dark:text-white group-hover:text-primary transition-colors duration-200">
+                {category.name}
+              </h2>
+              <p className="text-lg font-medium text-gray-600 dark:text-gray-300 mb-2">
+                {category.count} {category.count === 1 ? 'Article' : 'Articles'}
+              </p>
+              {category.description && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">
+                  {category.description}
+                </p>
+              )}
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  Explore Category
+                </span>
+                <svg 
+                  className="w-6 h-6 text-gray-400 group-hover:text-primary transition-colors duration-200" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24" 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </div>
             </div>
           </Link>

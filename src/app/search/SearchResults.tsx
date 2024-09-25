@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { searchPosts } from '../../lib/faust-api';
 import { Post } from '../../types';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function SearchResults() {
   const searchParams = useSearchParams();
@@ -36,32 +37,56 @@ export default function SearchResults() {
   }, [query]);
 
   if (isLoading) {
-    return <div className="text-center py-4">Loading...</div>;
+    return <div className="text-center py-8 text-xl">Loading...</div>;
   }
 
   if (error) {
-    return <div className="text-center py-4 text-red-500">{error}</div>;
-  }
-
-  if (results.length === 0 && query) {
-    return <div className="text-center py-4">No results found for &quot;{query}&quot;</div>;
+    return <div className="text-center py-8 text-xl text-red-500">{error}</div>;
   }
 
   return (
-    <div className="space-y-4">
-      {results.map((post) => (
-        <div key={post.id} className="border p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-          <Link href={`/post/${post.slug}`} className="block">
-            <h2 className="text-xl font-semibold mb-2 text-blue-600 hover:text-blue-800">{post.title}</h2>
-            {post.excerpt && (
-              <p className="text-gray-600" dangerouslySetInnerHTML={{ __html: post.excerpt }} />
-            )}
-            <div className="mt-2 text-sm text-gray-500">
-              {new Date(post.date).toLocaleDateString()} | {post.author.node.name}
-            </div>
-          </Link>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-center mb-8">
+        Search Results: {query ? `"${query}"` : 'No Query'}
+      </h1>
+
+      {results.length === 0 && query ? (
+        <div className="text-center py-8 text-xl">No results found for &quot;{query}&quot;</div>
+      ) : (
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {results.map((post) => (
+            <article key={post.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+              <Link href={`/${post.slug}`} className="block">
+                <div className="relative h-48 w-full">
+                  <Image
+                    src={post.featuredImage?.node.sourceUrl || '/placeholder.jpg'}
+                    alt={post.featuredImage?.node.altText || post.title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white hover:text-primary transition-colors duration-200">
+                    {post.title}
+                  </h2>
+                  {post.excerpt && (
+                    <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3" dangerouslySetInnerHTML={{ __html: post.excerpt }} />
+                  )}
+                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <span className="mr-4">{new Date(post.date).toLocaleDateString()}</span>
+                    <span className="mr-4">{post.author.node.name}</span>
+                    {post.categories?.nodes[0] && (
+                      <span className="bg-primary text-white px-2 py-1 rounded-full text-xs">
+                        {post.categories.nodes[0].name}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            </article>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }

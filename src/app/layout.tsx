@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   description: "Your source for forex news and analysis",
   icons: {
     icon: '/favicon.ico',
+    apple: '/apple-icon.png',
   },
   openGraph: {
     type: 'website',
@@ -51,6 +52,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" dir={process.env.NEXT_PUBLIC_SITE_DIRECTION || 'ltr'} suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen no-vertical-space`}
       >

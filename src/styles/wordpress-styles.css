@@ -13,17 +13,22 @@
 
 /* Gutenberg block styles */
 .wp-block-quote {
-  border-left-color: #4a5568;
+  border-left: 4px solid #4a5568;
+  margin-left: 0;
+  padding-left: 1em;
+  font-style: italic;
+  color: #4a5568;
 }
 
 .wp-block-pullquote {
-  border-top-color: #4a5568;
-  border-bottom-color: #4a5568;
-}
-
-.wp-block-image img {
-  max-width: 100%;
-  height: auto;
+  border-top: 4px solid #4a5568;
+  border-bottom: 4px solid #4a5568;
+  margin: 2em 0;
+  padding: 1em 0;
+  text-align: center;
+  font-style: italic;
+  font-size: 1.25em;
+  color: #4a5568;
 }
 
 .wp-block-table {
@@ -33,6 +38,7 @@
 .wp-block-table table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 1em;
 }
 
 .wp-block-table td,
@@ -53,8 +59,19 @@
   color: white;
 }
 
+.wp-block-image img {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
+  .wp-block-quote,
+  .wp-block-pullquote {
+    color: #a0aec0;
+    border-color: #718096;
+  }
+
   .wp-block-table td,
   .wp-block-table th {
     border-color: #4a5568;

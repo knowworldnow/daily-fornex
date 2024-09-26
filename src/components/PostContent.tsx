@@ -1,4 +1,5 @@
 import React from 'react';
+import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from './Table';
 
 interface PostContentProps {
   content: string;
@@ -10,7 +11,33 @@ export function PostContent({ content }: PostContentProps) {
     content = content.replace(
       /<table[^>]*>([\s\S]*?)<\/table>/g,
       (_, tableContent) => {
-        return `<div class="wp-block-table">${tableContent}</div>`;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(tableContent, 'text/html');
+        const rows = doc.querySelectorAll('tr');
+        let tableJsx = '<Table>';
+
+        rows.forEach((row, rowIndex) => {
+          const cells = row.querySelectorAll('th, td');
+          let rowJsx = rowIndex === 0 ? '<TableHead><TableRow>' : '<TableRow>';
+
+          cells.forEach((cell) => {
+            const cellContent = cell.innerHTML;
+            if (cell.tagName.toLowerCase() === 'th') {
+              rowJsx += `<TableHeader>${cellContent}</TableHeader>`;
+            } else {
+              rowJsx += `<TableCell>${cellContent}</TableCell>`;
+            }
+          });
+
+          rowJsx += '</TableRow>';
+          if (rowIndex === 0) rowJsx += '</TableHead>';
+          
+          if (rowIndex === 1) tableJsx += '<TableBody>';
+          tableJsx += rowJsx;
+        });
+
+        tableJsx += '</TableBody></Table>';
+        return tableJsx;
       }
     );
 

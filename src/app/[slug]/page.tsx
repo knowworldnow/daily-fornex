@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import SEO from '../../components/Seo';
+import { PostContent } from '../../components/PostContent';
 import { getPageBySlug } from '../../lib/faust-api';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const ogImageUrl = page.featuredImage?.node.sourceUrl || 'https://dailyfornex.com/default-og-image.jpg';
 
   return {
-    title: `${page.title} | Daily Fornex`,
+    title: page.title,
     description: page.excerpt || '',
     openGraph: {
       type: 'website',
@@ -30,7 +31,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
           alt: page.title,
         },
       ],
-      siteName: 'Daily Fornex',
     },
   };
 }
@@ -45,17 +45,16 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <>
       <SEO 
-        title={`${page.title} | Daily Fornex`}
+        title={page.title}
         description={page.excerpt || ''}
         canonicalUrl={`https://dailyfornex.com/${page.slug}`}
         ogType="website"
         ogImage={page.featuredImage?.node.sourceUrl || 'https://dailyfornex.com/default-og-image.jpg'}
         ogImageAlt={page.title}
-        siteName="Daily Fornex"
       />
       <article className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-6">{page.title}</h1>
-        <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: page.content }} />
+        <PostContent content={page.content} />
       </article>
     </>
   );

@@ -1,62 +1,49 @@
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import SEO from '../../components/Seo';
-import { PostContent } from '../../components/PostContent';
-import { getPageBySlug } from '../../lib/faust-api';
+import React from 'react';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const page = await getPageBySlug(params.slug);
-  
-  if (!page) {
-    return {
-      title: 'Page Not Found',
-    };
-  }
-
-  const ogImageUrl = page.featuredImage?.node.sourceUrl || 'https://dailyfornex.com/default-og-image.jpg';
-
-  return {
-    title: page.title,
-    description: page.excerpt || '',
-    openGraph: {
-      type: 'website',
-      url: `https://dailyfornex.com/${page.slug}`,
-      title: page.title,
-      description: page.excerpt || '',
-      images: [
-        {
-          url: ogImageUrl,
-          width: 1200,
-          height: 630,
-          alt: page.title,
-        },
-      ],
-    },
-  };
+interface PostContentProps {
+  content: string;
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const page = await getPageBySlug(params.slug);
+export function PostContent({ content }: PostContentProps) {
+  const processContent = (content: string): string => {
+    // Process tables
+    content = content.replace(
+      /<table[^>]*>([\s\S]*?)<\/table>/g,
+      (_, tableContent) => {
+        return `<div class="wp-block-table">${tableContent}</div>`;
+      }
+    );
 
-  if (!page) {
-    notFound();
-  }
+    // Process quotes
+    content = content.replace(
+      /<blockquote[^>]*>([\s\S]*?)<\/blockquote>/g,
+      (_, quoteContent) => `<blockquote class="wp-block-quote">${quoteContent}</blockquote>`
+    );
+
+    // Process pull quotes
+    content = content.replace(
+      /<p[^>]*class="[^"]*wp-block-pullquote[^"]*"[^>]*>([\s\S]*?)<\/p>/g,
+      (_, pullQuoteContent) => `<aside class="wp-block-pullquote">${pullQuoteContent}</aside>`
+    );
+
+    // Process alignments and other custom styles
+    content = content.replace(
+      /<([a-z]+)\s+class="([^"]*)"[^>]*>([\s\S]*?)<\/\1>/g,
+      (_, tag: string, classes: string, innerContent: string) => {
+        const processedClasses = classes.split(' ').map((cls: string) => `wp-${cls}`).join(' ');
+        return `<${tag} class="${processedClasses}">${innerContent}</${tag}>`;
+      }
+    );
+
+    return content;
+  };
+
+  const processedContent = processContent(content);
 
   return (
-    <>
-      <SEO 
-        title={page.title}
-        description={page.excerpt || ''}
-        canonicalUrl={`https://dailyfornex.com/${page.slug}`}
-        ogType="website"
-        ogImage={page.featuredImage?.node.sourceUrl || 'https://dailyfornex.com/default-og-image.jpg'}
-        ogImageAlt={page.title}
-        siteName="Daily Fornex"
-      />
-      <article className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-6">{page.title}</h1>
-        <PostContent content={page.content} />
-      </article>
-    </>
+    <div 
+      className="prose prose-lg dark:prose-invert max-w-none wp-content"
+      dangerouslySetInnerHTML={{ __html: processedContent }}
+    />
   );
 }

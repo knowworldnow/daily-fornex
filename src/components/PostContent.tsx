@@ -5,7 +5,7 @@ interface PostContentProps {
 }
 
 export function PostContent({ content }: PostContentProps) {
-  const processContent = (content: string) => {
+  const processContent = (content: string): string => {
     // Process tables
     content = content.replace(
       /<table[^>]*>([\s\S]*?)<\/table>/g,
@@ -29,8 +29,8 @@ export function PostContent({ content }: PostContentProps) {
     // Process alignments and other custom styles
     content = content.replace(
       /<([a-z]+)\s+class="([^"]*)"[^>]*>([\s\S]*?)<\/\1>/g,
-      (_, tag, classes, innerContent) => {
-        const processedClasses = classes.split(' ').map(cls => `wp-${cls}`).join(' ');
+      (_, tag: string, classes: string, innerContent: string) => {
+        const processedClasses = classes.split(' ').map((cls: string) => `wp-${cls}`).join(' ');
         return `<${tag} class="${processedClasses}">${innerContent}</${tag}>`;
       }
     );

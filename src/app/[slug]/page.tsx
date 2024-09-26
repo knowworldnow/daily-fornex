@@ -51,6 +51,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         ogType="website"
         ogImage={page.featuredImage?.node.sourceUrl || 'https://dailyfornex.com/default-og-image.jpg'}
         ogImageAlt={page.title}
+        siteName="Daily Fornex"
       />
       <article className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-6">{page.title}</h1>

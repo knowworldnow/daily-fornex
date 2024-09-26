@@ -1,7 +1,4 @@
 import React from 'react';
-import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from './Table';
-import { Quote } from './Quote';
-import { PullQuote } from './PullQuote';
 
 interface PostContentProps {
   content: string;
@@ -13,27 +10,20 @@ export function PostContent({ content }: PostContentProps) {
     content = content.replace(
       /<table[^>]*>([\s\S]*?)<\/table>/g,
       (_, tableContent) => {
-        const processedTable = tableContent
-          .replace(/<thead>([\s\S]*?)<\/thead>/g, (_, headContent) => `<TableHead>${headContent}</TableHead>`)
-          .replace(/<tbody>([\s\S]*?)<\/tbody>/g, (_, bodyContent) => `<TableBody>${bodyContent}</TableBody>`)
-          .replace(/<tr[^>]*>([\s\S]*?)<\/tr>/g, (_, rowContent) => `<TableRow>${rowContent}</TableRow>`)
-          .replace(/<th[^>]*>([\s\S]*?)<\/th>/g, (_, headerContent) => `<TableHeader>${headerContent}</TableHeader>`)
-          .replace(/<td[^>]*>([\s\S]*?)<\/td>/g, (_, cellContent) => `<TableCell>${cellContent}</TableCell>`);
-        
-        return `<Table>${processedTable}</Table>`;
+        return `<div class="wp-block-table">${tableContent}</div>`;
       }
     );
 
     // Process quotes
     content = content.replace(
       /<blockquote[^>]*>([\s\S]*?)<\/blockquote>/g,
-      (_, quoteContent) => `<Quote>${quoteContent}</Quote>`
+      (_, quoteContent) => `<blockquote class="wp-block-quote">${quoteContent}</blockquote>`
     );
 
     // Process pull quotes
     content = content.replace(
       /<p[^>]*class="[^"]*wp-block-pullquote[^"]*"[^>]*>([\s\S]*?)<\/p>/g,
-      (_, pullQuoteContent) => `<PullQuote>${pullQuoteContent}</PullQuote>`
+      (_, pullQuoteContent) => `<aside class="wp-block-pullquote">${pullQuoteContent}</aside>`
     );
 
     // Process alignments and other custom styles

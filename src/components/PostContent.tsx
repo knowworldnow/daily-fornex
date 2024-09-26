@@ -34,14 +34,25 @@ export function PostContent({ content }: PostContentProps) {
             return <TableCell>{children}</TableCell>;
           case 'blockquote':
             return <blockquote className="wp-block-quote">{children}</blockquote>;
-          default:
-            if (element.classList.contains('wp-block-pullquote')) {
-              return <aside className="wp-block-pullquote">{children}</aside>;
+          case 'ul':
+            if (!element.className) {
+              return <ul className="wp-block-list">{children}</ul>;
             }
-            const Tag = element.tagName.toLowerCase() as keyof JSX.IntrinsicElements;
-            const classes = Array.from(element.classList).map(cls => `wp-${cls}`).join(' ');
-            return React.createElement(Tag, { className: classes }, children);
+            break;
+          case 'ol':
+            if (!element.className) {
+              return <ol className="wp-block-list">{children}</ol>;
+            }
+            break;
         }
+
+        if (element.classList.contains('wp-block-pullquote')) {
+          return <aside className="wp-block-pullquote">{children}</aside>;
+        }
+
+        const Tag = element.tagName.toLowerCase() as keyof JSX.IntrinsicElements;
+        const classes = Array.from(element.classList).map(cls => `wp-${cls}`).join(' ');
+        return React.createElement(Tag, { className: classes || undefined }, children);
       }
 
       return null;

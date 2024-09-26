@@ -1,3 +1,41 @@
+/* WordPress Core Styles */
+.wp-align-left {
+  text-align: left;
+}
+
+.wp-align-center {
+  text-align: center;
+}
+
+.wp-align-right {
+  text-align: right;
+}
+
+/* Gutenberg block styles */
+.wp-block-quote {
+  border-left: 4px solid #4a5568;
+  margin-left: 0;
+  padding-left: 1em;
+  font-style: italic;
+  color: #4a5568;
+}
+
+.wp-block-pullquote {
+  border-top: 4px solid #4a5568;
+  border-bottom: 4px solid #4a5568;
+  margin: 2em 0;
+  padding: 1em 0;
+  text-align: center;
+  font-style: italic;
+  font-size: 1.25em;
+  color: #4a5568;
+}
+
+.wp-block-image img {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Table styles */
 .wp-block-table {
   width: 100%;
@@ -33,26 +71,30 @@
 }
 
 /* Dark mode adjustments */
-@media (prefers-color-scheme: dark) {
-  .wp-block-table th,
-  .wp-block-table td {
-    border-color: #4a5568;
-  }
+.dark .wp-block-quote,
+.dark .wp-block-pullquote {
+  color: #a0aec0;
+  border-color: #718096;
+}
 
-  .wp-block-table th {
-    background-color: #2d3748;
-    color: #e2e8f0;
-  }
+.dark .wp-block-table th,
+.dark .wp-block-table td {
+  border-color: #4a5568;
+}
 
-  .wp-block-table tr:nth-child(even) {
-    background-color: #2d3748;
-    color: #e2e8f0;
-  }
+.dark .wp-block-table th {
+  background-color: #2d3748;
+  color: #e2e8f0;
+}
 
-  .wp-block-table tr:nth-child(odd) {
-    background-color: #1a202c;
-    color: #e2e8f0;
-  }
+.dark .wp-block-table tr:nth-child(even) {
+  background-color: #2d3748;
+  color: #e2e8f0;
+}
+
+.dark .wp-block-table tr:nth-child(odd) {
+  background-color: #1a202c;
+  color: #e2e8f0;
 }
 
 /* Responsive table */

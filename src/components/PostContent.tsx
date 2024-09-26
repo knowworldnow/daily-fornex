@@ -6,71 +6,72 @@ interface PostContentProps {
 }
 
 export function PostContent({ content }: PostContentProps) {
-  const processContent = (content: string): string => {
-    // Process tables
-    content = content.replace(
-      /<table[^>]*>([\s\S]*?)<\/table>/g,
-      (_, tableContent) => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(tableContent, 'text/html');
-        const rows = doc.querySelectorAll('tr');
-        let tableJsx = '<Table>';
+  const processContent = (content: string): React.ReactNode => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
 
-        rows.forEach((row, rowIndex) => {
-          const cells = row.querySelectorAll('th, td');
-          let rowJsx = rowIndex === 0 ? '<TableHead><TableRow>' : '<TableRow>';
-
-          cells.forEach((cell) => {
-            const cellContent = cell.innerHTML;
-            if (cell.tagName.toLowerCase() === 'th') {
-              rowJsx += `<TableHeader>${cellContent}</TableHeader>`;
-            } else {
-              rowJsx += `<TableCell>${cellContent}</TableCell>`;
-            }
-          });
-
-          rowJsx += '</TableRow>';
-          if (rowIndex === 0) rowJsx += '</TableHead>';
-          
-          if (rowIndex === 1) tableJsx += '<TableBody>';
-          tableJsx += rowJsx;
-        });
-
-        tableJsx += '</TableBody></Table>';
-        return tableJsx;
+    const processNode = (node: Node): React.ReactNode => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return node.textContent;
       }
-    );
 
-    // Process quotes
-    content = content.replace(
-      /<blockquote[^>]*>([\s\S]*?)<\/blockquote>/g,
-      (_, quoteContent) => `<blockquote class="wp-block-quote">${quoteContent}</blockquote>`
-    );
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const element = node as Element;
+        const children = Array.from(element.childNodes).map(processNode);
 
-    // Process pull quotes
-    content = content.replace(
-      /<p[^>]*class="[^"]*wp-block-pullquote[^"]*"[^>]*>([\s\S]*?)<\/p>/g,
-      (_, pullQuoteContent) => `<aside class="wp-block-pullquote">${pullQuoteContent}</aside>`
-    );
+        if (element.tagName.toLowerCase() === 'table') {
+          return (
+            <Table>
+              {children}
+            </Table>
+          );
+        }
 
-    // Process alignments and other custom styles
-    content = content.replace(
-      /<([a-z]+)\s+class="([^"]*)"[^>]*>([\s\S]*?)<\/\1>/g,
-      (_, tag: string, classes: string, innerContent: string) => {
-        const processedClasses = classes.split(' ').map((cls: string) => `wp-${cls}`).join(' ');
-        return `<${tag} class="${processedClasses}">${innerContent}</${tag}>`;
+        if (element.tagName.toLowerCase() === 'thead') {
+          return <TableHead>{children}</TableHead>;
+        }
+
+        if (element.tagName.toLowerCase() === 'tbody') {
+          return <TableBody>{children}</TableBody>;
+        }
+
+        if (element.tagName.toLowerCase() === 'tr') {
+          return <TableRow>{children}</TableRow>;
+        }
+
+        if (element.tagName.toLowerCase() === 'th') {
+          return <TableHeader>{children}</TableHeader>;
+        }
+
+        if (element.tagName.toLowerCase() === 'td') {
+          return <TableCell>{children}</TableCell>;
+        }
+
+        if (element.tagName.toLowerCase() === 'blockquote') {
+          return <blockquote className="wp-block-quote">{children}</blockquote>;
+        }
+
+        if (element.classList.contains('wp-block-pullquote')) {
+          return <aside className="wp-block-pullquote">{children}</aside>;
+        }
+
+        const Tag = element.tagName.toLowerCase() as keyof JSX.IntrinsicElements;
+        const classes = Array.from(element.classList).map(cls => `wp-${cls}`).join(' ');
+
+        return React.createElement(Tag, { className: classes }, children);
       }
-    );
 
-    return content;
+      return null;
+    };
+
+    return processNode(doc.body);
   };
 
   const processedContent = processContent(content);
 
   return (
-    <div 
-      className="prose prose-lg dark:prose-invert max-w-none wp-content"
-      dangerouslySetInnerHTML={{ __html: processedContent }}
-    />
+    <div className="prose prose-lg dark:prose-invert max-w-none wp-content">
+      {processedContent}
+    </div>
   );
 }

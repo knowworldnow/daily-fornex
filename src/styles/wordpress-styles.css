@@ -108,30 +108,30 @@
 }
 
 /* Bullet point styles */
-ul:not([class]) {
+.wp-block-list {
   list-style: none;
   padding-left: 1.5em;
 }
 
-ul:not([class]) li {
+.wp-block-list li {
   position: relative;
   margin-bottom: 0.5em;
 }
 
-ul:not([class]) li::before {
+.wp-block-list li::before {
   content: '';
   position: absolute;
   left: -1.5em;
   top: 0.5em;
   width: 14px;
   height: 14px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
 /* Dark mode adjustments */
-.dark ul:not([class]) li::before {
-  filter: invert(1);
+.dark .wp-block-list li::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e2e8f0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E");
 }

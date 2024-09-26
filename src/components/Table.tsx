@@ -7,20 +7,16 @@ interface TableProps {
 export function Table({ children }: TableProps) {
   return (
     <div className="w-full overflow-x-auto my-8">
-      <div className="inline-block min-w-full align-middle">
-        <div className="overflow-hidden border-b border-gray-200 dark:border-gray-700 shadow-md sm:rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            {children}
-          </table>
-        </div>
-      </div>
+      <table className="w-full border-collapse bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+        {children}
+      </table>
     </div>
   );
 }
 
 export function TableHead({ children }: TableProps) {
   return (
-    <thead className="bg-gray-50 dark:bg-gray-700">
+    <thead className="bg-gray-100 dark:bg-gray-700">
       {children}
     </thead>
   );
@@ -28,7 +24,7 @@ export function TableHead({ children }: TableProps) {
 
 export function TableBody({ children }: TableProps) {
   return (
-    <tbody className="bg-white bg-opacity-50 dark:bg-gray-800 dark:bg-opacity-50 divide-y divide-gray-200 dark:divide-gray-700">
+    <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
       {children}
     </tbody>
   );
@@ -36,7 +32,7 @@ export function TableBody({ children }: TableProps) {
 
 export function TableRow({ children }: TableProps) {
   return (
-    <tr className="transition-colors hover:bg-gray-100 dark:hover:bg-gray-700">
+    <tr className="even:bg-gray-50 dark:even:bg-gray-700 odd:bg-white dark:odd:bg-gray-800">
       {children}
     </tr>
   );

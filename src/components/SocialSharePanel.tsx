@@ -60,27 +60,29 @@ const SocialSharePanel: React.FC<SocialSharePanelProps> = ({ url, title, descrip
   }
 
   return (
-    <div className="fixed md:left-0 md:top-1/2 bottom-0 left-0 right-0 md:transform md:-translate-y-1/2 flex md:flex-col justify-center items-center md:items-start z-50">
+    <div className="fixed z-50 md:left-0 md:top-1/2 md:-translate-y-1/2 bottom-0 left-0 right-0">
       <div className="w-full md:w-auto flex md:flex-col justify-around items-center bg-teal-800 py-2 px-2 md:rounded-r-lg md:py-2 md:px-2 shadow-lg">
-        <span className="text-white text-sm md:text-base font-semibold md:mb-2">Share:</span>
-        {shareLinks.map((link) => (
-          <a
-            key={link.name}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:opacity-80 transition-opacity"
-            aria-label={`Share on ${link.name}`}
-          >
-            <Image 
-              src={link.icon} 
-              alt={`${link.name} icon`} 
-              width={32} 
-              height={32} 
-              className="w-8 h-8 md:w-10 md:h-10" 
-            />
-          </a>
-        ))}
+        <span className="text-white text-xs md:text-sm font-semibold md:mb-2 mr-2 md:mr-0">Share:</span>
+        <div className="flex md:flex-col space-x-2 md:space-x-0 md:space-y-2">
+          {shareLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+              aria-label={`Share on ${link.name}`}
+            >
+              <Image 
+                src={link.icon} 
+                alt={`${link.name} icon`} 
+                width={32} 
+                height={32} 
+                className="w-6 h-6 md:w-8 md:h-8" 
+              />
+            </a>
+          ))}
+        </div>
       </div>
     </div>
   );

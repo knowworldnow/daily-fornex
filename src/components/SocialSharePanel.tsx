@@ -60,10 +60,10 @@ const SocialSharePanel: React.FC<SocialSharePanelProps> = ({ url, title, descrip
   }
 
   return (
-    <div className="fixed z-50 md:left-0 md:top-1/2 md:-translate-y-1/2 bottom-0 left-0 right-0">
-      <div className="w-full md:w-auto flex md:flex-col justify-around items-center bg-teal-800 py-2 px-2 md:rounded-r-lg md:py-2 md:px-2 shadow-lg">
-        <span className="text-white text-xs md:text-sm font-semibold md:mb-2 mr-2 md:mr-0">Share:</span>
-        <div className="flex md:flex-col space-x-2 md:space-x-0 md:space-y-2">
+    <div className="fixed z-50 md:left-4 md:top-1/2 md:-translate-y-1/2 bottom-0 left-0 right-0">
+      <div className="w-full md:w-auto flex md:flex-col justify-around items-center bg-teal-800 py-2 px-2 md:rounded-lg md:py-3 md:px-3 shadow-lg">
+        <span className="text-white text-xs md:text-sm font-semibold md:mb-2">Share:</span>
+        <div className="flex md:flex-col space-x-3 md:space-x-0 md:space-y-3">
           {shareLinks.map((link) => (
             <a
               key={link.name}
@@ -76,9 +76,9 @@ const SocialSharePanel: React.FC<SocialSharePanelProps> = ({ url, title, descrip
               <Image 
                 src={link.icon} 
                 alt={`${link.name} icon`} 
-                width={32} 
-                height={32} 
-                className="w-6 h-6 md:w-8 md:h-8" 
+                width={24} 
+                height={24} 
+                className="w-6 h-6 md:w-7 md:h-7" 
               />
             </a>
           ))}

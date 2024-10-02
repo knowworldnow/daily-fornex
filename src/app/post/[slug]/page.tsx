@@ -104,7 +104,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
       {post.faqItems && post.faqItems.length > 0 && (
         <FAQSchema faqItems={post.faqItems} />
       )}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 pl-12 sm:pl-16">
         <div className="flex flex-col lg:flex-row lg:space-x-8">
           <article className="lg:w-2/3">
             {post.featuredImage && (

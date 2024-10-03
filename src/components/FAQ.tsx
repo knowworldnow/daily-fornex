@@ -10,24 +10,9 @@ const FAQ: React.FC<FAQProps> = ({ faqItems }) => {
     return null;
   }
 
-  const sanitizeAndFormatAnswer = (answer: string) => {
-    // Remove the u00a0 artifacts and replace with actual spaces
-    const cleanedAnswer = answer.replace(/u00a0/g, ' ');
-    // Decode any HTML entities
-    const decodedAnswer = decodeHtmlEntities(cleanedAnswer);
-    // Split the answer into sentences for better formatting
-    return decodedAnswer.split('. ').map((sentence, index, array) => (
-      <React.Fragment key={index}>
-        {sentence}{index < array.length - 1 ? '. ' : ''}
-        {index < array.length - 1 && <br />}
-      </React.Fragment>
-    ));
-  };
-
-  const decodeHtmlEntities = (text: string) => {
-    const textArea = document.createElement('textarea');
-    textArea.innerHTML = text;
-    return textArea.value;
+  const sanitizeAnswer = (answer: string) => {
+    // Remove the u00a0 artifacts and replace with spaces
+    return answer.replace(/u00a0/g, ' ');
   };
 
   return (
@@ -36,7 +21,10 @@ const FAQ: React.FC<FAQProps> = ({ faqItems }) => {
       {faqItems.map((item, index) => (
         <details key={index} className="mb-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
           <summary className="font-semibold cursor-pointer">{item.question}</summary>
-          <div className="mt-2">{sanitizeAndFormatAnswer(item.answer)}</div>
+          <div 
+            className="mt-2"
+            dangerouslySetInnerHTML={{ __html: sanitizeAnswer(item.answer) }}
+          />
         </details>
       ))}
     </section>

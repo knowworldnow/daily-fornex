@@ -104,18 +104,22 @@ export default async function PostPage({ params }: { params: { slug: string } })
       {post.faqItems && post.faqItems.length > 0 && (
         <FAQSchema faqItems={post.faqItems} />
       )}
-      <div className="container mx-auto px-4 py-8 pl-12 sm:pl-16">
+      <main className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row lg:space-x-8">
           <article className="lg:w-2/3">
             {post.featuredImage && (
-              <Image
-                src={post.featuredImage.node.sourceUrl}
-                alt={post.featuredImage.node.altText || post.title}
-                width={1200}
-                height={630}
-                className="w-full h-auto object-cover rounded-lg mb-8"
-                priority
-              />
+              <div className="mb-8">
+                <Image
+                  src={post.featuredImage.node.sourceUrl}
+                  alt={post.featuredImage.node.altText || post.title}
+                  width={1200}
+                  height={630}
+                  layout="responsive"
+                  objectFit="cover"
+                  className="rounded-lg"
+                  priority
+                />
+              </div>
             )}
             <PostHeader
               title={post.title}
@@ -124,7 +128,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
               category={post.categories.nodes[0]}
             />
             <div 
-              className="prose max-w-none mt-8"
+              className="prose max-w-none mt-8 dark:prose-invert"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
             {post.faqItems && post.faqItems.length > 0 && (
@@ -135,7 +139,9 @@ export default async function PostPage({ params }: { params: { slug: string } })
             <CommentForm postId={post.id} />
           </article>
           <aside className="lg:w-1/3 mt-8 lg:mt-0">
-            <TableOfContents content={post.content} />
+            <div className="sticky top-8">
+              <TableOfContents content={post.content} />
+            </div>
           </aside>
         </div>
         <SocialSharePanel 
@@ -145,7 +151,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
           imageUrl={imageUrl}
         />
         {relatedPosts.length > 0 && <RelatedPosts posts={relatedPosts} />}
-      </div>
+      </main>
     </>
   );
 }

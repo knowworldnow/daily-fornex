@@ -6,7 +6,6 @@ import { debounce } from 'lodash';
 interface TOCItem {
   id: string;
   text: string;
-  level: number;
 }
 
 interface TableOfContentsProps {
@@ -19,17 +18,16 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
 
   useEffect(() => {
     const doc = new DOMParser().parseFromString(content, 'text/html');
-    const headings = doc.querySelectorAll('h2, h3, h4, h5, h6');
+    const headings = doc.querySelectorAll('h2');
     const tocItems: TOCItem[] = Array.from(headings).map((heading) => ({
       id: heading.id,
       text: heading.textContent || '',
-      level: parseInt(heading.tagName.charAt(1)),
     }));
     setToc(tocItems);
   }, [content]);
 
   const handleScroll = useCallback(() => {
-    const headings = document.querySelectorAll('h2, h3, h4, h5, h6');
+    const headings = document.querySelectorAll('h2');
     const scrollPosition = window.scrollY;
 
     for (let i = headings.length - 1; i >= 0; i--) {
@@ -47,6 +45,10 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
     return () => window.removeEventListener('scroll', debouncedHandleScroll);
   }, [handleScroll]);
 
+  if (toc.length === 0) {
+    return null;
+  }
+
   return (
     <nav className="sticky top-8 hidden lg:block max-h-[calc(100vh-4rem)] overflow-auto">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md border border-gray-200 dark:border-gray-700">
@@ -55,8 +57,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
           {toc.map((item) => (
             <li 
               key={item.id} 
-              className={`py-1 ${item.level === 2 ? 'font-semibold' : 'font-normal'}`}
-              style={{ paddingLeft: `${(item.level - 2) * 12}px` }}
+              className="py-1 font-semibold"
             >
               <a 
                 href={`#${item.id}`} 

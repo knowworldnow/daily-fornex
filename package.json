@@ -13,7 +13,7 @@
     "@faustwp/core": "^3.1.0",
     "next": "14.2.12",
     "next-secure-headers": "^2.2.0",
-    "next-themes": "^0.3.0",
+    "next-themes": "^0.4.6",
     "react": "^18",
     "react-dom": "^18",
     "react-hooks-global-state": "^2.1.0",
